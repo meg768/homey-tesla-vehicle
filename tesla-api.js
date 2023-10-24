@@ -177,9 +177,6 @@ function Request() {
 	constructor.apply(self, arguments);
 }
 
-let isCharging = (vehicleData) => {
-	return vehicleData.charge_state.charging_state == 'Charging';
-};
 
 module.exports = class TeslaAPI {
 	constructor(options) {
@@ -263,13 +260,7 @@ module.exports = class TeslaAPI {
 			case 200: {
 				break;
 			}
-			/*
-            case 408: {
-				// Timeout. Try again
-				response = await api.request(method, path, options);
-                break;
-            }
-*/
+
 			default: {
 				this.debug(`${response.statusMessage} (${response.statusCode}).`);
 
@@ -367,24 +358,7 @@ module.exports = class TeslaAPI {
 	}
 };
 
-/*
 
-async function test() {
-    let options = {};
-    options.token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Im5ZdVZJWTJTN3gxVHRYM01KMC1QMDJad3pXQSJ9.eyJpc3MiOiJodHRwczovL2F1dGgudGVzbGEuY29tL29hdXRoMi92MyIsInNjcCI6WyJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJhdWQiOiJodHRwczovL2F1dGgudGVzbGEuY29tL29hdXRoMi92My90b2tlbiIsInN1YiI6ImEzY2MwOTEwLThlYmEtNGU0Zi05MzIxLWQ4NDQ3ZWJiNDlmMSIsImRhdGEiOnsidiI6IjEiLCJhdWQiOiJodHRwczovL293bmVyLWFwaS50ZXNsYW1vdG9ycy5jb20vIiwic3ViIjoiYTNjYzA5MTAtOGViYS00ZTRmLTkzMjEtZDg0NDdlYmI0OWYxIiwic2NwIjpbIm9wZW5pZCIsIm9mZmxpbmVfYWNjZXNzIl0sImF6cCI6Im93bmVyYXBpIiwiYW1yIjpbInB3ZCJdLCJhdXRoX3RpbWUiOjE2ODc3OTc1NTl9LCJpYXQiOjE2ODc3OTc1NTl9.gcFTYlE8DrbOsfL1L3oCnFIeeaGFQ6_e_TjGMivy7zNVchZg2duHgZD7_oBqDC-YGnohS4Xb8e9xi90AqK9GCAz5kIdWPIW_2Gd8hXB4tnvWnK9HP219tMDhwDxQ2qTnTmnixvdlj6BYwYLNY8cqjcOxq_nzTO_uS4sip32fxCncECvgWPiSbqgz1xZMU-NFvaeAJ5K8sik3K8CgDyC89ER_JCA58_uxRl7X8hEpuDTw7b5pIhhdLgDdMgLmoQIVhpsTYZLERdjtbc2DernGoudF2NNCRELKXk262-2fJSIjsumrdSapmV0m6PyRwtcQqPK6PS0yzHC-tgKSEIzb9w";
-    options.debug = console.log;    
-    let api = new TeslaAPI(options);
 
-    let vehicles = await api.getVehicles();
-    
-    let vehicle = vehicles[0];
-    await api.wakeUp(vehicle.id);
 
-    let response = await api.request(vehicle.id, 'GET', 'vehicle_data');
-    console.log(response);
 
-}
-
-test();
-
-*/
