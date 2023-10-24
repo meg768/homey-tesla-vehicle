@@ -1,0 +1,99 @@
+{
+	"triggers": [
+		{
+			"id": "vehicle-inside-geofence",
+			"title": {
+				"en": "Came home",
+				"sv": "Kom hem"
+			}
+		},
+		{
+			"id": "vehicle-outside-geofence",
+			"title": {
+				"en": "Left home",
+				"sv": "Körde hemifrån"
+			}
+		},
+        {
+			"id": "vehicle-online",
+			"title": {
+				"en": "Online",
+				"sv": "Online"
+			}
+		},
+		{
+			"id": "vehicle-offline",
+			"title": {
+				"en": "Offline",
+				"sv": "Offline"
+			}
+		},
+		{
+			"id": "vehicle-started-driving",
+			"title": {
+				"en": "Started driving",
+				"sv": "Började köra"
+			}
+		},
+		{
+			"id": "vehicle-stopped-driving",
+			"title": {
+				"en": "Stopped driving",
+				"sv": "Slutade köra"
+			}
+		},
+		{
+			"id": "vehicle-charging-started",
+			"title": {
+				"en": "Started charging",
+				"sv": "Började ladda"
+			}
+		},
+		{
+			"id": "vehicle-charging-stopped",
+			"title": {
+				"en": "Stopped charging",
+				"sv": "Slutade ladda"
+			}
+		}
+	],
+	"conditions": [
+		{
+			"id": "vehicle-is-at-home",
+			"title": {
+				"en": "!{{Is|Is not}} home",
+				"sv": "!{{Är hemma|Är inte hemma}}"
+			}
+		},
+		{
+			"id": "vehicle-is-charging",
+			"title": {
+				"en": "!{{Is|Is not}} charging",
+				"sv": "!{{Laddar|Laddar inte}}"
+			}
+		},
+		{
+			"id": "vehicle-is-driving",
+			"title": {
+				"en": "!{{Is|Is not}} driving",
+				"sv": "!{{Kör|Är Parkerad}}"
+			}
+		},
+
+		{
+			"id": "vehicle-is-online",
+			"title": {
+				"en": "Is !{{online|offline}}",
+				"sv": "Är !{{online|online}}"
+			}
+		},
+
+		{
+			"id": "vehicle-is-locked",
+			"title": {
+				"en": "Is !{{locked|unlocked}} locked",
+				"sv": "Är !{{Låst|upplåst}}"
+			}
+		}
+	]
+}

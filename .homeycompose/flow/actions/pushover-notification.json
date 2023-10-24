@@ -1,0 +1,40 @@
+{
+	"title": {
+		"en": "Send message using Pushover",
+		"sv": "Skicka meddelande till Pushover"
+	},
+
+	"titleFormatted": {
+		"en": "Send [[message]] with [[priority]] priority using Pushover",
+		"sv": "Skicka [[message]] med [[priority]] prioritet till Pushover"
+	},
+
+
+	"args": [
+		{
+			"type": "text",
+			"name": "message",
+			"placeholder": {
+				"en": "Message"
+			}
+		},
+		{
+			"type": "dropdown",
+			"name": "priority",
+			"values": [
+				{
+					"id": "0",
+					"label": {
+						"en": "normal", "sv":"normal"
+					}
+				},
+				{
+					"id": "1",
+					"label": {
+						"en": "high", "sv":"hög"
+					}
+				}
+			]
+		}
+	]
+}

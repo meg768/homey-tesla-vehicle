@@ -1,0 +1,16 @@
+{
+  "title": {
+    "en": "Log to console",
+    "sv": "Logga"
+  },
+  "args": [
+    {
+      "type": "text",
+      "name": "message",
+      "placeholder": {
+        "en": "Message",
+        "sv": "Meddelande"
+      }
+    }
+  ]
+}

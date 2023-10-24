@@ -1,0 +1,10 @@
+
+{
+    "type": "string",
+    "title": { "en": "Charging state", "sv": "Laddning" },
+    "getable": true,
+    "setable": false,
+    "icon": "./assets/charging.svg"
+
+    
+  }

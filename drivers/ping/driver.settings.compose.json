@@ -1,0 +1,9 @@
+[
+	{
+		"id": "interval",
+		"type": "number",
+		"label": { "en": "Interval" , "sv": "Intervall"},
+		"value": 5,
+		"hint": { "en": "This ping interval in minutes.", "sv":"Ping intervall i minuter." }
+	}
+]

@@ -1,0 +1,10 @@
+
+{
+    "type": "number",
+    "title": { "en": "Odometer", "sv":"Odometer" },
+    "getable": true,
+    "setable": false,
+    "units": { "en": "km" },
+    "icon": "./assets/gauge.svg"
+    
+  }

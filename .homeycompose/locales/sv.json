@@ -1,0 +1,4 @@
+{
+	"InvalidAccessToken": "Ogiltig nyckel. Använd vertyg som 'Auth for Tesla' för att generera en giltig nyckel.",
+	"InnerTemperature": "Inner temperature"
+}

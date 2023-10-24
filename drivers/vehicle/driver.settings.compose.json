@@ -1,0 +1,9 @@
+[
+	{
+		"id": "pollInterval",
+		"type": "number",
+		"label": { "en": "Poll interval" , "sv": "Uppdateringsfrekvens"},
+		"value": 3,
+		"hint": { "en": "This poll interval in minutes.", "sv":"Antal minuter mellan anrop." }
+	}
+  ]

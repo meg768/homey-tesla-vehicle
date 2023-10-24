@@ -1,0 +1,32 @@
+{
+	"name": {
+		"en": "Tesla",
+		"sv": "Tesla"
+	},
+	"class": "lock",
+	"capabilities": ["odometer", "vehicle_state", "locked", "inner_temperature", "outer_temperature", "measure_battery", "battery_range", "charging_state"],
+	"platforms": ["local"],
+	"connectivity": [],
+	"images": {
+		"small": "{{driverAssetsPath}}/images/small.png",
+		"large": "{{driverAssetsPath}}/images/large.png",
+		"xlarge": "{{driverAssetsPath}}/images/xlarge.png"
+	},
+
+    "settings": {
+        "pollInterval": 5
+    },    
+	"pair": [
+		{
+			"id": "list_devices",
+			"template": "list_devices",
+			"navigation": {
+				"next": "add_devices"
+			}
+		},
+		{
+			"id": "add_devices",
+			"template": "add_devices"
+		}
+	]
+}

@@ -1,0 +1,14 @@
+
+{
+    "type": "number",
+    "title": { "en": "Battery range", "sv": "Kilometer" },
+    "getable": true,
+    "setable": false,
+    "units": { "en": "km" },
+    "min": 0,
+    "max": 999999,
+    "step": 1,
+    "icon": "./assets/gauge.svg"
+
+    
+  }

@@ -1,0 +1,870 @@
+{
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
+  "id": "se.egelberg.tesla.vehicle",
+  "version": "1.0.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Tesla Vehicle"
+  },
+  "description": {
+    "en": "Control your Tesla with Homey",
+    "sv": "Styr din Tesla med Homey"
+  },
+  "category": [
+    "tools"
+  ],
+  "permissions": [
+    "homey:manager:geolocation"
+  ],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Magnus Egelberg",
+    "email": "magnus.egelberg@gmail.com"
+  },
+  "flow": {
+    "actions": [
+      {
+        "title": {
+          "en": "Log to console",
+          "sv": "Logga"
+        },
+        "args": [
+          {
+            "type": "text",
+            "name": "message",
+            "placeholder": {
+              "en": "Message",
+              "sv": "Meddelande"
+            }
+          }
+        ],
+        "id": "log-to-console"
+      },
+      {
+        "title": {
+          "en": "Send message using Pushover",
+          "sv": "Skicka meddelande till Pushover"
+        },
+        "titleFormatted": {
+          "en": "Send [[message]] with [[priority]] priority using Pushover",
+          "sv": "Skicka [[message]] med [[priority]] prioritet till Pushover"
+        },
+        "args": [
+          {
+            "type": "text",
+            "name": "message",
+            "placeholder": {
+              "en": "Message"
+            }
+          },
+          {
+            "type": "dropdown",
+            "name": "priority",
+            "values": [
+              {
+                "id": "0",
+                "label": {
+                  "en": "normal",
+                  "sv": "normal"
+                }
+              },
+              {
+                "id": "1",
+                "label": {
+                  "en": "high",
+                  "sv": "hög"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "pushover-notification"
+      },
+      {
+        "id": "set-ping-interval",
+        "title": {
+          "en": "Set interval",
+          "sv": "Sätt intervall"
+        },
+        "titleFormatted": {
+          "en": "Set interval to [[interval]] minutes.",
+          "sv": "Sätt intervall till [[interval]] minuter."
+        },
+        "hint": {
+          "en": "Specify interval in mintues",
+          "sv": "Anger i minuter"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=ping"
+          },
+          {
+            "type": "number",
+            "name": "interval",
+            "placeholder": {
+              "en": "Interval",
+              "sv": "Intervall"
+            },
+            "min": 1,
+            "max": 120,
+            "step": 0.1
+          }
+        ]
+      }
+    ],
+    "triggers": [
+      {
+        "id": "vehicle-inside-geofence",
+        "title": {
+          "en": "Came home",
+          "sv": "Kom hem"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "vehicle-outside-geofence",
+        "title": {
+          "en": "Left home",
+          "sv": "Körde hemifrån"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "vehicle-online",
+        "title": {
+          "en": "Online",
+          "sv": "Online"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "vehicle-offline",
+        "title": {
+          "en": "Offline",
+          "sv": "Offline"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "vehicle-started-driving",
+        "title": {
+          "en": "Started driving",
+          "sv": "Började köra"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "vehicle-stopped-driving",
+        "title": {
+          "en": "Stopped driving",
+          "sv": "Slutade köra"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "vehicle-charging-started",
+        "title": {
+          "en": "Started charging",
+          "sv": "Började ladda"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "vehicle-charging-stopped",
+        "title": {
+          "en": "Stopped charging",
+          "sv": "Slutade ladda"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "id": "vehicle-is-at-home",
+        "title": {
+          "en": "!{{Is|Is not}} home",
+          "sv": "!{{Är hemma|Är inte hemma}}"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "vehicle-is-charging",
+        "title": {
+          "en": "!{{Is|Is not}} charging",
+          "sv": "!{{Laddar|Laddar inte}}"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "vehicle-is-driving",
+        "title": {
+          "en": "!{{Is|Is not}} driving",
+          "sv": "!{{Kör|Är Parkerad}}"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "vehicle-is-online",
+        "title": {
+          "en": "Is !{{online|offline}}",
+          "sv": "Är !{{online|online}}"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "vehicle-is-locked",
+        "title": {
+          "en": "Is !{{locked|unlocked}} locked",
+          "sv": "Är !{{Låst|upplåst}}"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      }
+    ]
+  },
+  "drivers": [
+    {
+      "name": {
+        "en": "Defrost",
+        "sv": "Avfrosta"
+      },
+      "class": "button",
+      "capabilities": [
+        "onoff"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [],
+      "images": {
+        "small": "/drivers/defrost/assets/images/small.png",
+        "large": "/drivers/defrost/assets/images/large.png",
+        "xlarge": "/drivers/defrost/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "defrost"
+    },
+    {
+      "name": {
+        "en": "Frunk",
+        "sv": "Framlucka"
+      },
+      "class": "button",
+      "capabilities": [
+        "onoff"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [],
+      "images": {
+        "small": "/drivers/frunk/assets/images/small.png",
+        "large": "/drivers/frunk/assets/images/large.png",
+        "xlarge": "/drivers/frunk/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "frunk"
+    },
+    {
+      "name": {
+        "en": "Air conditioner",
+        "sv": "Fläkt/AC"
+      },
+      "class": "button",
+      "capabilities": [
+        "onoff"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [],
+      "images": {
+        "small": "/drivers/hvac/assets/images/small.png",
+        "large": "/drivers/hvac/assets/images/large.png",
+        "xlarge": "/drivers/hvac/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "hvac"
+    },
+    {
+      "name": {
+        "en": "Inner temperature",
+        "sv": "Innertemperatur"
+      },
+      "class": "sensor",
+      "capabilities": [
+        "measure_temperature"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [],
+      "images": {
+        "small": "/drivers/inner-temperature/assets/images/small.png",
+        "large": "/drivers/inner-temperature/assets/images/large.png",
+        "xlarge": "/drivers/inner-temperature/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "inner-temperature"
+    },
+    {
+      "name": {
+        "en": "Outer temperature",
+        "sv": "Yttertemperatur"
+      },
+      "class": "sensor",
+      "capabilities": [
+        "measure_temperature"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [],
+      "images": {
+        "small": "/drivers/outer-temperature/assets/images/small.png",
+        "large": "/drivers/outer-temperature/assets/images/large.png",
+        "xlarge": "/drivers/outer-temperature/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "outer-temperature"
+    },
+    {
+      "name": {
+        "en": "Ping",
+        "sv": "Ping"
+      },
+      "class": "button",
+      "capabilities": [
+        "onoff"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [],
+      "images": {
+        "small": "/drivers/ping/assets/images/small.png",
+        "large": "/drivers/ping/assets/images/large.png",
+        "xlarge": "/drivers/ping/assets/images/xlarge.png"
+      },
+      "settings": [
+        {
+          "id": "interval",
+          "type": "number",
+          "label": {
+            "en": "Interval",
+            "sv": "Intervall"
+          },
+          "value": 5,
+          "hint": {
+            "en": "This ping interval in minutes.",
+            "sv": "Ping intervall i minuter."
+          }
+        }
+      ],
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "ping"
+    },
+    {
+      "name": {
+        "en": "Pong",
+        "sv": "Pong"
+      },
+      "class": "button",
+      "capabilities": [
+        "onoff"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [],
+      "images": {
+        "small": "/drivers/pong/assets/images/small.png",
+        "large": "/drivers/pong/assets/images/large.png",
+        "xlarge": "/drivers/pong/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "pong"
+    },
+    {
+      "name": {
+        "en": "Settings",
+        "sv": "Inställningar"
+      },
+      "class": "other",
+      "capabilities": [],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [],
+      "images": {
+        "small": "/drivers/settings/assets/images/small.png",
+        "large": "/drivers/settings/assets/images/large.png",
+        "xlarge": "/drivers/settings/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "settings",
+      "settings": [
+        {
+          "id": "refreshToken",
+          "type": "text",
+          "label": {
+            "en": "Security token issued by Tesla",
+            "sv": "Säkerhetsnyckel från Tesla"
+          },
+          "value": "",
+          "hint": {
+            "en": "A mandatory token used to communicate with Tesla. Use a tool like 'Auth for Tesla' to generate such a token. Often refered as a 'RefreshToken'",
+            "sv": "En obligatorisk nyckel för att komma åt din Tesla. Använd verktyg som 'Auth for Tesla' för att generera en sådan nyckel. Kallas ofta en 'RefreshToken'."
+          }
+        },
+        {
+          "id": "pushoverUser",
+          "type": "text",
+          "label": {
+            "en": "Pushover user",
+            "sv": "Användarnamn för Pushover"
+          },
+          "value": ""
+        },
+        {
+          "id": "pushoverToken",
+          "type": "text",
+          "label": {
+            "en": "Pushover token",
+            "sv": "Nyckel för Pushover"
+          },
+          "value": ""
+        },
+        {
+          "id": "remoteStartDrivePassword",
+          "type": "text",
+          "label": {
+            "en": "Remote start drive password",
+            "sv": "Lösenord för nyckellös körning"
+          },
+          "value": ""
+        }
+      ]
+    },
+    {
+      "name": {
+        "en": "Steering wheel heater",
+        "sv": "Rattvärme"
+      },
+      "class": "button",
+      "capabilities": [
+        "onoff"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [],
+      "images": {
+        "small": "/drivers/steering-wheel-heater/assets/images/small.png",
+        "large": "/drivers/steering-wheel-heater/assets/images/large.png",
+        "xlarge": "/drivers/steering-wheel-heater/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "steering-wheel-heater"
+    },
+    {
+      "name": {
+        "en": "Trunk",
+        "sv": "Baklucka"
+      },
+      "class": "button",
+      "capabilities": [
+        "onoff"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [],
+      "images": {
+        "small": "/drivers/trunk/assets/images/small.png",
+        "large": "/drivers/trunk/assets/images/large.png",
+        "xlarge": "/drivers/trunk/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "trunk"
+    },
+    {
+      "name": {
+        "en": "Tesla",
+        "sv": "Tesla"
+      },
+      "class": "lock",
+      "capabilities": [
+        "odometer",
+        "vehicle_state",
+        "locked",
+        "inner_temperature",
+        "outer_temperature",
+        "measure_battery",
+        "battery_range",
+        "charging_state"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [],
+      "images": {
+        "small": "/drivers/vehicle/assets/images/small.png",
+        "large": "/drivers/vehicle/assets/images/large.png",
+        "xlarge": "/drivers/vehicle/assets/images/xlarge.png"
+      },
+      "settings": [
+        {
+          "id": "pollInterval",
+          "type": "number",
+          "label": {
+            "en": "Poll interval",
+            "sv": "Uppdateringsfrekvens"
+          },
+          "value": 3,
+          "hint": {
+            "en": "This poll interval in minutes.",
+            "sv": "Antal minuter mellan anrop."
+          }
+        }
+      ],
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "vehicle"
+    },
+    {
+      "name": {
+        "en": "Ventilation",
+        "sv": "Ventilation"
+      },
+      "class": "button",
+      "capabilities": [
+        "onoff"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [],
+      "images": {
+        "small": "/drivers/ventilation/assets/images/small.png",
+        "large": "/drivers/ventilation/assets/images/large.png",
+        "xlarge": "/drivers/ventilation/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "ventilation"
+    }
+  ],
+  "capabilities": {
+    "battery_range": {
+      "type": "number",
+      "title": {
+        "en": "Battery range",
+        "sv": "Kilometer"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "km"
+      },
+      "min": 0,
+      "max": 999999,
+      "step": 1,
+      "icon": "./assets/gauge.svg"
+    },
+    "charging_state": {
+      "type": "string",
+      "title": {
+        "en": "Charging state",
+        "sv": "Laddning"
+      },
+      "getable": true,
+      "setable": false,
+      "icon": "./assets/charging.svg"
+    },
+    "inner_temperature": {
+      "type": "number",
+      "title": {
+        "en": "Inner temperature",
+        "sv": "Innertemperatur"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "°C"
+      },
+      "min": -100,
+      "max": 100,
+      "step": 0.5,
+      "icon": "./assets/temperature.svg"
+    },
+    "odometer": {
+      "type": "number",
+      "title": {
+        "en": "Odometer",
+        "sv": "Odometer"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "km"
+      },
+      "icon": "./assets/gauge.svg"
+    },
+    "outer_temperature": {
+      "type": "number",
+      "title": {
+        "en": "Outer temperature",
+        "sv": "Yttertemperatur"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "°C"
+      },
+      "min": -100,
+      "max": 100,
+      "step": 0.5,
+      "icon": "./assets/temperature.svg"
+    },
+    "vehicle_state": {
+      "type": "string",
+      "title": {
+        "en": "State",
+        "sv": "Status"
+      },
+      "getable": true,
+      "setable": false,
+      "icon": "./assets/gauge.svg"
+    }
+  }
+}

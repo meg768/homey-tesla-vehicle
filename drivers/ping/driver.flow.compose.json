@@ -1,0 +1,32 @@
+{
+	"actions": [
+		{
+			"id": "set-ping-interval",
+			"title": {
+				"en": "Set interval",
+				"sv": "Sätt intervall"
+			},
+			"titleFormatted": {
+				"en": "Set interval to [[interval]] minutes.",
+				"sv": "Sätt intervall till [[interval]] minuter."
+			},
+			"hint": {
+				"en": "Specify interval in mintues",
+				"sv": "Anger i minuter"
+			},
+			"args": [
+				{
+					"type": "number",
+					"name": "interval",
+					"placeholder": {
+						"en": "Interval",
+						"sv": "Intervall"
+					},
+					"min": 1,
+					"max": 120,
+					"step": 0.1
+				}
+			]
+		}
+	]
+}

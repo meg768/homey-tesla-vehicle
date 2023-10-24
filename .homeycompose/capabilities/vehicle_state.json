@@ -1,0 +1,10 @@
+
+{
+    "type": "string",
+    "title": { "en": "State", "sv": "Status" },
+    "getable": true,
+    "setable": false,
+    "icon": "./assets/gauge.svg"
+
+    
+  }
