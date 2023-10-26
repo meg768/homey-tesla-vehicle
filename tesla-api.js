@@ -358,61 +358,78 @@ class TeslaAPI {
 };
 
 
-TeslaAPI.isOnline = (vehicleData) => {
-	return vehicleData.state == 'online';
+TeslaAPI.getVehicleSpeed = (vehicleData) => {
+
+    if (typeof vehicleData.drive_state.speed == 'number') {
+        return vehicleData.drive_state.speed * 1.609344;
+    }
+
+    return 0;
+
+}
+
+
+TeslaAPI.getOdometer = (vehicleData) => {
+    return Math.round(vehicleData.vehicle_state.odometer * 1.609344);
 };
 
-TeslaAPI.isCharging = (vehicleData) => {
-	return vehicleData.charge_state.charging_state == 'Charging';
+
+TeslaAPI.getChargingState = (vehicleData) => {
+    return vehicleData.charge_state.charging_state;
 };
 
-TeslaAPI.isClimateOn = (vehicleData) => {
-	return vehicleData.climate_state.is_climate_on;
+
+TeslaAPI.getBatteryLevel = (vehicleData) => {
+    return vehicleData.charge_state.battery_level;
 };
 
-TeslaAPI.isLocked = (vehicleData) => {
-	return vehicleData.vehicle_state.locked;
-};
-
-TeslaAPI.isDefrosting = (vehicleData) => {
-	return vehicleData.climate_state.defrost_mode != 0;
-};
 
 TeslaAPI.getInsideTemperature = (vehicleData) => {
-	return vehicleData.climate_state.inside_temp;
+    return vehicleData.climate_state.inside_temp;
 };
 
 TeslaAPI.getOutsideTemperature = (vehicleData) => {
-	return vehicleData.climate_state.outside_temp;
+    return vehicleData.climate_state.outside_temp;
 };
 
-TeslaAPI.isWindowOpen = (vehicleData) => {
+TeslaAPI.isLocked = (vehicleData) => {
+    return vehicleData.vehicle_state.locked ? true : false;
+};
 
-    if (vehicleData.vehicle_state.fd_window != 0) {
-        return true;
-    };
 
-    if (vehicleData.vehicle_state.rd_window != 0) {
-        return true;
-    };
+TeslaAPI.isOnline = (vehicleData) => {
+    return vehicleData.state == 'online';
+};
 
-    if (vehicleData.vehicle_state.fp_window != 0) {
-        return true;
-    };
-
-    if (vehicleData.vehicle_state.rp_window != 0) {
-        return true;
-    };
-
-    return false;
+TeslaAPI.isCharging = (vehicleData) => {
+    return vehicleData.charge_state.charging_state == 'Charging';
 };
 
 
 TeslaAPI.isDriving = (vehicleData) => {
-	if (!vehicleData.drive_state.shift_state) {
-		return false;
-	}
-	return vehicleData.drive_state.shift_state != 'P';
+    if (!vehicleData.drive_state.shift_state) {
+        return false;
+    }
+    return vehicleData.drive_state.shift_state != 'P';
 };
+
+
+TeslaAPI.getChargePower = (vehicleData) => {
+    return Math.round(vehicleData.charge_state.charge_rate * vehicleData.charge_state.charger_voltage);
+};
+
+TeslaAPI.getBatteryRange = (vehicleData) => {
+    return Math.round(vehicleData.charge_state.battery_range * 1.609344);
+};
+
+
+
+TeslaAPI.getChargingSpeed = (vehicleData) => {
+    let chargePower = TeslaAPI.getChargePower(vehicleData);
+    let chargingRate = chargePower / 171;
+    return Math.round(chargingRate * 10) / 10;
+};
+
+
 
 module.exports = TeslaAPI;

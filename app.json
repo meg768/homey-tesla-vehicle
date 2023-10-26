@@ -49,46 +49,6 @@
         "id": "log-to-console"
       },
       {
-        "title": {
-          "en": "Send message using Pushover",
-          "sv": "Skicka meddelande till Pushover"
-        },
-        "titleFormatted": {
-          "en": "Send [[message]] with [[priority]] priority using Pushover",
-          "sv": "Skicka [[message]] med [[priority]] prioritet till Pushover"
-        },
-        "args": [
-          {
-            "type": "text",
-            "name": "message",
-            "placeholder": {
-              "en": "Message"
-            }
-          },
-          {
-            "type": "dropdown",
-            "name": "priority",
-            "values": [
-              {
-                "id": "0",
-                "label": {
-                  "en": "normal",
-                  "sv": "normal"
-                }
-              },
-              {
-                "id": "1",
-                "label": {
-                  "en": "high",
-                  "sv": "hög"
-                }
-              }
-            ]
-          }
-        ],
-        "id": "pushover-notification"
-      },
-      {
         "id": "set-ping-interval",
         "title": {
           "en": "Set interval",
@@ -118,6 +78,67 @@
             "min": 1,
             "max": 120,
             "step": 0.1
+          }
+        ]
+      },
+      {
+        "id": "stop-polling",
+        "title": {
+          "en": "Stop polling"
+        },
+        "hint": {
+          "en": "Stops polling completely."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "start-polling",
+        "title": {
+          "en": "Start polling"
+        },
+        "titleFormatted": {
+          "en": "Start polling every [[interval]] minute(s)."
+        },
+        "hint": {
+          "en": "Starts polling with the specified interval in minutes."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          },
+          {
+            "type": "number",
+            "name": "interval",
+            "placeholder": {
+              "en": "Interval"
+            },
+            "min": 1,
+            "max": 720,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "wake-up",
+        "title": {
+          "en": "Wake up"
+        },
+        "hint": {
+          "en": "Makes your Tesla go online."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
           }
         ]
       }
@@ -240,6 +261,19 @@
         "title": {
           "en": "Stopped charging",
           "sv": "Slutade ladda"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "poll",
+        "title": {
+          "en": "Poll request was made"
         },
         "args": [
           {
@@ -743,7 +777,7 @@
           "id": "pollInterval",
           "type": "number",
           "label": {
-            "en": "Specify poll interval",
+            "en": "Specify default poll interval",
             "sv": "Uppdateringsfrekvens"
           },
           "value": 3,

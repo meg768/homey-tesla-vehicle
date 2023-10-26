@@ -19,7 +19,12 @@ class Vehicle extends Events {
 		this.vehicleData = null;
 	}
 
-	async onUninit() {}
+	async onUninit() {
+
+
+    }
+
+
 
 	getAPI() {
 		return this.app.api;
@@ -142,11 +147,29 @@ class MyApp extends Homey.App {
     }
 
 
+    async onUninit() {
+		// Cleanup conditions
+		if (this.conditions) {
+			this.conditions.forEach((condition) => {
+				condition.removeAllListeners();
+			});
+		}
+
+		// Cleanup actions
+		if (this.actions) {
+			this.actions.forEach((action) => {
+				action.removeAllListeners();
+			});
+		}
+
+    }
 	async onInit() {
 		this.timer = null;
 		this.api = null;
 		this.vehicles = null;
 		this.debug = this.log;
+        this.conditions = [];
+        this.actions = [];
 
 		let config = this.getConfig();
 
@@ -163,44 +186,6 @@ class MyApp extends Homey.App {
 			this.log(message);
 		});
 
-		this.addAction('pushover-notification', async (args) => {
-			const PushoverNotifications = require('pushover-notifications');
-			const { message, priority } = args;
-
-			if (!message) {
-				throw new Error(`Need to specify a message.`);
-			}
-
-			if (!priority) {
-				priority = '0';
-			}
-
-			if (message == '') {
-				message = '{Empty message}';
-			}
-
-
-            let config = this.getConfig();
-			let user = config.pushoverUser;
-			let token = config.pushoverToken;
-            let payload = { priority: parseInt(priority), message: message };
-
-			if (typeof user != 'string' || typeof token != 'string') {
-				throw new Error(`Need to specify Pushover user and token in settings.`);
-			}
-
-            this.log(`Sending payload ${JSON.stringify(payload)} to Pushover.`);
-
-			var push = new PushoverNotifications({ user: user, token: token });
-
-			// See https://pushover.net/api for payload parameters
-
-			push.send(payload, function (error, result) {
-				if (error) {
-					this.log(error.stack);
-				}
-			});
-		});
 	}
 
 	async trigger(name, args) {
@@ -212,6 +197,7 @@ class MyApp extends Homey.App {
 	addAction(name, fn) {
 		let action = this.homey.flow.getActionCard(name);
 		action.registerRunListener(fn);
+        this.actions.push(action);
 	}
 
 	async getPairListDevices(description) {

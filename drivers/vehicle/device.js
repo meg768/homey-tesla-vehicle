@@ -3,10 +3,14 @@
 const Homey = require('homey');
 const TeslaAPI = require('../../tesla-api.js');
 
+
+
+
 class MyDevice extends Homey.Device {
 	async onSettings({ oldSettings, changedKeys, newSettings }) {
-		this.stopPolling();
-		this.startPolling();
+		if (this.isPolling()) {
+			this.startPolling();
+		}
 	}
 
 	async onUninit() {
@@ -32,68 +36,17 @@ class MyDevice extends Homey.Device {
 	async onInit() {
 		this.vehicle = await this.homey.app.registerDevice(this);
 		this.debug = this.log;
+		this.timer = null;
 		this.conditions = [];
+		this.actions = [];
 
 		// Get initial value
-		this.locked = this.vehicle.vehicleData.vehicle_state.locked;
+		this.locked = TeslaAPI.isLocked(this.vehicle.vehicleData);
 
 		// Get initial value
 		this.vehicleData = JSON.parse(JSON.stringify(this.vehicle.vehicleData));
 		this.vehicleState = 'wtf'; // this.vehicleData.state;
 
-		let getVehicleSpeed = (vehicleData) => {
-			if (typeof vehicleData.drive_state.speed == 'number') {
-				return vehicleData.drive_state.speed;
-			}
-
-			return 0;
-		};
-
-		let getChargingSpeed = (vehicleData) => {
-			let chargePower = getChargePower(vehicleData);
-			let chargingRate = chargePower / 171;
-			return Math.round(chargingRate * 10) / 10;
-		};
-
-		let getChargePower = (vehicleData) => {
-			return Math.round(vehicleData.charge_state.charge_rate * vehicleData.charge_state.charger_voltage);
-		};
-
-		let getBatteryRange = (vehicleData) => {
-			return Math.round(vehicleData.charge_state.battery_range * 1.609344);
-		};
-
-		let getChargingState = (vehicleData) => {
-			let text = vehicleData.charge_state.charging_state;
-
-			switch (vehicleData.charge_state.charging_state) {
-				case 'Disconnected': {
-					text = this.homey.__('DeviceVehicleDisconnected');
-					break;
-				}
-				case 'Charging': {
-					text = this.homey.__('DeviceVehicleCharging');
-					break;
-				}
-				case 'Stopped': {
-					text = this.homey.__('DeviceVehicleStopped');
-					break;
-				}
-			}
-
-			return text;
-		};
-
-		let isDriving = (vehicleData) => {
-			if (!vehicleData.drive_state.shift_state) {
-				return false;
-			}
-			return vehicleData.drive_state.shift_state != 'P';
-		};
-
-		let isCharging = (vehicleData) => {
-			return vehicleData.charge_state.charging_state == 'Charging';
-		};
 
 		let getDistanceFromHomey = (vehicleData) => {
 			function deg2rad(deg) {
@@ -127,18 +80,17 @@ class MyDevice extends Homey.Device {
 			return getDistanceFromHomey(vehicleData) < 0.25;
 		};
 
-		await this.setCapabilityValue('inner_temperature', this.vehicleData.climate_state.inside_temp);
-		await this.setCapabilityValue('outer_temperature', this.vehicleData.climate_state.outside_temp);
-		await this.setCapabilityValue('measure_battery', this.vehicleData.charge_state.battery_level);
-		await this.setCapabilityValue('battery_range', getBatteryRange(this.vehicleData));
-		await this.setCapabilityValue('charging_state', getChargingState(this.vehicleData));
-		await this.setCapabilityValue('locked', this.vehicle.vehicleData.vehicle_state.locked);
-		await this.setCapabilityValue('odometer', Math.round(this.vehicle.vehicleData.vehicle_state.odometer * 1.609344));
-		await this.setCapabilityValue('distance_from_homey', getDistanceFromHomey(this.vehicleData));
+		await this.setCapabilityValue('inner_temperature', TeslaAPI.getInsideTemperature(this.vehicle.vehicleData));
+		await this.setCapabilityValue('outer_temperature', TeslaAPI.getOutsideTemperature(this.vehicle.vehicleData));
+		await this.setCapabilityValue('measure_battery', TeslaAPI.getBatteryLevel(this.vehicle.vehicleData));
+		await this.setCapabilityValue('battery_range', TeslaAPI.getBatteryRange(this.vehicle.vehicleData));
+		await this.setCapabilityValue('charging_state', TeslaAPI.getChargingState(this.vehicle.vehicleData));
+		await this.setCapabilityValue('locked', TeslaAPI.isLocked(this.vehicle.vehicleData));
+		await this.setCapabilityValue('odometer', TeslaAPI.getOdometer(this.vehicle.vehicleData));
+		await this.setCapabilityValue('distance_from_homey', getDistanceFromHomey(this.vehicle.vehicleData));
 		await this.setCapabilityValue('vehicle_state', '-');
-		await this.setCapabilityValue('vehicle_speed', 0);
-		await this.setCapabilityValue('charge_power', getChargePower(this.vehicleData));
-		await this.setCapabilityValue('vehicle_speed', getVehicleSpeed(this.vehicleData));
+		await this.setCapabilityValue('charge_power', TeslaAPI.getChargePower(this.vehicle.vehicleData));
+		await this.setCapabilityValue('vehicle_speed', TeslaAPI.getVehicleSpeed(this.vehicle.vehicleData));
 
 		this.registerCapabilityListener('locked', async (value, options) => {
 			try {
@@ -168,30 +120,54 @@ class MyDevice extends Homey.Device {
 		});
 
 		this.addCondition('vehicle-is-charging', async (args, state) => {
-			return isCharging(this.vehicle.vehicleData);
+			return TeslaAPI.isCharging(this.vehicle.vehicleData);
 		});
 
 		this.addCondition('vehicle-is-locked', async (args, state) => {
-			return this.vehicle.vehicleData.vehicle_state.locked;
+			return TeslaAPI.isLocked(this.vehicle.vehicleData);
 		});
 
 		this.addCondition('vehicle-is-online', async (args, state) => {
-			return this.vehicleState == 'online';
+			return TeslaAPI.isOnline(this.vehicle.vehicleData);
 		});
 
 		this.addCondition('vehicle-is-driving', async (args, state) => {
-			return isDriving(this.vehicle.vehicleData);
+			return TestaAPI.isDriving(this.vehicle.vehicleData);
 		});
 
 		this.addCondition('vehicle-is-at-home', async (args, state) => {
 			return isAtHome(this.vehicle.vehicleData);
 		});
 
+		this.addAction('stop-polling', async (args) => {
+			this.stopPolling();
+		});
+
+		this.addAction('start-polling', async (args) => {
+			let { interval } = args;
+
+			if (!interval) {
+				interval = 3;
+			}
+
+			let settings = this.getSettings();
+			this.setSettings({ ...settings, pollInterval: interval });
+
+			this.log(`Started polling with this ${JSON.stringify(this.getSettings())}`);
+
+			this.startPolling();
+		});
+
+		this.addAction('wake-up', async (args) => {
+			this.log(`Waking up...`);
+			await this.vehicle.getVehicleData();
+		});
+
 		this.vehicle.on('vehicle_state', async (vehicleState) => {
 			if (this.vehicleState != vehicleState) {
 				this.vehicleState = vehicleState;
 
-                if (vehicleState == 'online') {
+				if (vehicleState == 'online') {
 					await this.setCapabilityValue('vehicle_state', 'Online');
 					this.trigger('vehicle-online');
 				} else {
@@ -199,12 +175,23 @@ class MyDevice extends Homey.Device {
 					this.trigger('vehicle-offline');
 				}
 
-                this.trigger('vehicle-state-changed');
+				this.trigger('vehicle-state-changed');
 			}
 		});
 
 		this.vehicle.on('vehicle_data', async (vehicleData) => {
 			try {
+                /*
+				if (isCharging(vehicleData)) {
+					this.log(`Charging. I will be back soon.`);
+					await this.vehicle.updateVehicleData(60000 * 3);
+				}
+				if (isDriving(vehicleData)) {
+					this.log(`Driving. I will be back soon.`);
+					await this.vehicle.updateVehicleData(60000 * 1);
+				}
+                */
+
 				await this.setCapabilityValue('distance_from_homey', getDistanceFromHomey(vehicleData));
 
 				if (this.locked != vehicleData.vehicle_state.locked) {
@@ -213,44 +200,44 @@ class MyDevice extends Homey.Device {
 					this.setCapabilityValue('locked', this.locked);
 				}
 
-				if (this.vehicleData.climate_state.inside_temp != vehicleData.climate_state.inside_temp) {
-					await this.setCapabilityValue('inner_temperature', vehicleData.climate_state.inside_temp);
+				if (TeslaAPI.getInsideTemperature(this.vehicleData) != TeslaAPI.getInsideTemperature(vehicleData)) {
+					await this.setCapabilityValue('inner_temperature', TeslaAPI.getInsideTemperature(vehicleData));
 				}
 
-				if (this.vehicleData.climate_state.outside_temp != vehicleData.climate_state.outside_temp) {
-					await this.setCapabilityValue('outer_temperature', vehicleData.climate_state.outside_temp);
+                if (TeslaAPI.getOutsideTemperature(this.vehicleData) != TeslaAPI.getOutsideTemperature(vehicleData)) {
+					await this.setCapabilityValue('outer_temperature', TeslaAPI.getOutsideTemperature(vehicleData));
 				}
 
-				if (this.vehicleData.charge_state.battery_level != vehicleData.charge_state.battery_level) {
-					await this.setCapabilityValue('measure_battery', vehicleData.charge_state.battery_level);
+                if (TeslaAPI.getBatteryLevel(this.vehicleData) != TeslaAPI.getBatteryLevel(vehicleData)) {
+					await this.setCapabilityValue('measure_battery', TeslaAPI.getBatteryLevel(vehicleData));
 				}
 
-				if (getBatteryRange(this.vehicleData) != getBatteryRange(vehicleData)) {
-					await this.setCapabilityValue('battery_range', getBatteryRange(vehicleData));
+				if (TeslaAPI.getBatteryRange(this.vehicleData) != TeslaAPI.getBatteryRange(vehicleData)) {
+					await this.setCapabilityValue('battery_range', TeslaAPI.getBatteryRange(vehicleData));
 				}
 
-				if (this.vehicleData.vehicle_state.odometer != vehicleData.vehicle_state.odometer) {
-					await this.setCapabilityValue('odometer', Math.round(vehicleData.vehicle_state.odometer * 1.609344));
+                if (TeslaAPI.getOdometer(this.vehicleData) != TeslaAPI.getOdometer(vehicleData)) {
+					await this.setCapabilityValue('odometer', TeslaAPI.getOdometer(vehicleData));
 				}
 
-				if (getChargePower(this.vehicleData) != getChargePower(vehicleData)) {
-					await this.setCapabilityValue('charge_power', getChargePower(vehicleData));
+				if (TeslaAPI.getChargePower(this.vehicleData) != TeslaAPI.getChargePower(vehicleData)) {
+					await this.setCapabilityValue('charge_power', TeslaAPI.getChargePower(vehicleData));
 				}
 
-				if (getVehicleSpeed(this.vehicleData) != getVehicleSpeed(vehicleData)) {
-					await this.setCapabilityValue('vehicle_speed', getVehicleSpeed(vehicleData));
+				if (TeslaAPI.getVehicleSpeed(this.vehicleData) != TeslaAPI.getVehicleSpeed(vehicleData)) {
+					await this.setCapabilityValue('vehicle_speed', TeslaAPIgetVehicleSpeed(vehicleData));
 				}
 
-				if (getChargingState(this.vehicleData) != getChargingState(vehicleData)) {
-					await this.setCapabilityValue('charging_state', getChargingState(vehicleData));
+				if (TeslaAPI.getChargingState(this.vehicleData) != TeslaAPI.getChargingState(vehicleData)) {
+					await this.setCapabilityValue('charging_state', TeslaAPI.getChargingState(vehicleData));
 				}
 
-				if (getChargingSpeed(this.vehicleData) != getChargingSpeed(vehicleData)) {
-					await this.setCapabilityValue('charging_speed', getChargingSpeed(vehicleData));
+				if (TeslaAPI.getChargingSpeed(this.vehicleData) != TeslaAPI.getChargingSpeed(vehicleData)) {
+					await this.setCapabilityValue('charging_speed', TeslaAPI.getChargingSpeed(vehicleData));
 				}
 
-				if (isCharging(this.vehicleData) != isCharging(vehicleData)) {
-					if (isCharging(vehicleData)) {
+				if (TeslaAPI.isCharging(this.vehicleData) != TeslaAPI.isCharging(vehicleData)) {
+					if (TeslaAPI.isCharging(vehicleData)) {
 						this.log(`Charging started.`);
 						await this.trigger('vehicle-charging-started');
 					} else {
@@ -259,8 +246,8 @@ class MyDevice extends Homey.Device {
 					}
 				}
 
-				if (isDriving(this.vehicleData) != isDriving(vehicleData)) {
-					if (isDriving(vehicleData)) {
+				if (TeslaAPI.isDriving(this.vehicleData) != TeslaAPI.isDriving(vehicleData)) {
+					if (TeslaAPI.isDriving(vehicleData)) {
 						await this.trigger('vehicle-started-driving');
 					} else {
 						await this.trigger('vehicle-stopped-driving');
@@ -284,6 +271,9 @@ class MyDevice extends Homey.Device {
 		this.startPolling();
 	}
 
+	isPolling() {
+		return this.timer ? true : false;
+	}
 	stopPolling() {
 		if (this.timer) {
 			this.debug(`Vehicle polling stopped.`);
@@ -307,6 +297,8 @@ class MyDevice extends Homey.Device {
 				if (vehicle.state == 'online') {
 					await this.vehicle.getVehicleData();
 				}
+
+				await this.trigger('poll');
 			} catch (error) {
 				this.log(`Could not fetch vehicle state. ${error}`);
 			}
@@ -325,6 +317,13 @@ class MyDevice extends Homey.Device {
 		condition.registerRunListener(fn);
 
 		this.conditions.push(condition);
+	}
+
+	addAction(name, fn) {
+		let action = this.homey.flow.getActionCard(name);
+		action.registerRunListener(fn);
+
+		this.actions.push(action);
 	}
 
 	async trigger(name, args) {
