@@ -1,6 +1,7 @@
 'use strict';
 
 const Homey = require('homey');
+const TeslaAPI = require('../../tesla-api.js');
 
 class MyDevice extends Homey.Device {
 	async onSettings({ oldSettings, changedKeys, newSettings }) {
@@ -40,17 +41,42 @@ class MyDevice extends Homey.Device {
 		this.vehicleData = JSON.parse(JSON.stringify(this.vehicle.vehicleData));
 		this.vehicleState = 'wtf'; // this.vehicleData.state;
 
-		let getChargingStateDescription = (vehicleData) => {
-			let chargingState = vehicleData.charge_state.charging_state.toLowerCase();
-			let text = '-';
+		let getVehicleSpeed = (vehicleData) => {
+			if (typeof vehicleData.drive_state.speed == 'number') {
+				return vehicleData.drive_state.speed;
+			}
 
-			switch (chargingState) {
-				case 'disconnected': {
-					text = this.homey.__('device-vehicle-disconnected');
+			return 0;
+		};
+
+		let getChargingSpeed = (vehicleData) => {
+			let chargePower = getChargePower(vehicleData);
+			let chargingRate = chargePower / 171;
+			return Math.round(chargingRate * 10) / 10;
+		};
+
+		let getChargePower = (vehicleData) => {
+			return Math.round(vehicleData.charge_state.charge_rate * vehicleData.charge_state.charger_voltage);
+		};
+
+		let getBatteryRange = (vehicleData) => {
+			return Math.round(vehicleData.charge_state.battery_range * 1.609344);
+		};
+
+		let getChargingState = (vehicleData) => {
+			let text = vehicleData.charge_state.charging_state;
+
+			switch (vehicleData.charge_state.charging_state) {
+				case 'Disconnected': {
+					text = this.homey.__('DeviceVehicleDisconnected');
 					break;
 				}
-				case 'connected': {
-					text = this.homey.__('device-vehicle-connected');
+				case 'Charging': {
+					text = this.homey.__('DeviceVehicleCharging');
+					break;
+				}
+				case 'Stopped': {
+					text = this.homey.__('DeviceVehicleStopped');
 					break;
 				}
 			}
@@ -69,7 +95,7 @@ class MyDevice extends Homey.Device {
 			return vehicleData.charge_state.charging_state == 'Charging';
 		};
 
-		let isAtHome = (vehicleData) => {
+		let getDistanceFromHomey = (vehicleData) => {
 			function deg2rad(deg) {
 				return deg * (Math.PI / 180);
 			}
@@ -94,17 +120,25 @@ class MyDevice extends Homey.Device {
 				distance = getDistanceFromLatLonInKm(homeyLatitude, homeyLongitude, vehicleLatitude, vehicleLongitude);
 			}
 
-			return distance < 0.25;
+			return distance;
+		};
+
+		let isAtHome = (vehicleData) => {
+			return getDistanceFromHomey(vehicleData) < 0.25;
 		};
 
 		await this.setCapabilityValue('inner_temperature', this.vehicleData.climate_state.inside_temp);
 		await this.setCapabilityValue('outer_temperature', this.vehicleData.climate_state.outside_temp);
 		await this.setCapabilityValue('measure_battery', this.vehicleData.charge_state.battery_level);
-		await this.setCapabilityValue('battery_range', this.vehicleData.charge_state.battery_range);
-		await this.setCapabilityValue('charging_state', getChargingStateDescription(this.vehicleData));
+		await this.setCapabilityValue('battery_range', getBatteryRange(this.vehicleData));
+		await this.setCapabilityValue('charging_state', getChargingState(this.vehicleData));
 		await this.setCapabilityValue('locked', this.vehicle.vehicleData.vehicle_state.locked);
 		await this.setCapabilityValue('odometer', Math.round(this.vehicle.vehicleData.vehicle_state.odometer * 1.609344));
+		await this.setCapabilityValue('distance_from_homey', getDistanceFromHomey(this.vehicleData));
 		await this.setCapabilityValue('vehicle_state', '-');
+		await this.setCapabilityValue('vehicle_speed', 0);
+		await this.setCapabilityValue('charge_power', getChargePower(this.vehicleData));
+		await this.setCapabilityValue('vehicle_speed', getVehicleSpeed(this.vehicleData));
 
 		this.registerCapabilityListener('locked', async (value, options) => {
 			try {
@@ -127,7 +161,6 @@ class MyDevice extends Homey.Device {
 
 					await this.vehicle.post(`command/${locked ? 'door_lock' : 'door_unlock'}`);
 					await this.vehicle.updateVehicleData(2000);
-
 				}
 			} catch (error) {
 				this.log(error);
@@ -156,22 +189,24 @@ class MyDevice extends Homey.Device {
 
 		this.vehicle.on('vehicle_state', async (vehicleState) => {
 			if (this.vehicleState != vehicleState) {
-				if (vehicleState == 'online') {
-					this.log(`Vehicle is online.`);
-					this.trigger('vehicle-online');
+				this.vehicleState = vehicleState;
+
+                if (vehicleState == 'online') {
 					await this.setCapabilityValue('vehicle_state', 'Online');
+					this.trigger('vehicle-online');
 				} else {
-					this.log(`Vehicle is offline.`);
-					this.trigger('vehicle-offline');
 					await this.setCapabilityValue('vehicle_state', 'Offline');
+					this.trigger('vehicle-offline');
 				}
 
-				this.vehicleState = vehicleState;
+                this.trigger('vehicle-state-changed');
 			}
 		});
 
 		this.vehicle.on('vehicle_data', async (vehicleData) => {
 			try {
+				await this.setCapabilityValue('distance_from_homey', getDistanceFromHomey(vehicleData));
+
 				if (this.locked != vehicleData.vehicle_state.locked) {
 					this.locked = vehicleData.vehicle_state.locked;
 					this.log(`Updating car doors to ${this.locked ? 'LOCKED' : 'UNLOCKED'}.`);
@@ -190,12 +225,28 @@ class MyDevice extends Homey.Device {
 					await this.setCapabilityValue('measure_battery', vehicleData.charge_state.battery_level);
 				}
 
-				if (this.vehicleData.charge_state.battery_range != vehicleData.charge_state.battery_range) {
-					await this.setCapabilityValue('battery_range', vehicleData.charge_state.battery_range);
+				if (getBatteryRange(this.vehicleData) != getBatteryRange(vehicleData)) {
+					await this.setCapabilityValue('battery_range', getBatteryRange(vehicleData));
 				}
 
 				if (this.vehicleData.vehicle_state.odometer != vehicleData.vehicle_state.odometer) {
 					await this.setCapabilityValue('odometer', Math.round(vehicleData.vehicle_state.odometer * 1.609344));
+				}
+
+				if (getChargePower(this.vehicleData) != getChargePower(vehicleData)) {
+					await this.setCapabilityValue('charge_power', getChargePower(vehicleData));
+				}
+
+				if (getVehicleSpeed(this.vehicleData) != getVehicleSpeed(vehicleData)) {
+					await this.setCapabilityValue('vehicle_speed', getVehicleSpeed(vehicleData));
+				}
+
+				if (getChargingState(this.vehicleData) != getChargingState(vehicleData)) {
+					await this.setCapabilityValue('charging_state', getChargingState(vehicleData));
+				}
+
+				if (getChargingSpeed(this.vehicleData) != getChargingSpeed(vehicleData)) {
+					await this.setCapabilityValue('charging_speed', getChargingSpeed(vehicleData));
 				}
 
 				if (isCharging(this.vehicleData) != isCharging(vehicleData)) {

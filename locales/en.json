@@ -35,5 +35,20 @@
   "NoAPI": "To find this device you first need to add the 'Settings' device and specify a tesla access token.",
   "device-steering-wheel-heater-instanceName": "Steering wheel heater",
   "device-defrost-instanceName": "Defrost",
-  "SpecifyAccessToken": "An access token must be specified."
+  "SpecifyAccessToken": "An access token must be specified.",
+  "DeviceVehicleCharging": "Charging",
+  "DeviceVehicleDisconnected": "Disconnected",
+  "DeviceVehicleStopped": "Stopped",
+  "DeviceHvacInstanceName": "Air conditioner",
+  "DevicePingInstanceName": "Ping",
+  "DevicePongInstanceName": "Pong",
+  "DeviceVentilationInstanceName": "Ventilation",
+  "DeviceInnerTemperatureInstanceName": "Inner temperature",
+  "DeviceOuterTemperatureInstanceName": "Outer temperature",
+  "DeviceFrunkInstanceName": "Frunk",
+  "DeviceTrunkInstanceName": "Trunk",
+  "DeviceVehicleInstanceName": "Tesla",
+  "DeviceSettingsInstanceName": "Settings",
+  "DeviceSteeringWwheelHeaterInstanceName": "Steering wheel heater",
+  "DeviceDefrostInstanceName": "Defrost"
 }

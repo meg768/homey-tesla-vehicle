@@ -1,0 +1,10 @@
+
+{
+    "type": "number",
+    "title": { "en": "Charge power", "sv":"Laddningseffekt" },
+    "getable": true,
+    "setable": false,
+    "units": { "en": "W" },
+    "icon": "./assets/capabilities/charge_power.svg"
+    
+  }

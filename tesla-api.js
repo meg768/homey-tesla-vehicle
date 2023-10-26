@@ -177,8 +177,7 @@ function Request() {
 	constructor.apply(self, arguments);
 }
 
-
-module.exports = class TeslaAPI {
+class TeslaAPI {
 	constructor(options) {
 		this.token = options.refreshToken || options.token;
 		this.api = undefined;
@@ -359,6 +358,61 @@ module.exports = class TeslaAPI {
 };
 
 
+TeslaAPI.isOnline = (vehicleData) => {
+	return vehicleData.state == 'online';
+};
+
+TeslaAPI.isCharging = (vehicleData) => {
+	return vehicleData.charge_state.charging_state == 'Charging';
+};
+
+TeslaAPI.isClimateOn = (vehicleData) => {
+	return vehicleData.climate_state.is_climate_on;
+};
+
+TeslaAPI.isLocked = (vehicleData) => {
+	return vehicleData.vehicle_state.locked;
+};
+
+TeslaAPI.isDefrosting = (vehicleData) => {
+	return vehicleData.climate_state.defrost_mode != 0;
+};
+
+TeslaAPI.getInsideTemperature = (vehicleData) => {
+	return vehicleData.climate_state.inside_temp;
+};
+
+TeslaAPI.getOutsideTemperature = (vehicleData) => {
+	return vehicleData.climate_state.outside_temp;
+};
+
+TeslaAPI.isWindowOpen = (vehicleData) => {
+
+    if (vehicleData.vehicle_state.fd_window != 0) {
+        return true;
+    };
+
+    if (vehicleData.vehicle_state.rd_window != 0) {
+        return true;
+    };
+
+    if (vehicleData.vehicle_state.fp_window != 0) {
+        return true;
+    };
+
+    if (vehicleData.vehicle_state.rp_window != 0) {
+        return true;
+    };
+
+    return false;
+};
 
 
+TeslaAPI.isDriving = (vehicleData) => {
+	if (!vehicleData.drive_state.shift_state) {
+		return false;
+	}
+	return vehicleData.drive_state.shift_state != 'P';
+};
 
+module.exports = TeslaAPI;

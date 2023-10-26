@@ -179,19 +179,18 @@ class MyApp extends Homey.App {
 				message = '{Empty message}';
 			}
 
-			if (!Homey.env.pushover) {
-				throw new Error(`Need to specify user and token.`);
-			}
 
-			let user = Homey.env.pushover.user;
-			let token = Homey.env.pushover.token;
-			let payload = { priority: parseInt(priority), message: message };
-
-			this.log(`Sending payload ${JSON.stringify(payload)} to Pushover.`);
+            let config = this.getConfig();
+			let user = config.pushoverUser;
+			let token = config.pushoverToken;
+            let payload = { priority: parseInt(priority), message: message };
 
 			if (typeof user != 'string' || typeof token != 'string') {
-				throw new Error(`Need to specify user and token.`);
+				throw new Error(`Need to specify Pushover user and token in settings.`);
 			}
+
+            this.log(`Sending payload ${JSON.stringify(payload)} to Pushover.`);
+
 			var push = new PushoverNotifications({ user: user, token: token });
 
 			// See https://pushover.net/api for payload parameters

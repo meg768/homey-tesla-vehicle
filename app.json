@@ -152,6 +152,20 @@
         ]
       },
       {
+        "id": "vehicle-state-changed",
+        "title": {
+          "en": "State changed",
+          "sv": "State changed"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
         "id": "vehicle-online",
         "title": {
           "en": "Online",
@@ -498,13 +512,13 @@
           "id": "interval",
           "type": "number",
           "label": {
-            "en": "Interval",
+            "en": "Ping interval",
             "sv": "Intervall"
           },
           "value": 5,
           "hint": {
-            "en": "This ping interval in minutes.",
-            "sv": "Ping intervall i minuter."
+            "en": "Specify the ping interval in minutes. This will wake up your Tesla and update the user interface with current values",
+            "sv": "Ange intervall i minuter. Detta kommer att väcka din bil och uppdatera värden i Homey."
           }
         }
       ],
@@ -702,6 +716,10 @@
       },
       "class": "lock",
       "capabilities": [
+        "charging_speed",
+        "charge_power",
+        "vehicle_speed",
+        "distance_from_homey",
         "odometer",
         "vehicle_state",
         "locked",
@@ -725,13 +743,13 @@
           "id": "pollInterval",
           "type": "number",
           "label": {
-            "en": "Poll interval",
+            "en": "Specify poll interval",
             "sv": "Uppdateringsfrekvens"
           },
           "value": 3,
           "hint": {
-            "en": "This poll interval in minutes.",
-            "sv": "Antal minuter mellan anrop."
+            "en": "Specify the poll interval in minutes. When polling, it does not wake up your vehicle. It only fetches the online/offline state.",
+            "sv": "Ange hur ofta bilens tillstånd ska uppdateras i minuter. Det kommer inte att väcka bilen utan det är bara tillståndet som hämtas. Online eller Offline."
           }
         }
       ],
@@ -796,10 +814,33 @@
       "units": {
         "en": "km"
       },
-      "min": 0,
-      "max": 999999,
-      "step": 1,
-      "icon": "./assets/gauge.svg"
+      "icon": "./assets/capabilities/battery_range.svg"
+    },
+    "charge_power": {
+      "type": "number",
+      "title": {
+        "en": "Charge power",
+        "sv": "Laddningseffekt"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "W"
+      },
+      "icon": "./assets/capabilities/charge_power.svg"
+    },
+    "charging_speed": {
+      "type": "number",
+      "title": {
+        "en": "Charging speed",
+        "sv": "Laddningshastighet"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "km/h"
+      },
+      "icon": "./assets/capabilities/charging_speed.svg"
     },
     "charging_state": {
       "type": "string",
@@ -809,7 +850,20 @@
       },
       "getable": true,
       "setable": false,
-      "icon": "./assets/charging.svg"
+      "icon": "./assets/capabilities/charging_state.svg"
+    },
+    "distance_from_homey": {
+      "type": "number",
+      "title": {
+        "en": "Away from Homey",
+        "sv": "Avstånd hemifrån"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "km"
+      },
+      "icon": "./assets/capabilities/distance_from_homey.svg"
     },
     "inner_temperature": {
       "type": "number",
@@ -822,10 +876,7 @@
       "units": {
         "en": "°C"
       },
-      "min": -100,
-      "max": 100,
-      "step": 0.5,
-      "icon": "./assets/temperature.svg"
+      "icon": "./assets/capabilities/inner_temperature.svg"
     },
     "odometer": {
       "type": "number",
@@ -838,7 +889,7 @@
       "units": {
         "en": "km"
       },
-      "icon": "./assets/gauge.svg"
+      "icon": "./assets/capabilities/odometer.svg"
     },
     "outer_temperature": {
       "type": "number",
@@ -851,10 +902,20 @@
       "units": {
         "en": "°C"
       },
-      "min": -100,
-      "max": 100,
-      "step": 0.5,
-      "icon": "./assets/temperature.svg"
+      "icon": "./assets/capabilities/outer_temperature.svg"
+    },
+    "vehicle_speed": {
+      "type": "number",
+      "title": {
+        "en": "Speed",
+        "sv": "Hastighet"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "km/h"
+      },
+      "icon": "./assets/capabilities/vehicle_speed.svg"
     },
     "vehicle_state": {
       "type": "string",
@@ -864,7 +925,7 @@
       },
       "getable": true,
       "setable": false,
-      "icon": "./assets/gauge.svg"
+      "icon": "./assets/capabilities/vehicle_state.svg"
     }
   }
 }

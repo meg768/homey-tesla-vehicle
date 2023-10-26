@@ -2,8 +2,8 @@
 	{
 		"id": "interval",
 		"type": "number",
-		"label": { "en": "Interval" , "sv": "Intervall"},
+		"label": { "en": "Ping interval" , "sv": "Intervall"},
 		"value": 5,
-		"hint": { "en": "This ping interval in minutes.", "sv":"Ping intervall i minuter." }
+		"hint": { "en": "Specify the ping interval in minutes. This will wake up your Tesla and update the user interface with current values", "sv":"Ange intervall i minuter. Detta kommer att väcka din bil och uppdatera värden i Homey." }
 	}
 ]

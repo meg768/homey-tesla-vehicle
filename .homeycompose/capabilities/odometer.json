@@ -5,6 +5,6 @@
     "getable": true,
     "setable": false,
     "units": { "en": "km" },
-    "icon": "./assets/gauge.svg"
+    "icon": "./assets/capabilities/odometer.svg"
     
   }

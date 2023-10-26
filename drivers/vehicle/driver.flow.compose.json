@@ -15,6 +15,13 @@
 			}
 		},
         {
+			"id": "vehicle-state-changed",
+			"title": {
+				"en": "State changed",
+				"sv": "State changed"
+			}
+		},
+        {
 			"id": "vehicle-online",
 			"title": {
 				"en": "Online",

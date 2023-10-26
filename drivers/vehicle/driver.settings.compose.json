@@ -2,8 +2,8 @@
 	{
 		"id": "pollInterval",
 		"type": "number",
-		"label": { "en": "Poll interval" , "sv": "Uppdateringsfrekvens"},
+		"label": { "en": "Specify poll interval", "sv": "Uppdateringsfrekvens" },
 		"value": 3,
-		"hint": { "en": "This poll interval in minutes.", "sv":"Antal minuter mellan anrop." }
+		"hint": { "en": "Specify the poll interval in minutes. When polling, it does not wake up your vehicle. It only fetches the online/offline state.", "sv": "Ange hur ofta bilens tillstånd ska uppdateras i minuter. Det kommer inte att väcka bilen utan det är bara tillståndet som hämtas. Online eller Offline." }
 	}
-  ]
+]

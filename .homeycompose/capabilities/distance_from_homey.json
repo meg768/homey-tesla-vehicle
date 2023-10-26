@@ -1,0 +1,10 @@
+
+{
+    "type": "number",
+    "title": { "en": "Away from Homey", "sv":"Avstånd hemifrån" },
+    "getable": true,
+    "setable": false,
+    "units": { "en": "km" },
+    "icon": "./assets/capabilities/distance_from_homey.svg"
+    
+  }

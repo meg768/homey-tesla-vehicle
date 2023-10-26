@@ -1,0 +1,10 @@
+
+{
+    "type": "number",
+    "title": { "en": "Charging speed", "sv":"Laddningshastighet" },
+    "getable": true,
+    "setable": false,
+    "units": { "en": "km/h" },
+    "icon": "./assets/capabilities/charging_speed.svg"
+    
+  }
