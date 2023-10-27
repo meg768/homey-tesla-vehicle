@@ -1,16 +1,11 @@
 'use strict';
 
-const { Device } = require('homey');
+const Device = require('../../device');
 
 class MyDevice extends Device {
 
-    async onUninit() {
-        await this.homey.app.unregisterDevice(this);
-    }
-
 	async onInit() {
-		this.vehicle = await this.homey.app.registerDevice(this);
-
+        await super.onInit();
 
 		// Get initial value
 		this.state = this.vehicle.vehicleData.vehicle_state.fd_window != 0;
@@ -38,20 +33,25 @@ class MyDevice extends Device {
 
 		await this.setCapabilityValue('onoff', this.state);
 
-		this.vehicle.on('vehicle_data', async (vehicleData) => {
-			try {
-				let state = vehicleData.vehicle_state.fd_window != 0;
-
-				if (this.state != state) {
-					this.state = state;
-					this.log(`Updating ventilation state to ${this.state ? 'ON' : 'OFF'}`);
-					this.setCapabilityValue('onoff', this.state);
-				}
-			} catch (error) {
-				this.log(error);
-			}
-		});
 	}
+
+    async onVehicleData(vehicleData) {
+        await super.onVehicleData(vehicleData);
+
+        try {
+            let state = vehicleData.vehicle_state.fd_window != 0;
+
+            if (this.state != state) {
+                this.state = state;
+                this.log(`Updating ventilation state to ${this.state ? 'ON' : 'OFF'}`);
+                this.setCapabilityValue('onoff', this.state);
+            }
+        } catch (error) {
+            this.log(error);
+        }
+
+
+    }
 }
 
 module.exports = MyDevice;

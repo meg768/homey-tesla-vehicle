@@ -1,15 +1,11 @@
 'use strict';
 
-const { Device } = require('homey');
+const Device = require('../../device');
 
-class MyDevice extends Device {
-
-    async onUninit() {
-        await this.homey.app.unregisterDevice(this);
-    }
+module.exports = class extends Device {
 
 	async onInit() {
-		this.vehicle = await this.homey.app.registerDevice(this);
+        await super.onInit();
 
         this.registerCapabilityListener('onoff', async (value, options) => {
             if (value) {
@@ -27,4 +23,3 @@ class MyDevice extends Device {
 	}
 }
 
-module.exports = MyDevice;

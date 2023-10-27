@@ -1,21 +1,15 @@
 'use strict';
 
-const { Device } = require('homey');
+const Device = require('../../device');
 
-class MyDevice extends Device {
-
-    async onUninit() {
-        await this.homey.app.unregisterDevice(this);
-    }
-
+module.exports = class extends Device {
 	async onInit() {
-		this.vehicle = await this.homey.app.registerDevice(this);
-
+		await super.onInit();
 
 		// Get initial value
 		this.state = this.vehicle.vehicleData.climate_state.is_climate_on;
 
-        this.registerCapabilityListener('onoff', async (value, options) => {
+		this.registerCapabilityListener('onoff', async (value, options) => {
 			try {
 				let state = value ? true : false;
 
@@ -27,30 +21,28 @@ class MyDevice extends Device {
 					} else {
 						await this.vehicle.post('command/auto_conditioning_stop');
 					}
+                    
+					await this.setCapabilityValue('onoff', state);
 				}
 			} catch (error) {
 				this.log(error);
 			} finally {
-				this.vehicle.getVehicleData();
-			}
-		});
-
-		await this.setCapabilityValue('onoff', this.state);
-
-		this.vehicle.on('vehicle_data', async (vehicleData) => {
-			try {
-				let state = vehicleData.climate_state.is_climate_on;
-
-				if (this.state != state) {
-					this.state = state;
-                    this.log(`Updating HVAC status to ${this.state ? 'ON' : 'OFF'}.`);
-					this.setCapabilityValue('onoff', this.state);
-				}
-			} catch (error) {
-				this.log(error);
+				this.vehicle.updateVehicleData(1000);
 			}
 		});
 	}
-}
 
-module.exports = MyDevice;
+	async onVehicleData(vehicleData) {
+		try {
+			let state = vehicleData.climate_state.is_climate_on;
+
+			if (this.state != state) {
+				this.state = state;
+				this.log(`Updating HVAC status to ${this.state ? 'ON' : 'OFF'}.`);
+				this.setCapabilityValue('onoff', this.state);
+			}
+		} catch (error) {
+			this.log(error);
+		}
+	}
+};

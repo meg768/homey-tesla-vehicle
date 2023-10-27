@@ -1,6 +1,6 @@
 'use strict';
 
-const { Device } = require('homey');
+const Device = require('../../device');
 
 class MyDevice extends Device {
 
@@ -18,22 +18,16 @@ class MyDevice extends Device {
     }
 
     async onUninit() {
+        await super.onUninit();
         this.stopPolling();
 
-        this.actions.forEach((action) => {
-            action.removeAllListeners();
-        });
-
-        this.homey.app.unregisterDevice(this);
     }
 
     async onInit() {
+        await super.onInit();
 
-        this.debug = this.log;
         this.state = false;
         this.timer = null;
-        this.actions = [];
-        this.vehicle = await this.homey.app.registerDevice(this);
 
 		this.registerCapabilityListener('onoff', async (value, options) => {
 
@@ -64,16 +58,6 @@ class MyDevice extends Device {
         await this.setCapabilityValue('onoff', this.state);
 
     }
-
-    addAction(name, fn) {
-		let action = this.homey.flow.getActionCard(name);
-		action.registerRunListener(fn);
-
-        this.actions.push(action);
-	}
-
-
-
 
     stopPolling() {
         if (this.timer) {

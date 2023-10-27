@@ -103,7 +103,7 @@
           "en": "Start polling"
         },
         "titleFormatted": {
-          "en": "Start polling every [[interval]] minute(s)."
+          "en": "Start polling vehicle data every [[interval]] minute(s)."
         },
         "hint": {
           "en": "Starts polling with the specified interval in minutes."
@@ -570,39 +570,6 @@
         }
       ],
       "id": "ping"
-    },
-    {
-      "name": {
-        "en": "Pong",
-        "sv": "Pong"
-      },
-      "class": "button",
-      "capabilities": [
-        "onoff"
-      ],
-      "platforms": [
-        "local"
-      ],
-      "connectivity": [],
-      "images": {
-        "small": "/drivers/pong/assets/images/small.png",
-        "large": "/drivers/pong/assets/images/large.png",
-        "xlarge": "/drivers/pong/assets/images/xlarge.png"
-      },
-      "pair": [
-        {
-          "id": "list_devices",
-          "template": "list_devices",
-          "navigation": {
-            "next": "add_devices"
-          }
-        },
-        {
-          "id": "add_devices",
-          "template": "add_devices"
-        }
-      ],
-      "id": "pong"
     },
     {
       "name": {

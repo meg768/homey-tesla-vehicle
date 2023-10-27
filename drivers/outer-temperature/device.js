@@ -1,37 +1,36 @@
 'use strict';
 
-const { Device } = require('homey');
+const Device = require('../../device');
 
-class MyDevice extends Device {
+module.exports = class extends Device {
 
-
-
-    async onUninit() {
-        await this.homey.app.unregisterDevice(this);
-    }
     
 	async onInit() {
-		this.vehicle = await this.homey.app.registerDevice(this);
+        await super.onInit();
 
 		// Get initial value
 		this.temperature = this.vehicle.vehicleData.climate_state.outside_temp;
 
 		await this.setCapabilityValue('measure_temperature', this.temperature);
 
-		this.vehicle.on('vehicle_data', async (vehicleData) => {
-			try {
-				let temperature = vehicleData.climate_state.outside_temp;
-
-				if (this.temperature != temperature) {
-					this.temperature = temperature;
-					this.log(`Updating outer temperature to ${this.temperature}.`);
-					this.setCapabilityValue('measure_temperature', this.temperature);
-				}
-			} catch (error) {
-				this.log(error);
-			}
-		});
 	}
+
+    async onVehicleData(vehicleData) {
+        await super.onVehicleData(vehicleData);
+
+        try {
+            let temperature = vehicleData.climate_state.outside_temp;
+
+            if (this.temperature != temperature) {
+                this.temperature = temperature;
+                this.log(`Updating outer temperature to ${this.temperature}.`);
+                this.setCapabilityValue('measure_temperature', this.temperature);
+            }
+        } catch (error) {
+            this.log(error);
+        }
+
+    }
 }
 
 module.exports = MyDevice;
