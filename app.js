@@ -42,25 +42,33 @@ class Vehicle extends Events {
 		return await this.request('GET', command, options);
 	}
 
-	async getVehicle() {
+	async getVehicleState() {
 		this.log(`Fetching vehicle state.`);
 		let vehicle = await this.getAPI().getVehicle(this.vehicleID);
 
 		if (vehicle && typeof vehicle.state == 'string') {
-			this.emit('vehicle_state', vehicle.state);
+
+            this.emit('vehicle_state', vehicle.state);
+
+            if (vehicle.state == 'online') {
+                await this.getVehicleData();
+            }
+
+            return vehicle.state;
 		}
 
-		return vehicle;
+		return 'unknown';
 	}
 
 	async getVehicleData() {
 		this.vehicleData = await this.getAPI().request(this.vehicleID, 'GET', 'vehicle_data');
 
-		this.emit('vehicle_data', this.vehicleData);
-
 		if (this.vehicleData && typeof this.vehicleData.state == 'string') {
 			this.emit('vehicle_state', this.vehicleData.state);
 		}
+
+        this.emit('vehicle_data', this.vehicleData);
+
 
 		return this.vehicleData;
 	}
@@ -79,11 +87,6 @@ class Vehicle extends Events {
 		}, delay);
 	}
 
-	/*
-		this.debug('----------------------------');
-		this.debug(JSON.stringify(this.vehicleData));
-		this.debug('----------------------------');
-        */
 }
 
 class MyApp extends Homey.App {
@@ -117,7 +120,7 @@ class MyApp extends Homey.App {
     
                 let instance = new Vehicle({ app: this, vehicleID: vehicle.id_s });
                 
-                await instance.getVehicle();
+                await instance.getVehicleState();
                 let vehicleData = await instance.getVehicleData();
     
                 this.log(JSON.stringify(vehicleData));
@@ -163,6 +166,8 @@ class MyApp extends Homey.App {
 		}
 
     }
+
+    
 	async onInit() {
 		this.timer = null;
 		this.api = null;

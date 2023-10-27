@@ -4,16 +4,141 @@ const Homey = require('homey');
 const TeslaAPI = require('../../tesla-api.js');
 const Device = require('../../device.js');
 
+
 class MyDevice extends Device {
 	async onSettings({ oldSettings, changedKeys, newSettings }) {
-		if (this.isPolling()) {
-			this.startPolling();
-		}
-	}
+        await this.pollVehicleState(newSettings.pollInterval);
+    }
 
 	async onUninit() {
 		await super.onUninit();
-		this.stopPolling();
+
+        // Turn off timers
+        this.refreshVehicleData(0);
+        this.pollVehicleState(0);
+
+	}
+
+    async pollVehicleState(interval) {
+
+        let loop = async () => {
+
+            if (this.vehicleStateTimer) {
+                clearTimeout(this.vehicleStateTimer);
+                this.vehicleStateTimer = null;
+            }
+    
+            if (interval > 0) {
+                try {
+                    await this.vehicle.getVehicleState();
+                } catch (error) {
+                    this.log(`Failed polling vehicle state. ${error.stack}`);
+                }
+    
+                this.log(`Next vehicle state poll is in ${interval} minute(s).`);
+                this.vehicleStateTimer = setTimeout(loop, interval * 60000);
+    
+            }
+            else {
+                this.log(`Polling stopped.`);
+
+            }
+
+		};
+
+		loop();
+
+	}
+
+	async refreshVehicleData(delay = 0) {
+		if (this.vehicleDataTimer) {
+			clearTimeout(this.vehicleDataTimer);
+            this.vehicleDataTimer = null;
+		}
+
+        if (delay > 0) {
+            this.vehicleDataTimer = setTimeout(async () => {
+                try {
+                    this.log(`Performing refresh on vehicle data.`)
+                    await this.vehicle.getVehicleData();
+                } catch (error) {
+                    this.log(`Failed delayed fetching of vehicle data. ${error.stack}`);
+                }
+            }, delay * 60000);
+    
+        }
+	}
+
+
+	async onInit() {
+		await super.onInit();
+
+		this.vehicleStateTimer = null;
+		this.vehicleDataTimer = null;
+
+		// Get initial value
+		this.locked = TeslaAPI.isLocked(this.vehicle.vehicleData);
+
+		// Get initial value
+		this.vehicleData = JSON.parse(JSON.stringify(this.vehicle.vehicleData));
+        this.vehicleState = 'xxx';
+
+		await this.updateCapabilities(this.vehicle.vehicleData);
+
+		this.registerCapabilityListener('locked', async (value, options) => {
+			try {
+				let locked = value ? true : false;
+
+				if (this.locked != locked) {
+					this.log(`Setting doors to ${locked ? 'LOCKED' : 'UNLOCKED'}.`);
+
+					if (locked) {
+						await this.vehicle.post('command/door_lock');
+					} else {
+						let remoteStartDrivePassword = this.homey.app.getConfig().remoteStartDrivePassword;
+
+						await this.vehicle.post('command/door_unlock');
+
+						if (typeof remoteStartDrivePassword == 'string') {
+							await this.vehicle.post(`command/remote_start_drive?password=${remoteStartDrivePassword}`);
+						}
+					}
+
+					await this.vehicle.post(`command/${locked ? 'door_lock' : 'door_unlock'}`);
+					await this.vehicle.updateVehicleData(2000);
+				}
+			} catch (error) {
+				this.log(error);
+			}
+		});
+
+		this.addCondition('vehicle-is-charging', async (args, state) => {
+			return TeslaAPI.isCharging(this.vehicle.vehicleData);
+		});
+
+		this.addCondition('vehicle-is-locked', async (args, state) => {
+			return TeslaAPI.isLocked(this.vehicle.vehicleData);
+		});
+
+		this.addCondition('vehicle-is-online', async (args, state) => {
+			return this.vehicleState == 'online';
+		});
+
+		this.addCondition('vehicle-is-driving', async (args, state) => {
+			return TestaAPI.isDriving(this.vehicle.vehicleData);
+		});
+
+		this.addCondition('vehicle-is-at-home', async (args, state) => {
+			return this.isAtHome(this.vehicle.vehicleData);
+		});
+
+		this.addAction('wake-up', async (args) => {
+			this.log(`Waking up...`);
+			await this.vehicle.getVehicleData();
+		});
+
+
+        await this.pollVehicleState(this.getSetting('pollInterval'));
 	}
 
 	isAtHome(vehicleData) {
@@ -52,6 +177,18 @@ class MyDevice extends Device {
 		await super.onVehicleData(vehicleData);
 
 		try {
+
+            // Clear delayed fetch
+            this.refreshVehicleData(0);
+
+            if (TeslaAPI.isCharging(vehicleData)) { 
+                this.refreshVehicleData(2);
+            }
+
+            if (TeslaAPI.isDriving(vehicleData)) {
+                this.refreshVehicleData(2);
+            }
+
 			await this.setCapabilityValue('distance_from_homey', this.getDistanceFromHomey(vehicleData));
 
 			if (this.locked != vehicleData.vehicle_state.locked) {
@@ -86,6 +223,7 @@ class MyDevice extends Device {
 
 			if (TeslaAPI.getVehicleSpeed(this.vehicleData) != TeslaAPI.getVehicleSpeed(vehicleData)) {
 				await this.setCapabilityValue('vehicle_speed', TeslaAPIgetVehicleSpeed(vehicleData));
+                await this.trigger('vehicle-speed-changed');
 			}
 
 			if (TeslaAPI.getChargingState(this.vehicleData) != TeslaAPI.getChargingState(vehicleData)) {
@@ -98,10 +236,8 @@ class MyDevice extends Device {
 
 			if (TeslaAPI.isCharging(this.vehicleData) != TeslaAPI.isCharging(vehicleData)) {
 				if (TeslaAPI.isCharging(vehicleData)) {
-					this.log(`Charging started.`);
 					await this.trigger('vehicle-charging-started');
 				} else {
-					this.log(`Charging stopped.`);
 					await this.trigger('vehicle-charging-stopped');
 				}
 			}
@@ -124,7 +260,7 @@ class MyDevice extends Device {
 
 			this.vehicleData = JSON.parse(JSON.stringify(vehicleData));
 		} catch (error) {
-			this.log(error);
+			this.log(error.stack);
 		}
 	}
 
@@ -146,145 +282,22 @@ class MyDevice extends Device {
 		}
 	}
 
-	async onInit() {
-		await super.onInit();
-
-		this.timer = null;
-
-		// Get initial value
-		this.locked = TeslaAPI.isLocked(this.vehicle.vehicleData);
-
-		// Get initial value
-		this.vehicleData = JSON.parse(JSON.stringify(this.vehicle.vehicleData));
-		this.vehicleState = 'wtf'; // this.vehicleData.state;
-
-		await this.setCapabilityValue('inner_temperature', TeslaAPI.getInsideTemperature(this.vehicle.vehicleData));
-		await this.setCapabilityValue('outer_temperature', TeslaAPI.getOutsideTemperature(this.vehicle.vehicleData));
-		await this.setCapabilityValue('measure_battery', TeslaAPI.getBatteryLevel(this.vehicle.vehicleData));
-		await this.setCapabilityValue('battery_range', TeslaAPI.getBatteryRange(this.vehicle.vehicleData));
-		await this.setCapabilityValue('charging_state', TeslaAPI.getChargingState(this.vehicle.vehicleData));
-		await this.setCapabilityValue('locked', TeslaAPI.isLocked(this.vehicle.vehicleData));
-		await this.setCapabilityValue('odometer', TeslaAPI.getOdometer(this.vehicle.vehicleData));
-		await this.setCapabilityValue('distance_from_homey', this.getDistanceFromHomey(this.vehicle.vehicleData));
-		await this.setCapabilityValue('vehicle_state', '-');
-		await this.setCapabilityValue('charge_power', TeslaAPI.getChargePower(this.vehicle.vehicleData));
-		await this.setCapabilityValue('vehicle_speed', TeslaAPI.getVehicleSpeed(this.vehicle.vehicleData));
-
-		this.registerCapabilityListener('locked', async (value, options) => {
-			try {
-				let locked = value ? true : false;
-
-				if (this.locked != locked) {
-					this.log(`Setting doors to ${locked ? 'LOCKED' : 'UNLOCKED'}.`);
-
-					if (locked) {
-						await this.vehicle.post('command/door_lock');
-					} else {
-						let remoteStartDrivePassword = this.homey.app.getConfig().remoteStartDrivePassword;
-
-						await this.vehicle.post('command/door_unlock');
-
-						if (typeof remoteStartDrivePassword == 'string') {
-							await this.vehicle.post(`command/remote_start_drive?password=${remoteStartDrivePassword}`);
-						}
-					}
-
-					await this.vehicle.post(`command/${locked ? 'door_lock' : 'door_unlock'}`);
-					await this.vehicle.updateVehicleData(2000);
-				}
-			} catch (error) {
-				this.log(error);
-			}
-		});
-
-		this.addCondition('vehicle-is-charging', async (args, state) => {
-			return TeslaAPI.isCharging(this.vehicle.vehicleData);
-		});
-
-		this.addCondition('vehicle-is-locked', async (args, state) => {
-			return TeslaAPI.isLocked(this.vehicle.vehicleData);
-		});
-
-		this.addCondition('vehicle-is-online', async (args, state) => {
-			return TeslaAPI.isOnline(this.vehicle.vehicleData);
-		});
-
-		this.addCondition('vehicle-is-driving', async (args, state) => {
-			return TestaAPI.isDriving(this.vehicle.vehicleData);
-		});
-
-		this.addCondition('vehicle-is-at-home', async (args, state) => {
-			return this.isAtHome(this.vehicle.vehicleData);
-		});
-
-		this.addAction('stop-polling', async (args) => {
-			this.stopPolling();
-		});
-
-		this.addAction('start-polling', async (args) => {
-			let { interval } = args;
-
-			if (!interval) {
-				interval = 3;
-			}
-
-			let settings = this.getSettings();
-			this.setSettings({ ...settings, pollInterval: interval });
-
-			this.log(`Started polling with this ${JSON.stringify(this.getSettings())}`);
-
-			this.startPolling();
-		});
-
-		this.addAction('wake-up', async (args) => {
-			this.log(`Waking up...`);
-			await this.vehicle.getVehicleData();
-		});
-
-		this.startPolling();
+	async updateCapabilities(vehicleData) {
+		await this.setCapabilityValue('inner_temperature', TeslaAPI.getInsideTemperature(vehicleData));
+		await this.setCapabilityValue('outer_temperature', TeslaAPI.getOutsideTemperature(vehicleData));
+		await this.setCapabilityValue('measure_battery', TeslaAPI.getBatteryLevel(vehicleData));
+		await this.setCapabilityValue('battery_range', TeslaAPI.getBatteryRange(vehicleData));
+		await this.setCapabilityValue('charging_state', TeslaAPI.getChargingState(vehicleData));
+		await this.setCapabilityValue('locked', TeslaAPI.isLocked(vehicleData));
+		await this.setCapabilityValue('odometer', TeslaAPI.getOdometer(vehicleData));
+		await this.setCapabilityValue('distance_from_homey', this.getDistanceFromHomey(vehicleData));
+		await this.setCapabilityValue('vehicle_state', TeslaAPI.getState(vehicleData));
+		await this.setCapabilityValue('charge_power', TeslaAPI.getChargePower(vehicleData));
+		await this.setCapabilityValue('vehicle_speed', TeslaAPI.getVehicleSpeed(vehicleData));
 	}
 
-	isPolling() {
-		return this.timer ? true : false;
-	}
 
-	stopPolling() {
-		if (this.timer) {
-			this.debug(`Vehicle polling stopped.`);
-			clearTimeout(this.timer);
-			this.timer = null;
-		}
-	}
 
-	startPolling() {
-		this.debug(`Vehicle polling started.`);
-
-		let loop = async () => {
-			if (this.timer) {
-				clearTimeout(this.timer);
-			}
-
-			this.timer = null;
-
-			try {
-				let vehicle = await this.vehicle.getVehicle();
-				if (vehicle.state == 'online') {
-					await this.vehicle.getVehicleData();
-				}
-
-				await this.trigger('poll');
-			} catch (error) {
-				this.log(`Could not fetch vehicle state. ${error}`);
-			}
-
-			let settings = this.getSettings();
-
-			this.log(`Next poll in ${settings.pollInterval} minute(s).`);
-			this.timer = setTimeout(loop, settings.pollInterval * 60000);
-		};
-
-		loop();
-	}
 }
 
 module.exports = MyDevice;

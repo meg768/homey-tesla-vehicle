@@ -431,5 +431,9 @@ TeslaAPI.getChargingSpeed = (vehicleData) => {
 };
 
 
+TeslaAPI.getState = (vehicleData) => {
+    return vehicleData.state;
+};
+
 
 module.exports = TeslaAPI;
