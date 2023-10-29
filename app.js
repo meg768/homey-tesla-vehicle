@@ -5,6 +5,9 @@ const Homey = require('homey');
 const TeslaAPI = require('./tesla-api.js');
 
 /*
+
+
+Hemma, 55.70775364493117, 13.196651572960741
 https://www.svgrepo.com/svg/114988/turn-off?edit=true
 https://thenounproject.com/browse/icons/term/car-trunk/
 */
@@ -19,12 +22,7 @@ class Vehicle extends Events {
 		this.vehicleData = null;
 	}
 
-	async onUninit() {
-
-
-    }
-
-
+	async onUninit() {}
 
 	getAPI() {
 		return this.app.api;
@@ -42,19 +40,75 @@ class Vehicle extends Events {
 		return await this.request('GET', command, options);
 	}
 
+	async setClimateState(state) {
+		this.log(`Setting HVAC state to ${state ? 'ON' : 'OFF'}.`);
+
+		if (state) {
+			await this.post('command/auto_conditioning_start');
+		} else {
+			await this.post('command/auto_conditioning_stop');
+		}
+	}
+
+	async setDefrostState(state) {
+		this.log(`Setting defrost state to ${state ? 'ON' : 'OFF'}.`);
+		await this.post('command/set_preconditioning_max', { on: state });
+	}
+
+	async setPreconditioningMaxState(state) {
+		this.log(`Setting preconditioning state to ${state ? 'ON' : 'OFF'}.`);
+		await this.post('command/set_preconditioning_max', { on: state });
+	}
+
+	async actuateFrunk() {
+		this.log(`Actuating frunk.`);
+		await this.post('command/actuate_trunk', { which_trunk: 'front' });
+	}
+
+	async actuateTrunk() {
+		this.log(`Actuating trunk.`);
+		await this.post('command/actuate_trunk', { which_trunk: 'rear' });
+	}
+
+	async setSteeringWheelHeaterState(state) {
+		this.log(`Setting steering wheel heater state to ${state ? 'ON' : 'OFF'}.`);
+		await this.post('command/remote_steering_wheel_heater_request', { on: state });
+	}
+
+	async setVentilationState(state) {
+		this.log(`Setting ventilation state to ${state ? 'ON' : 'OFF'}`);
+
+		var payload = {};
+		payload.command = state ? 'vent' : 'close';
+		payload.lat = 0;
+		payload.lon = 0;
+
+		if (payload.command == 'close') {
+			let vehicleData = await this.getVehicleData();
+			payload.lat = vehicleData.drive_state.latitude;
+			payload.lon = vehicleData.drive_state.longitude;
+		}
+
+		await this.post('command/window_control', payload);
+	}
+
+    async setSteeringWheelHeaterState(state) {
+        this.log(`Setting steering wheel heater state to ${state ? 'ON' : 'OFF'}.`);
+        await this.post('command/remote_steering_wheel_heater_request', { on: state });
+    }
+
 	async getVehicleState() {
 		this.log(`Fetching vehicle state.`);
 		let vehicle = await this.getAPI().getVehicle(this.vehicleID);
 
 		if (vehicle && typeof vehicle.state == 'string') {
+			this.emit('vehicle_state', vehicle.state);
 
-            this.emit('vehicle_state', vehicle.state);
+			if (vehicle.state == 'online') {
+				await this.getVehicleData();
+			}
 
-            if (vehicle.state == 'online') {
-                await this.getVehicleData();
-            }
-
-            return vehicle.state;
+			return vehicle.state;
 		}
 
 		return 'unknown';
@@ -67,8 +121,7 @@ class Vehicle extends Events {
 			this.emit('vehicle_state', this.vehicleData.state);
 		}
 
-        this.emit('vehicle_data', this.vehicleData);
-
+		this.emit('vehicle_data', this.vehicleData);
 
 		return this.vehicleData;
 	}
@@ -82,16 +135,13 @@ class Vehicle extends Events {
 			try {
 				await this.getVehicleData();
 			} catch (error) {
-				this.log(error);
+				this.log(error.stack);
 			}
 		}, delay);
 	}
-
 }
 
 class MyApp extends Homey.App {
-
-
 	async registerDevice(device) {
 		this.debug(`Registering device ${device.getName()}.`);
 
@@ -105,52 +155,44 @@ class MyApp extends Homey.App {
 		this.debug(`Unregistering device ${device.getName()}.`);
 	}
 
+	async initializeVehicles(token) {
+		let api = new TeslaAPI({ debug: this.log, log: this.log, token: token });
+		this.api = api;
 
+		if (this.vehicles == null) {
+			let vehicles = await api.getVehicles();
+			let instances = {};
 
-    async initializeVehicles(token) {
+			for (let vehicle of vehicles) {
+				let instance = new Vehicle({ app: this, vehicleID: vehicle.id_s });
 
-        let api = new TeslaAPI({ debug: this.log, log: this.log, token: token });
-        this.api = api;        
-        
-        if (this.vehicles == null) {
-            let vehicles = await api.getVehicles();
-            let instances = {};
-    
-            for (let vehicle of vehicles) {
-    
-                let instance = new Vehicle({ app: this, vehicleID: vehicle.id_s });
-                
-                await instance.getVehicleState();
-                let vehicleData = await instance.getVehicleData();
-    
-                this.log(JSON.stringify(vehicleData));
+				await instance.getVehicleState();
+				let vehicleData = await instance.getVehicleData();
 
-                instances[vehicle.id_s] = instance;
-            }
-    
-            this.vehicles = instances;
-    
-        }
+				this.log(JSON.stringify(vehicleData));
 
-    }
+				instances[vehicle.id_s] = instance;
+			}
 
+			this.vehicles = instances;
+		}
+	}
 
-    getConfig() {
-        let config = this.homey.settings.get('config');
+	getConfig() {
+		let config = this.homey.settings.get('config');
 
-        if (typeof config != 'object') {
-            config = {};
-        }
+		if (typeof config != 'object') {
+			config = {};
+		}
 
-        return config;
-    }
+		return config;
+	}
 
-    saveConfig(config) {
-        this.homey.settings.set('config', config);
-    }
+	saveConfig(config) {
+		this.homey.settings.set('config', config);
+	}
 
-
-    async onUninit() {
+	async onUninit() {
 		// Cleanup conditions
 		if (this.conditions) {
 			this.conditions.forEach((condition) => {
@@ -164,33 +206,30 @@ class MyApp extends Homey.App {
 				action.removeAllListeners();
 			});
 		}
+	}
 
-    }
-
-    
 	async onInit() {
 		this.timer = null;
 		this.api = null;
 		this.vehicles = null;
 		this.debug = this.log;
-        this.conditions = [];
-        this.actions = [];
+		this.conditions = [];
+		this.actions = [];
 
 		let config = this.getConfig();
 
 		if (config && config.refreshToken && config.refreshToken != '') {
-            try {
-                await this.initializeVehicles(config.refreshToken);
-            } catch (error) {
-                this.log(`Invalid refresh token. ${error}`);
-            }
+			try {
+				await this.initializeVehicles(config.refreshToken);
+			} catch (error) {
+				this.log(`Invalid refresh token. ${error.stack}`);
+			}
 		}
 
 		this.addAction('log-to-console', async (args) => {
 			const { message } = args;
 			this.log(message);
 		});
-
 	}
 
 	async trigger(name, args) {
@@ -202,12 +241,12 @@ class MyApp extends Homey.App {
 	addAction(name, fn) {
 		let action = this.homey.flow.getActionCard(name);
 		action.registerRunListener(fn);
-        this.actions.push(action);
+		this.actions.push(action);
 	}
 
 	async getPairListDevices(description) {
 		if (!this.api) {
-            throw new Error(this.homey.__('NoAPI'));
+			throw new Error(this.homey.__('NoAPI'));
 			return [];
 		}
 

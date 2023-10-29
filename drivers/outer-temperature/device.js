@@ -1,36 +1,33 @@
 'use strict';
 
 const Device = require('../../device');
+const TeslaAPI = require('../../tesla-api');
 
 module.exports = class extends Device {
-
-    
 	async onInit() {
-        await super.onInit();
+		await super.onInit();
 
 		// Get initial value
-		this.temperature = this.vehicle.vehicleData.climate_state.outside_temp;
+		this.temperature = TeslaAPI.getOutsideTemperature(this.vehicle.vehicleData);
 
 		await this.setCapabilityValue('measure_temperature', this.temperature);
-
 	}
 
-    async onVehicleData(vehicleData) {
-        await super.onVehicleData(vehicleData);
+	async onVehicleData(vehicleData) {
+		await super.onVehicleData(vehicleData);
 
-        try {
-            let temperature = vehicleData.climate_state.outside_temp;
+		try {
+			let temperature = TeslaAPI.getOutsideTemperature(vehicleData);
 
-            if (this.temperature != temperature) {
-                this.temperature = temperature;
-                this.log(`Updating outer temperature to ${this.temperature}.`);
-                this.setCapabilityValue('measure_temperature', this.temperature);
-            }
-        } catch (error) {
-            this.log(error);
-        }
-
-    }
-}
+			if (this.temperature != temperature) {
+				this.temperature = temperature;
+				this.log(`Updating outer temperature to ${this.temperature}.`);
+				this.setCapabilityValue('measure_temperature', this.temperature);
+			}
+		} catch (error) {
+			this.log(error.stack);
+		}
+	}
+};
 
 module.exports = MyDevice;

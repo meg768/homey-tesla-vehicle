@@ -1,33 +1,28 @@
 'use strict';
 
 const Device = require('../../device');
+const TeslaAPI = require('../../tesla-api');
 
 class MyDevice extends Device {
 	async onInit() {
 		await super.onInit();
 
 		// Get initial value
-		this.state = this.vehicle.vehicleData.climate_state.steering_wheel_heater;
+		this.state = TeslaAPI.isSteeringWheelHeaterOn(this.vehicle.vehicleData);
+		await this.setCapabilityValue('onoff', this.state);
 
 		this.registerCapabilityListener('onoff', async (value, options) => {
-			let state = value ? true : false;
-
-			if (this.state != state) {
-				this.log(`Setting steering wheel heater state to ${state ? 'ON' : 'OFF'}.`);
-
-				await this.vehicle.post('command/remote_steering_wheel_heater_request', { on: state });
-				await this.vehicle.updateVehicleData(1000);
-			}
+            await this.vehicle.setSteeringWheelHeaterState(value);
+            await this.vehicle.updateVehicleData(1000);
 		});
 
-		await this.setCapabilityValue('onoff', this.state);
 	}
 
 	async onVehicleData(vehicleData) {
 		await super.onVehicleData(vehicleData);
 
 		try {
-			let state = vehicleData.climate_state.steering_wheel_heater;
+			let state = TeslaAPI.isSteeringWheelHeaterOn(vehicleData);
 
 			if (this.state != state) {
 				this.state = state;
@@ -35,7 +30,7 @@ class MyDevice extends Device {
 				this.setCapabilityValue('onoff', this.state);
 			}
 		} catch (error) {
-			this.log(error);
+			this.log(error.stack);
 		}
 	}
 }

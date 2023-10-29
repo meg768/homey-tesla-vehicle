@@ -3,34 +3,27 @@
 const Device = require('../../device');
 
 class MyDevice extends Device {
+	async onSettings({ oldSettings, changedKeys, newSettings }) {
+		this.debug(`Settings changed.`);
+		this.debug(newSettings);
 
-    async onSettings({oldSettings, changedKeys, newSettings}) {
+        this.setTimeout(newSettings.interval);
+	}
 
-        this.debug(`Settings changed.`)
-        this.debug(newSettings);
+	async onUninit() {
+		await super.onUninit();
+		this.clearTimeout();
+	}
 
-        if (this.timer) {
-            this.stopPolling();
-            this.startPolling();
-        }
+	async onInit() {
+		await super.onInit();
 
+		this.state = false;
+		this.timer = null;
 
-    }
-
-    async onUninit() {
-        await super.onUninit();
-        this.stopPolling();
-
-    }
-
-    async onInit() {
-        await super.onInit();
-
-        this.state = false;
-        this.timer = null;
+		await this.setCapabilityValue('onoff', this.state);
 
 		this.registerCapabilityListener('onoff', async (value, options) => {
-
 			if (value === this.state) {
 				return;
 			}
@@ -38,59 +31,41 @@ class MyDevice extends Device {
 			this.state = value;
 			this.log(`Ping is turned ${this.state ? 'ON' : 'OFF'}.`);
 
-            this.state ? this.startPolling() : this.stopPolling();
-
+			if (this.state) {
+				await this.vehicle.getVehicleData();
+			}
 		});
 
-        this.addAction('set-ping-interval', async ({interval}) => {
-            let settings = this.getSettings();
-            settings.interval = interval;
+	}
 
-            if (this.timer) {
-                this.stopPolling();
-                this.startPolling();
+    onVehicleData(vehicleData) {
+		super.onVehicleData(vehicleData);
+        this.setTimeout();
+	}
+
+
+	clearTimeout() {
+		if (this.timer) {
+			clearTimeout(this.timer);
+			this.timer = null;
+		}
+	}
+
+    setTimeout(interval) {
+        this.clearTimeout();
+
+        if (this.state) {
+            if (interval == undefined) {
+                interval = this.getSetting('interval') || 8;
             }
 
-            this.log(`Ping interval is now set to ${interval}`);
-        });
-
-
-        await this.setCapabilityValue('onoff', this.state);
-
-    }
-
-    stopPolling() {
-        if (this.timer) {
-            this.log(`Ping polling stopped.`);
-            clearTimeout(this.timer);
-            this.timer = null;
+            if (interval > 0) {
+                this.timer = setTimeout(async () => {
+                    await this.vehicle.getVehicleData();
+                }, interval * 60000);
+            }
+    
         }
-
-    }
-
-    startPolling() {
-        this.log(`Ping polling started.`);
-
-        let loop = async() => {
-            clearTimeout(this.timer);
-            this.timer = null;
-
-            try {
-                await this.vehicle.getVehicleData();
-            }
-            catch(error) {
-                this.log(`Could not fetch vehicle data. ${error}`);
-            }
-
-            if (this.state) {
-                let interval = this.getSetting('interval');
-                this.log(`Next ping in ${interval} minutes.`);
-                this.timer = setTimeout(loop, interval * 60000);
-            } 
-        }
-        
-        loop();
-
     }
 
 }

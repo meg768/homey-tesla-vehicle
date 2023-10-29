@@ -7,6 +7,8 @@
 	"name": {
 		"en": "Tesla Vehicle"
 	},
+    "brandColor": "#cc0100",
+
 	"description": {
 		"en": "Control your Tesla with Homey",
 		"sv": "Styr din Tesla med Homey"

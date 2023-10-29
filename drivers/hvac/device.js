@@ -1,40 +1,25 @@
 'use strict';
 
 const Device = require('../../device');
+const TeslaAPI = require('../../tesla-api');
 
 module.exports = class extends Device {
 	async onInit() {
 		await super.onInit();
 
 		// Get initial value
-		this.state = this.vehicle.vehicleData.climate_state.is_climate_on;
+		this.state = TeslaAPI.isClimateOn(this.vehicle.vehicleData);
+		await this.setCapabilityValue('onoff', this.state);
 
 		this.registerCapabilityListener('onoff', async (value, options) => {
-			try {
-				let state = value ? true : false;
-
-				if (this.state != state) {
-					this.log(`Setting HVAC state to ${state ? 'ON' : 'OFF'}.`);
-
-					if (state) {
-						await this.vehicle.post('command/auto_conditioning_start');
-					} else {
-						await this.vehicle.post('command/auto_conditioning_stop');
-					}
-                    
-					await this.setCapabilityValue('onoff', state);
-				}
-			} catch (error) {
-				this.log(error);
-			} finally {
-				this.vehicle.updateVehicleData(1000);
-			}
+            await this.vehicle.setClimateState(value);
+            await this.vehicle.updateVehicleData(2000);
 		});
 	}
 
 	async onVehicleData(vehicleData) {
 		try {
-			let state = vehicleData.climate_state.is_climate_on;
+			let state = TeslaAPI.isClimateOn(vehicleData);
 
 			if (this.state != state) {
 				this.state = state;
@@ -42,7 +27,7 @@ module.exports = class extends Device {
 				this.setCapabilityValue('onoff', this.state);
 			}
 		} catch (error) {
-			this.log(error);
+			this.log(error.stack);
 		}
 	}
 };

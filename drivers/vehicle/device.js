@@ -4,71 +4,60 @@ const Homey = require('homey');
 const TeslaAPI = require('../../tesla-api.js');
 const Device = require('../../device.js');
 
-
 class MyDevice extends Device {
 	async onSettings({ oldSettings, changedKeys, newSettings }) {
-        await this.pollVehicleState(newSettings.pollInterval);
-    }
+		await this.pollVehicleState(newSettings.pollInterval);
+	}
 
 	async onUninit() {
 		await super.onUninit();
 
-        // Turn off timers
-        this.refreshVehicleData(0);
-        this.pollVehicleState(0);
-
+		// Turn off timers
+		this.setVehicleDataRefreshInterval(0);
+		this.pollVehicleState(0);
 	}
 
-    async pollVehicleState(interval) {
+	async pollVehicleState(interval) {
+		let loop = async () => {
+			if (this.vehicleStateTimer) {
+				clearTimeout(this.vehicleStateTimer);
+				this.vehicleStateTimer = null;
+			}
 
-        let loop = async () => {
+			if (interval > 0) {
+				try {
+					await this.vehicle.getVehicleState();
+				} catch (error) {
+					this.log(`Failed polling vehicle state. ${error.stack}`);
+				}
 
-            if (this.vehicleStateTimer) {
-                clearTimeout(this.vehicleStateTimer);
-                this.vehicleStateTimer = null;
-            }
-    
-            if (interval > 0) {
-                try {
-                    await this.vehicle.getVehicleState();
-                } catch (error) {
-                    this.log(`Failed polling vehicle state. ${error.stack}`);
-                }
-    
-                this.log(`Next vehicle state poll is in ${interval} minute(s).`);
-                this.vehicleStateTimer = setTimeout(loop, interval * 60000);
-    
-            }
-            else {
-                this.log(`Polling stopped.`);
-
-            }
-
+				this.log(`Next vehicle state poll is in ${interval} minute(s).`);
+				this.vehicleStateTimer = setTimeout(loop, interval * 60000);
+			} else {
+				this.log(`Polling stopped.`);
+			}
 		};
 
 		loop();
-
 	}
 
-	async refreshVehicleData(delay = 0) {
+	async setVehicleDataRefreshInterval(delay = 0) {
 		if (this.vehicleDataTimer) {
 			clearTimeout(this.vehicleDataTimer);
-            this.vehicleDataTimer = null;
+			this.vehicleDataTimer = null;
 		}
 
-        if (delay > 0) {
-            this.vehicleDataTimer = setTimeout(async () => {
-                try {
-                    this.log(`Performing refresh on vehicle data.`)
-                    await this.vehicle.getVehicleData();
-                } catch (error) {
-                    this.log(`Failed delayed fetching of vehicle data. ${error.stack}`);
-                }
-            }, delay * 60000);
-    
-        }
+		if (delay > 0) {
+			this.vehicleDataTimer = setTimeout(async () => {
+				try {
+					this.log(`Performing refresh on vehicle data.`);
+					await this.vehicle.getVehicleData();
+				} catch (error) {
+					this.log(`Failed delayed fetching of vehicle data. ${error.stack}`);
+				}
+			}, delay * 60000);
+		}
 	}
-
 
 	async onInit() {
 		await super.onInit();
@@ -81,7 +70,7 @@ class MyDevice extends Device {
 
 		// Get initial value
 		this.vehicleData = JSON.parse(JSON.stringify(this.vehicle.vehicleData));
-        this.vehicleState = 'xxx';
+		this.vehicleState = 'xxx';
 
 		await this.updateCapabilities(this.vehicle.vehicleData);
 
@@ -108,8 +97,21 @@ class MyDevice extends Device {
 					await this.vehicle.updateVehicleData(2000);
 				}
 			} catch (error) {
-				this.log(error);
+				this.log(error.stack);
 			}
+		});
+        
+
+		this.addCondition('vehicle-is-near-location', async (args, state) => {
+			let { latitude, longitude } = args;
+			let distance = this.getDistanceFromLocation(this.vehicle.vehicleData, latitude, longitude);
+			return distance < 0.2;
+		});
+
+        this.addCondition('vehicle-is-near-location-with-radius', async (args, state) => {
+			let { latitude, longitude, radius } = args;
+			let distance = this.getDistanceFromLocation(this.vehicle.vehicleData, latitude, longitude);
+			return distance < radius;
 		});
 
 		this.addCondition('vehicle-is-charging', async (args, state) => {
@@ -137,15 +139,14 @@ class MyDevice extends Device {
 			await this.vehicle.getVehicleData();
 		});
 
-
-        await this.pollVehicleState(this.getSetting('pollInterval'));
+		await this.pollVehicleState(this.getSetting('pollInterval'));
 	}
 
 	isAtHome(vehicleData) {
-		return this.getDistanceFromHomey(vehicleData) < 0.25;
+		return this.getDistanceFromHomey(vehicleData) < 0.2;
 	}
 
-	getDistanceFromHomey(vehicleData) {
+	getDistanceFromLocation(vehicleData, latitude, longitude) {
 		function deg2rad(deg) {
 			return deg * (Math.PI / 180);
 		}
@@ -161,8 +162,8 @@ class MyDevice extends Device {
 		}
 
 		let distance = 0;
-		let homeyLatitude = this.homey.geolocation.getLatitude();
-		let homeyLongitude = this.homey.geolocation.getLongitude();
+		let homeyLatitude = latitude;
+		let homeyLongitude = longitude;
 		let vehicleLatitude = vehicleData.drive_state.latitude;
 		let vehicleLongitude = vehicleData.drive_state.longitude;
 
@@ -170,24 +171,33 @@ class MyDevice extends Device {
 			distance = getDistanceFromLatLonInKm(homeyLatitude, homeyLongitude, vehicleLatitude, vehicleLongitude);
 		}
 
-		return distance;
+		return Math.round(distance * 10) / 10;
 	}
 
-	async onVehicleData(vehicleData) {
+	getDistanceFromHomey(vehicleData) {
+		let latitude = this.homey.geolocation.getLatitude();
+		let longitude = this.homey.geolocation.getLongitude();
+		return this.getDistanceFromLocation(vehicleData, latitude, longitude);
+	}
+
+    getLocation(vehicleData) {
+        return `${vehicleData.drive_state.latitude} ${vehicleData.drive_state.longitude}`;
+    }
+
+    async onVehicleData(vehicleData) {
 		await super.onVehicleData(vehicleData);
 
 		try {
+			// Clear delayed fetch
+			this.setVehicleDataRefreshInterval(0);
 
-            // Clear delayed fetch
-            this.refreshVehicleData(0);
+			if (TeslaAPI.isCharging(vehicleData)) {
+				this.setVehicleDataRefreshInterval(10);
+			}
 
-            if (TeslaAPI.isCharging(vehicleData)) { 
-                this.refreshVehicleData(2);
-            }
-
-            if (TeslaAPI.isDriving(vehicleData)) {
-                this.refreshVehicleData(2);
-            }
+			if (TeslaAPI.isDriving(vehicleData)) {
+				this.setVehicleDataRefreshInterval(1);
+			}
 
 			await this.setCapabilityValue('distance_from_homey', this.getDistanceFromHomey(vehicleData));
 
@@ -222,8 +232,13 @@ class MyDevice extends Device {
 			}
 
 			if (TeslaAPI.getVehicleSpeed(this.vehicleData) != TeslaAPI.getVehicleSpeed(vehicleData)) {
-				await this.setCapabilityValue('vehicle_speed', TeslaAPIgetVehicleSpeed(vehicleData));
-                await this.trigger('vehicle-speed-changed');
+				await this.setCapabilityValue('vehicle_speed', TeslaAPI.getVehicleSpeed(vehicleData));
+				await this.trigger('vehicle-speed-changed');
+                this.log(`Speed is ${TeslaAPI.getVehicleSpeed(vehicleData)}`);
+			}
+
+            if (this.getLocation(this.vehicleData) != this.getLocation(vehicleData)) {
+				await this.trigger('vehicle-location-changed');
 			}
 
 			if (TeslaAPI.getChargingState(this.vehicleData) != TeslaAPI.getChargingState(vehicleData)) {
@@ -295,9 +310,6 @@ class MyDevice extends Device {
 		await this.setCapabilityValue('charge_power', TeslaAPI.getChargePower(vehicleData));
 		await this.setCapabilityValue('vehicle_speed', TeslaAPI.getVehicleSpeed(vehicleData));
 	}
-
-
-
 }
 
 module.exports = MyDevice;

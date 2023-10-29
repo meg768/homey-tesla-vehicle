@@ -10,6 +10,7 @@
   "name": {
     "en": "Tesla Vehicle"
   },
+  "brandColor": "#cc0100",
   "description": {
     "en": "Control your Tesla with Homey",
     "sv": "Styr din Tesla med Homey"
@@ -49,39 +50,6 @@
         "id": "log-to-console"
       },
       {
-        "id": "set-ping-interval",
-        "title": {
-          "en": "Set interval",
-          "sv": "Sätt intervall"
-        },
-        "titleFormatted": {
-          "en": "Set interval to [[interval]] minutes.",
-          "sv": "Sätt intervall till [[interval]] minuter."
-        },
-        "hint": {
-          "en": "Specify interval in mintues",
-          "sv": "Anger i minuter"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=ping"
-          },
-          {
-            "type": "number",
-            "name": "interval",
-            "placeholder": {
-              "en": "Interval",
-              "sv": "Intervall"
-            },
-            "min": 1,
-            "max": 120,
-            "step": 0.1
-          }
-        ]
-      },
-      {
         "id": "wake-up",
         "title": {
           "en": "Wake up"
@@ -114,6 +82,20 @@
         ]
       },
       {
+        "id": "vehicle-location-changed",
+        "title": {
+          "en": "Location changed",
+          "sv": "Ändrade plats"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
         "id": "vehicle-outside-geofence",
         "title": {
           "en": "Left home",
@@ -131,7 +113,7 @@
         "id": "vehicle-state-changed",
         "title": {
           "en": "State changed",
-          "sv": "State changed"
+          "sv": "Online/offline ändrades"
         },
         "args": [
           {
@@ -307,6 +289,89 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "vehicle-is-near-location",
+        "title": {
+          "en": "Is !{{near|not near}} a location"
+        },
+        "titleFormatted": {
+          "en": "!{{Is at|Is not at}} [[location]] - [[latitude]], [[longitude]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          },
+          {
+            "type": "text",
+            "name": "location",
+            "placeholder": {
+              "en": "Location",
+              "sv": "Plats"
+            }
+          },
+          {
+            "type": "number",
+            "name": "latitude",
+            "placeholder": {
+              "en": "Latitude"
+            }
+          },
+          {
+            "type": "number",
+            "name": "longitude",
+            "placeholder": {
+              "en": "Longitude"
+            }
+          }
+        ]
+      },
+      {
+        "id": "vehicle-is-near-location-with-radius",
+        "title": {
+          "en": "Is !{{near|not near}} a location with a radius"
+        },
+        "titleFormatted": {
+          "en": "Is !{{near|not near}} [[location]] within a radius of [[radius]] km - [[latitude]], [[longitude]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          },
+          {
+            "type": "text",
+            "name": "location",
+            "placeholder": {
+              "en": "Location",
+              "sv": "Plats"
+            }
+          },
+          {
+            "type": "number",
+            "name": "radius",
+            "placeholder": {
+              "en": "Radius"
+            }
+          },
+          {
+            "type": "number",
+            "name": "latitude",
+            "placeholder": {
+              "en": "Latitude"
+            }
+          },
+          {
+            "type": "number",
+            "name": "longitude",
+            "placeholder": {
+              "en": "Longitude"
+            }
           }
         ]
       }
@@ -504,7 +569,7 @@
             "en": "Ping interval",
             "sv": "Intervall"
           },
-          "value": 5,
+          "value": 8,
           "hint": {
             "en": "Specify the ping interval in minutes. This will wake up your Tesla and update the user interface with current values",
             "sv": "Ange intervall i minuter. Detta kommer att väcka din bil och uppdatera värden i Homey."

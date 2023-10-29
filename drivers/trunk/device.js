@@ -1,6 +1,8 @@
 'use strict';
 
 const Device = require('../../device');
+const TeslaAPI = require('../../tesla-api');
+
 
 module.exports = class MyDevice extends Device {
 
@@ -8,26 +10,24 @@ module.exports = class MyDevice extends Device {
         await super.onInit();
 
 		// Get initial value
-		this.state = this.vehicle.vehicleData.vehicle_state.rt != 0;
+		this.state = TeslaAPI.isTrunkOpen(this.vehicle.vehicleData);
+		await this.setCapabilityValue('onoff', this.state);
 
         this.registerCapabilityListener('onoff', async (value, options) => {
             let state = value ? true : false;
 
             if (this.state != state) {
-                this.log(`Setting trunk state to ${state ? 'ON' : 'OFF'}.`);
-
-                await this.vehicle.post('command/actuate_trunk', {which_trunk:'rear'});
+                await this.vehicle.actuateTrunk();
                 await this.vehicle.updateVehicleData(3000);
             }
 		});
 
-		await this.setCapabilityValue('onoff', this.state);
 
 	}
 
     async onVehicleData(vehicleData) {
         try {
-            let state = vehicleData.vehicle_state.rt != 0;
+            let state = TeslaAPI.isTrunkOpen(vehicleData);
 
             if (this.state != state) {
                 this.state = state;
@@ -35,7 +35,7 @@ module.exports = class MyDevice extends Device {
                 this.setCapabilityValue('onoff', this.state);
             }
         } catch (error) {
-            this.log(error);
+            this.log(error.stack);
         }
 
     }
