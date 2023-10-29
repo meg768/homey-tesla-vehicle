@@ -66,40 +66,11 @@ class MyDevice extends Device {
 		this.vehicleDataTimer = null;
 
 		// Get initial value
-		this.locked = TeslaAPI.isLocked(this.vehicle.vehicleData);
-
-		// Get initial value
 		this.vehicleData = JSON.parse(JSON.stringify(this.vehicle.vehicleData));
 		this.vehicleState = 'xxx';
 
 		await this.updateCapabilities(this.vehicle.vehicleData);
 
-		this.registerCapabilityListener('locked', async (value, options) => {
-			try {
-				let locked = value ? true : false;
-
-				if (this.locked != locked) {
-					this.log(`Setting doors to ${locked ? 'LOCKED' : 'UNLOCKED'}.`);
-
-					if (locked) {
-						await this.vehicle.post('command/door_lock');
-					} else {
-						let remoteStartDrivePassword = this.homey.app.getConfig().remoteStartDrivePassword;
-
-						await this.vehicle.post('command/door_unlock');
-
-						if (typeof remoteStartDrivePassword == 'string') {
-							await this.vehicle.post(`command/remote_start_drive?password=${remoteStartDrivePassword}`);
-						}
-					}
-
-					await this.vehicle.post(`command/${locked ? 'door_lock' : 'door_unlock'}`);
-					await this.vehicle.updateVehicleData(2000);
-				}
-			} catch (error) {
-				this.log(error.stack);
-			}
-		});
         
 
 		this.addCondition('vehicle-is-near-location', async (args, state) => {
@@ -201,12 +172,6 @@ class MyDevice extends Device {
 
 			await this.setCapabilityValue('distance_from_homey', this.getDistanceFromHomey(vehicleData));
 
-			if (this.locked != vehicleData.vehicle_state.locked) {
-				this.locked = vehicleData.vehicle_state.locked;
-				this.log(`Updating car doors to ${this.locked ? 'LOCKED' : 'UNLOCKED'}.`);
-				this.setCapabilityValue('locked', this.locked);
-			}
-
 			if (TeslaAPI.getInsideTemperature(this.vehicleData) != TeslaAPI.getInsideTemperature(vehicleData)) {
 				await this.setCapabilityValue('inner_temperature', TeslaAPI.getInsideTemperature(vehicleData));
 			}
@@ -234,7 +199,6 @@ class MyDevice extends Device {
 			if (TeslaAPI.getVehicleSpeed(this.vehicleData) != TeslaAPI.getVehicleSpeed(vehicleData)) {
 				await this.setCapabilityValue('vehicle_speed', TeslaAPI.getVehicleSpeed(vehicleData));
 				await this.trigger('vehicle-speed-changed');
-                this.log(`Speed is ${TeslaAPI.getVehicleSpeed(vehicleData)}`);
 			}
 
             if (this.getLocation(this.vehicleData) != this.getLocation(vehicleData)) {
@@ -303,7 +267,6 @@ class MyDevice extends Device {
 		await this.setCapabilityValue('measure_battery', TeslaAPI.getBatteryLevel(vehicleData));
 		await this.setCapabilityValue('battery_range', TeslaAPI.getBatteryRange(vehicleData));
 		await this.setCapabilityValue('charging_state', TeslaAPI.getChargingState(vehicleData));
-		await this.setCapabilityValue('locked', TeslaAPI.isLocked(vehicleData));
 		await this.setCapabilityValue('odometer', TeslaAPI.getOdometer(vehicleData));
 		await this.setCapabilityValue('distance_from_homey', this.getDistanceFromHomey(vehicleData));
 		await this.setCapabilityValue('vehicle_state', TeslaAPI.getState(vehicleData));

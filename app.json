@@ -512,6 +512,54 @@
     },
     {
       "name": {
+        "en": "Lock",
+        "sv": "Lås"
+      },
+      "class": "lock",
+      "capabilities": [
+        "locked"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [],
+      "images": {
+        "small": "/drivers/lock/assets/images/small.png",
+        "large": "/drivers/lock/assets/images/large.png",
+        "xlarge": "/drivers/lock/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "lock",
+      "settings": [
+        {
+          "id": "remoteStartDrivePassword",
+          "type": "text",
+          "label": {
+            "en": "Password for keyless driving",
+            "sv": "Lösenord för nyckellös körning"
+          },
+          "hint": {
+            "en": "If specified your car will be ready to drive without your keycard present when unlocking.",
+            "sv": "Anger du lösenord här behöver du inte din bilnyckel (kortet) för att köra iväg när du låser upp."
+          },
+          "value": ""
+        }
+      ]
+    },
+    {
+      "name": {
         "en": "Outer temperature",
         "sv": "Yttertemperatur"
       },
@@ -561,21 +609,6 @@
         "large": "/drivers/ping/assets/images/large.png",
         "xlarge": "/drivers/ping/assets/images/xlarge.png"
       },
-      "settings": [
-        {
-          "id": "interval",
-          "type": "number",
-          "label": {
-            "en": "Ping interval",
-            "sv": "Intervall"
-          },
-          "value": 8,
-          "hint": {
-            "en": "Specify the ping interval in minutes. This will wake up your Tesla and update the user interface with current values",
-            "sv": "Ange intervall i minuter. Detta kommer att väcka din bil och uppdatera värden i Homey."
-          }
-        }
-      ],
       "pair": [
         {
           "id": "list_devices",
@@ -631,36 +664,9 @@
           },
           "value": "",
           "hint": {
-            "en": "A mandatory token used to communicate with Tesla. Use a tool like 'Auth for Tesla' to generate such a token. Often refered as a 'RefreshToken'",
-            "sv": "En obligatorisk nyckel för att komma åt din Tesla. Använd verktyg som 'Auth for Tesla' för att generera en sådan nyckel. Kallas ofta en 'RefreshToken'."
+            "en": "A mandatory token used to communicate with Tesla. Use a tool like 'Auth for Tesla' to generate such a token. Often refered as a 'refresh token'",
+            "sv": "En obligatorisk nyckel för att komma åt din Tesla. Använd verktyg som 'Auth for Tesla' för att generera en sådan nyckel. Kallas ofta en 'refresh token'."
           }
-        },
-        {
-          "id": "pushoverUser",
-          "type": "text",
-          "label": {
-            "en": "Pushover user",
-            "sv": "Användarnamn för Pushover"
-          },
-          "value": ""
-        },
-        {
-          "id": "pushoverToken",
-          "type": "text",
-          "label": {
-            "en": "Pushover token",
-            "sv": "Nyckel för Pushover"
-          },
-          "value": ""
-        },
-        {
-          "id": "remoteStartDrivePassword",
-          "type": "text",
-          "label": {
-            "en": "Remote start drive password",
-            "sv": "Lösenord för nyckellös körning"
-          },
-          "value": ""
         }
       ]
     },
@@ -735,7 +741,7 @@
         "en": "Tesla",
         "sv": "Tesla"
       },
-      "class": "lock",
+      "class": "other",
       "capabilities": [
         "charging_speed",
         "charge_power",
@@ -743,7 +749,6 @@
         "distance_from_homey",
         "odometer",
         "vehicle_state",
-        "locked",
         "inner_temperature",
         "outer_temperature",
         "measure_battery",

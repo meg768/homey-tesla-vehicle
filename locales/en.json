@@ -50,5 +50,6 @@
   "DeviceVehicleInstanceName": "Tesla",
   "DeviceSettingsInstanceName": "Settings",
   "DeviceSteeringWwheelHeaterInstanceName": "Steering wheel heater",
-  "DeviceDefrostInstanceName": "Defrost"
+  "DeviceDefrostInstanceName": "Defrost",
+  "DeviceLockInstanceName": "Lock"
 }

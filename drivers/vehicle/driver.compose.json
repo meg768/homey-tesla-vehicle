@@ -3,8 +3,8 @@
 		"en": "Tesla",
 		"sv": "Tesla"
 	},
-	"class": "lock",
-	"capabilities": ["charging_speed", "charge_power", "vehicle_speed", "distance_from_homey", "odometer", "vehicle_state", "locked", "inner_temperature", "outer_temperature", "measure_battery", "battery_range", "charging_state"],
+	"class": "other",
+	"capabilities": ["charging_speed", "charge_power", "vehicle_speed", "distance_from_homey", "odometer", "vehicle_state", "inner_temperature", "outer_temperature", "measure_battery", "battery_range", "charging_state"],
 	"platforms": ["local"],
 	"connectivity": [],
 	"images": {

@@ -17,6 +17,8 @@
 	"DeviceSettingsInstanceName": "Settings",
     "DeviceSteeringWwheelHeaterInstanceName": "Steering wheel heater",
     "DeviceDefrostInstanceName": "Defrost",
+    "DeviceLockInstanceName": "Lock",
+    
     
 	"Device Vehicle Texts": "--------------------------------------",
 	"DeviceVehicleCharging": "Charging",

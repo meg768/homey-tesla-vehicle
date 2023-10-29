@@ -1,10 +1,12 @@
 {
 	"name": {
-		"en": "Ping",
-		"sv": "Ping"
+		"en": "Lock",
+		"sv": "Lås"
 	},
-	"class": "button",
-	"capabilities": ["onoff"],
+
+	"class": "lock",
+	"capabilities": ["locked"],
+
 	"platforms": ["local"],
 	"connectivity": [],
 	"images": {

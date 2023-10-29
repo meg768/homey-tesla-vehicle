@@ -40,6 +40,7 @@ class Vehicle extends Events {
 		return await this.request('GET', command, options);
 	}
 
+
 	async setClimateState(state) {
 		this.log(`Setting HVAC state to ${state ? 'ON' : 'OFF'}.`);
 

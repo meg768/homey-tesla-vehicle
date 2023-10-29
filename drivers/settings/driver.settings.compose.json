@@ -8,42 +8,10 @@
 		},
 		"value": "",
 		"hint": {
-			"en": "A mandatory token used to communicate with Tesla. Use a tool like 'Auth for Tesla' to generate such a token. Often refered as a 'RefreshToken'",
-			"sv": "En obligatorisk nyckel för att komma åt din Tesla. Använd verktyg som 'Auth for Tesla' för att generera en sådan nyckel. Kallas ofta en 'RefreshToken'."
+			"en": "A mandatory token used to communicate with Tesla. Use a tool like 'Auth for Tesla' to generate such a token. Often refered as a 'refresh token'",
+			"sv": "En obligatorisk nyckel för att komma åt din Tesla. Använd verktyg som 'Auth for Tesla' för att generera en sådan nyckel. Kallas ofta en 'refresh token'."
 		}
-	},
-
-	{
-		"id": "pushoverUser",
-		"type": "text",
-		"label": {
-			"en": "Pushover user",
-			"sv": "Användarnamn för Pushover"
-		},
-		"value": ""
-	},
-    
-    {
-		"id": "pushoverToken",
-		"type": "text",
-		"label": {
-			"en": "Pushover token",
-			"sv": "Nyckel för Pushover"
-		},
-		"value": ""
-	},
-
-    {
-		"id": "remoteStartDrivePassword",
-		"type": "text",
-		"label": {
-			"en": "Remote start drive password",
-			"sv": "Lösenord för nyckellös körning"
-		},
-		"value": ""
 	}
-   
-
    
 
 
