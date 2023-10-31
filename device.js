@@ -12,6 +12,7 @@ module.exports = class extends Homey.Device {
     }
 
 	async onInit() {
+        
 		this.conditions = [];
 		this.actions = [];
         this.debug = this.log;

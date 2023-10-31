@@ -71,7 +71,6 @@ class MyDevice extends Device {
 
 		await this.updateCapabilities(this.vehicle.vehicleData);
 
-        
 
 		this.addCondition('vehicle-is-near-location', async (args, state) => {
 			let { latitude, longitude } = args;
@@ -109,6 +108,8 @@ class MyDevice extends Device {
 			this.log(`Waking up...`);
 			await this.vehicle.getVehicleData();
 		});
+
+        
 
 		await this.pollVehicleState(this.getSetting('pollInterval'));
 	}

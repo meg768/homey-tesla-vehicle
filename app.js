@@ -20,6 +20,10 @@ class Vehicle extends Events {
 		this.vehicleID = vehicleID;
 		this.debug = app.debug;
 		this.vehicleData = null;
+        this.vehiceState = 'wtf';
+
+        this.setMaxListeners(20);
+
 	}
 
 	async onUninit() {}
@@ -103,13 +107,18 @@ class Vehicle extends Events {
 		let vehicle = await this.getAPI().getVehicle(this.vehicleID);
 
 		if (vehicle && typeof vehicle.state == 'string') {
-			this.emit('vehicle_state', vehicle.state);
+            // If vehicle state changed - notify
+            if (this.vehicleState != vehicle.state) {
+                this.vehicleState = vehicle.state;
+                this.emit('vehicle_state', this.vehicleState);
+            }
 
+            // Freebie?!
 			if (vehicle.state == 'online') {
 				await this.getVehicleData();
 			}
 
-			return vehicle.state;
+			return this.vehicleState;
 		}
 
 		return 'unknown';
@@ -119,9 +128,16 @@ class Vehicle extends Events {
 		this.vehicleData = await this.getAPI().request(this.vehicleID, 'GET', 'vehicle_data');
 
 		if (this.vehicleData && typeof this.vehicleData.state == 'string') {
-			this.emit('vehicle_state', this.vehicleData.state);
+
+            // Emit vehicle state if changed
+            if (this.vehiceState != this.vehicleData.state) {
+                this.vehiceState = this.vehicleData.state;
+                this.emit('vehicle_state', this.vehicleState);
+            }
+
 		}
 
+        // Emit the data
 		this.emit('vehicle_data', this.vehicleData);
 
 		return this.vehicleData;
@@ -231,6 +247,9 @@ class MyApp extends Homey.App {
 			const { message } = args;
 			this.log(message);
 		});
+
+
+        
 	}
 
 	async trigger(name, args) {

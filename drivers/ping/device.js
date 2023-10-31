@@ -15,7 +15,7 @@ class MyDevice extends Device {
 			if (value != this.state) {
                 this.state = value;
                 this.log(`Ping is turned ${this.state ? 'ON' : 'OFF'}.`);
-                this.ping();
+                await this.ping();
             }
 		});
 
@@ -24,6 +24,7 @@ class MyDevice extends Device {
     async ping() {
         if (this.state) {
             try {
+                this.log(`Ping!`);
                 await this.vehicle.getVehicleData();
             }
             catch(error) {

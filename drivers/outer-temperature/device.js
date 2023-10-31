@@ -30,4 +30,3 @@ module.exports = class extends Device {
 	}
 };
 
-module.exports = MyDevice;
