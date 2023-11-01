@@ -1,9 +1,9 @@
 'use strict';
 
-const Device = require('../../device');
+const Homey = require('homey');
 const TeslaAPI = require('../../tesla-api');
 
-class MyDevice extends Device {
+class MyDevice extends Homey.Device {
 	async onInit() {
 		await super.onInit();
 
