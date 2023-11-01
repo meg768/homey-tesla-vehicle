@@ -1,12 +1,27 @@
 'use strict';
 
-const Homey = require('homey');
-const TeslaAPI = require('../../tesla-api.js');
-const Device = require('../../device.js');
+const Device = require('../../device');
+const TeslaAPI = require('../../tesla-api');
 
 class MyDevice extends Device {
 	async onSettings({ oldSettings, changedKeys, newSettings }) {
 		await this.pollVehicleState(newSettings.pollInterval);
+	}
+
+
+	async onInit() {
+		await super.onInit();
+
+		this.vehicleStateTimer = null;
+		this.vehicleDataTimer = null;
+
+		// Get initial value
+		this.vehicleData = JSON.parse(JSON.stringify(this.vehicle.vehicleData));
+		this.vehicleState = 'xxx';
+
+		await this.updateCapabilities(this.vehicle.vehicleData);
+
+		await this.pollVehicleState(this.getSetting('pollInterval'));
 	}
 
 	async onUninit() {
@@ -59,62 +74,40 @@ class MyDevice extends Device {
 		}
 	}
 
-	async onInit() {
-		await super.onInit();
+    async wakeUp() {
+        this.log(`Waking up...`);
+        await this.vehicle.getVehicleData();
 
-		this.vehicleStateTimer = null;
-		this.vehicleDataTimer = null;
+    }
 
-		// Get initial value
-		this.vehicleData = JSON.parse(JSON.stringify(this.vehicle.vehicleData));
-		this.vehicleState = 'xxx';
+    isNearLocation(latitude, longitude, radius) {
+        let distance = this.getDistanceFromLocation(this.vehicle.vehicleData, latitude, longitude);
+        return distance < radius;
 
-		await this.updateCapabilities(this.vehicle.vehicleData);
+    }
 
+    isAtHome() {
+        return this.isHome(this.vehicle.vehicleData);
 
-		this.addCondition('vehicle-is-near-location', async (args, state) => {
-			let { latitude, longitude } = args;
-			let distance = this.getDistanceFromLocation(this.vehicle.vehicleData, latitude, longitude);
-			return distance < 0.2;
-		});
+    }
 
-        this.addCondition('vehicle-is-near-location-with-radius', async (args, state) => {
-			let { latitude, longitude, radius } = args;
-			let distance = this.getDistanceFromLocation(this.vehicle.vehicleData, latitude, longitude);
-			return distance < radius;
-		});
+    isLocked() {
+        return TeslaAPI.isLocked(this.vehicle.vehicleData);
+    }
 
-		this.addCondition('vehicle-is-charging', async (args, state) => {
-			return TeslaAPI.isCharging(this.vehicle.vehicleData);
-		});
+    isOnline() {
+        return this.vehicleState == 'online';
+    }
 
-		this.addCondition('vehicle-is-locked', async (args, state) => {
-			return TeslaAPI.isLocked(this.vehicle.vehicleData);
-		});
+    isCharging() {
+        return TeslaAPI.isCharging(this.vehicle.vehicleData);
+    }
 
-		this.addCondition('vehicle-is-online', async (args, state) => {
-			return this.vehicleState == 'online';
-		});
+    isDriving() {
+        return TestaAPI.isDriving(this.vehicle.vehicleData); 
+    }
 
-		this.addCondition('vehicle-is-driving', async (args, state) => {
-			return TestaAPI.isDriving(this.vehicle.vehicleData);
-		});
-
-		this.addCondition('vehicle-is-at-home', async (args, state) => {
-			return this.isAtHome(this.vehicle.vehicleData);
-		});
-
-		this.addAction('wake-up', async (args) => {
-			this.log(`Waking up...`);
-			await this.vehicle.getVehicleData();
-		});
-
-        
-
-		await this.pollVehicleState(this.getSetting('pollInterval'));
-	}
-
-	isAtHome(vehicleData) {
+	isHome(vehicleData) {
 		return this.getDistanceFromHomey(vehicleData) < 0.2;
 	}
 
@@ -230,8 +223,8 @@ class MyDevice extends Device {
 				}
 			}
 
-			if (this.isAtHome(this.vehicleData) != this.isAtHome(vehicleData)) {
-				if (this.isAtHome(vehicleData)) {
+			if (this.isHome(this.vehicleData) != this.isHome(vehicleData)) {
+				if (this.isHome(vehicleData)) {
 					await this.trigger('vehicle-inside-geofence');
 				} else {
 					await this.trigger('vehicle-outside-geofence');

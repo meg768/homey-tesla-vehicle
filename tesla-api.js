@@ -359,7 +359,7 @@ class TeslaAPI {
 
 TeslaAPI.getVehicleSpeed = (vehicleData) => {
 	if (typeof vehicleData.drive_state.speed == 'number') {
-		return vehicleData.drive_state.speed * 1.609344;
+		return Math.round(vehicleData.drive_state.speed * 1.609344);
 	}
 
 	return 0;

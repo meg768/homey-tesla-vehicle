@@ -52,8 +52,8 @@
 		{
 			"id": "vehicle-stopped-driving",
 			"title": {
-				"en": "Stopped driving",
-				"sv": "Slutade köra"
+				"en": "Parked",
+				"sv": "Parkerades"
 			}
 		},
 		{
@@ -73,7 +73,8 @@
 		{
 			"id": "vehicle-speed-changed",
 			"title": {
-				"en": "Speed changed"
+				"en": "Speed changed",
+				"sv": "Hastigheten ändrades"
 			}
 		}
 	],

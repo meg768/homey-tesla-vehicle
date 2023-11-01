@@ -210,19 +210,6 @@ class MyApp extends Homey.App {
 	}
 
 	async onUninit() {
-		// Cleanup conditions
-		if (this.conditions) {
-			this.conditions.forEach((condition) => {
-				condition.removeAllListeners();
-			});
-		}
-
-		// Cleanup actions
-		if (this.actions) {
-			this.actions.forEach((action) => {
-				action.removeAllListeners();
-			});
-		}
 	}
 
 	async onInit() {
@@ -230,8 +217,6 @@ class MyApp extends Homey.App {
 		this.api = null;
 		this.vehicles = null;
 		this.debug = this.log;
-		this.conditions = [];
-		this.actions = [];
 
 		let config = this.getConfig();
 
@@ -249,6 +234,51 @@ class MyApp extends Homey.App {
 		});
 
 
+
+		this.addCondition('vehicle-is-near-location', async (args, state) => {
+			let { device, latitude, longitude } = args;
+            return device.isNearLocation(latitude, longitude, 0.2);
+		});
+
+        this.addCondition('vehicle-is-near-location-with-radius', async (args, state) => {
+			let { device, latitude, longitude, radius } = args;
+            return device.isNearLocation(latitude, longitude, radius);
+		});
+
+		this.addCondition('vehicle-is-charging', async (args, state) => {
+            let {device} = args;
+            return device.isCharging();
+		});
+
+		this.addCondition('vehicle-is-locked', async (args, state) => {
+            let {device} = args;
+            return device.isLocked();
+		});
+
+		this.addCondition('vehicle-is-online', async (args, state) => {
+            let {device} = args;
+            return device.isOnline();
+		});
+
+		this.addCondition('vehicle-is-driving', async (args, state) => {
+            let {device} = args;
+            return device.isDriving();
+			
+		});
+
+		this.addCondition('vehicle-is-at-home', async (args, state) => {
+            let {device} = args;
+            return device.isAtHome();
+		});
+
+
+		this.addAction('wake-up', async (args) => {
+            let {device} = args;
+			await device.wakeUp();
+		});
+
+
+
         
 	}
 
@@ -258,10 +288,15 @@ class MyApp extends Homey.App {
 		await triggerCard.trigger(args);
 	}
 
-	addAction(name, fn) {
+	async addAction(name, fn) {
 		let action = this.homey.flow.getActionCard(name);
 		action.registerRunListener(fn);
-		this.actions.push(action);
+	}
+
+    async addCondition(name, fn) {
+		let condition = this.homey.flow.getConditionCard(name);
+		condition.registerRunListener(fn);
+
 	}
 
 	async getPairListDevices(description) {
