@@ -4,7 +4,7 @@
 		"sv": "Tesla"
 	},
 	"class": "other",
-	"capabilities": ["charging_speed", "charge_power", "vehicle_speed", "distance_from_homey", "odometer", "vehicle_state", "inner_temperature", "outer_temperature", "measure_battery", "battery_range", "charging_state"],
+	"capabilities": ["vehicle_location", "vehicle_charging_speed", "vehicle_charge_power", "vehicle_speed", "vehicle_distance_from_homey", "vehicle_odometer", "vehicle_state", "vehicle_inside_temperature", "vehicle_outside_temperature", "measure_battery", "vehicle_battery_range", "vehicle_charging_state"],
 	"platforms": ["local"],
 	"connectivity": [],
 	"images": {

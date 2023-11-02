@@ -76,6 +76,20 @@
 				"en": "Speed changed",
 				"sv": "Hastigheten ändrades"
 			}
+		},
+		{
+			"id": "inner-temperature-changed",
+			"title": {
+				"en": "Inner temperature changed",
+				"sv": "Innertemperaturen ändrades"
+			}
+		},
+		{
+			"id": "outer-temperature-changed",
+			"title": {
+				"en": "Outer temperature changed",
+				"sv": "Yttertemperaturen ändrades"
+			}
 		}
 	],
 	"conditions": [
@@ -117,10 +131,11 @@
 		{
 			"id": "vehicle-is-near-location",
 			"title": {
-				"en": "Is !{{near|not near}} a location"
+				"en": "Är !{{nära|inte nära}} en plats"
 			},
 			"titleFormatted": {
-				"en": "!{{Is at|Is not at}} [[location]] - [[latitude]], [[longitude]]"
+				"en": "!{{Is at|Is not at}} [[location]] ([[latitude]], [[longitude]])",
+				"sv": "!{{Är på plats|Är inte på plats}} [[location]] ([[latitude]], [[longitude]])"
 			},
 			"args": [
 				{
@@ -150,10 +165,12 @@
 		{
 			"id": "vehicle-is-near-location-with-radius",
 			"title": {
-				"en": "Is !{{near|not near}} a location with a radius"
+				"en": "Is !{{near|not near}} a location with a radius",
+				"sv": "Är !{{nära|inte nära}} a plats inom en radie"
 			},
 			"titleFormatted": {
-				"en": "Is !{{near|not near}} [[location]] within a radius of [[radius]] km - [[latitude]], [[longitude]]"
+				"en": "Is !{{near|not near}} [[location]] within a radius of [[radius]] km ([[latitude]], [[longitude]])",
+				"sv": "Är !{{nära|inte nära}} [[location]] inom en radie på [[radius]] km ([[latitude]], [[longitude]])"
 			},
 			"args": [
 				{
@@ -171,7 +188,6 @@
 						"en": "Radius"
 					}
 				},
-
 				{
 					"type": "number",
 					"name": "latitude",
@@ -193,11 +209,30 @@
 		{
 			"id": "wake-up",
 			"title": {
-				"en": "Wake up"
-			},
-			"hint": {
-				"en": "Makes your Tesla go online."
+				"en": "Wake up",
+				"sv": "Väck bilen"
 			}
+		},
+		{
+			"id": "vehicle-set-location",
+			"title": {
+				"en": "Set current location",
+				"sv": "Ange aktuell plats"
+			},
+			"titleFormatted": {
+				"en": "Set current location to [[location]]",
+				"sv": "Sätt aktuell plats till [[location]]"
+			},
+			"args": [
+				{
+					"type": "text",
+					"name": "location",
+					"placeholder": {
+						"en": "Location",
+						"sv": "Plats"
+					}
+				}
+			]
 		}
 	]
 }

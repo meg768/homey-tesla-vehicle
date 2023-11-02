@@ -1,0 +1,7 @@
+{
+	"type": "string",
+	"title": { "en": "Location", "sv": "Plats" },
+	"getable": true,
+	"setable": true,
+	"icon": "./assets/capabilities/vehicle_location.svg"
+}

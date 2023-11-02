@@ -14,6 +14,7 @@ class MyDevice extends Device {
 
 		this.vehicleStateTimer = null;
 		this.vehicleDataTimer = null;
+        this.vehicleLocation = '-';
 
 		// Get initial value
 		this.vehicleData = JSON.parse(JSON.stringify(this.vehicle.vehicleData));
@@ -164,14 +165,14 @@ class MyDevice extends Device {
 				this.setVehicleDataRefreshInterval(1);
 			}
 
-			await this.setCapabilityValue('distance_from_homey', this.getDistanceFromHomey(vehicleData));
+			await this.setCapabilityValue('vehicle_distance_from_homey', this.getDistanceFromHomey(vehicleData));
 
 			if (TeslaAPI.getInsideTemperature(this.vehicleData) != TeslaAPI.getInsideTemperature(vehicleData)) {
-				await this.setCapabilityValue('inner_temperature', TeslaAPI.getInsideTemperature(vehicleData));
+				await this.setCapabilityValue('vehicle_inside_temperature', TeslaAPI.getInsideTemperature(vehicleData));
 			}
 
 			if (TeslaAPI.getOutsideTemperature(this.vehicleData) != TeslaAPI.getOutsideTemperature(vehicleData)) {
-				await this.setCapabilityValue('outer_temperature', TeslaAPI.getOutsideTemperature(vehicleData));
+				await this.setCapabilityValue('vehicle_outside_temperature', TeslaAPI.getOutsideTemperature(vehicleData));
 			}
 
 			if (TeslaAPI.getBatteryLevel(this.vehicleData) != TeslaAPI.getBatteryLevel(vehicleData)) {
@@ -179,15 +180,15 @@ class MyDevice extends Device {
 			}
 
 			if (TeslaAPI.getBatteryRange(this.vehicleData) != TeslaAPI.getBatteryRange(vehicleData)) {
-				await this.setCapabilityValue('battery_range', TeslaAPI.getBatteryRange(vehicleData));
+				await this.setCapabilityValue('vehicle_battery_range', TeslaAPI.getBatteryRange(vehicleData));
 			}
 
 			if (TeslaAPI.getOdometer(this.vehicleData) != TeslaAPI.getOdometer(vehicleData)) {
-				await this.setCapabilityValue('odometer', TeslaAPI.getOdometer(vehicleData));
+				await this.setCapabilityValue('vehicle_odometer', TeslaAPI.getOdometer(vehicleData));
 			}
 
 			if (TeslaAPI.getChargePower(this.vehicleData) != TeslaAPI.getChargePower(vehicleData)) {
-				await this.setCapabilityValue('charge_power', TeslaAPI.getChargePower(vehicleData));
+				await this.setCapabilityValue('vehicle_charge_power', TeslaAPI.getChargePower(vehicleData));
 			}
 
 			if (TeslaAPI.getVehicleSpeed(this.vehicleData) != TeslaAPI.getVehicleSpeed(vehicleData)) {
@@ -200,11 +201,11 @@ class MyDevice extends Device {
 			}
 
 			if (TeslaAPI.getChargingState(this.vehicleData) != TeslaAPI.getChargingState(vehicleData)) {
-				await this.setCapabilityValue('charging_state', TeslaAPI.getChargingState(vehicleData));
+				await this.setCapabilityValue('vehicle_charging_state', TeslaAPI.getChargingState(vehicleData));
 			}
 
 			if (TeslaAPI.getChargingSpeed(this.vehicleData) != TeslaAPI.getChargingSpeed(vehicleData)) {
-				await this.setCapabilityValue('charging_speed', TeslaAPI.getChargingSpeed(vehicleData));
+				await this.setCapabilityValue('vehicle_charging_speed', TeslaAPI.getChargingSpeed(vehicleData));
 			}
 
 			if (TeslaAPI.isCharging(this.vehicleData) != TeslaAPI.isCharging(vehicleData)) {
@@ -231,6 +232,16 @@ class MyDevice extends Device {
 				}
 			}
 
+			if (TeslaAPI.getInsideTemperature(this.vehicleData) != TeslaAPI.getInsideTemperature(vehicleData)) {
+                this.log(`Inner temperature is now ${TeslaAPI.getInsideTemperature(vehicleData)}`);
+				await this.trigger('inner-temperature-changed');
+			}
+			if (TeslaAPI.getOutsideTemperature(this.vehicleData) != TeslaAPI.getOutsideTemperature(vehicleData)) {
+                this.log(`Outer temperature is now ${TeslaAPI.getOutsideTemperature(vehicleData)}`);
+				await this.trigger('outer-temperature-changed');
+			}
+
+
 			this.vehicleData = JSON.parse(JSON.stringify(vehicleData));
 		} catch (error) {
 			this.log(error.stack);
@@ -256,16 +267,19 @@ class MyDevice extends Device {
 	}
 
 	async updateCapabilities(vehicleData) {
-		await this.setCapabilityValue('inner_temperature', TeslaAPI.getInsideTemperature(vehicleData));
-		await this.setCapabilityValue('outer_temperature', TeslaAPI.getOutsideTemperature(vehicleData));
 		await this.setCapabilityValue('measure_battery', TeslaAPI.getBatteryLevel(vehicleData));
-		await this.setCapabilityValue('battery_range', TeslaAPI.getBatteryRange(vehicleData));
-		await this.setCapabilityValue('charging_state', TeslaAPI.getChargingState(vehicleData));
-		await this.setCapabilityValue('odometer', TeslaAPI.getOdometer(vehicleData));
-		await this.setCapabilityValue('distance_from_homey', this.getDistanceFromHomey(vehicleData));
+
+
+        await this.setCapabilityValue('vehicle_inside_temperature', TeslaAPI.getInsideTemperature(vehicleData));
+		await this.setCapabilityValue('vehicle_outside_temperature', TeslaAPI.getOutsideTemperature(vehicleData));
+		await this.setCapabilityValue('vehicle_battery_range', TeslaAPI.getBatteryRange(vehicleData));
+		await this.setCapabilityValue('vehicle_charging_state', TeslaAPI.getChargingState(vehicleData));
+		await this.setCapabilityValue('vehicle_odometer', TeslaAPI.getOdometer(vehicleData));
+		await this.setCapabilityValue('vehicle_distance_from_homey', this.getDistanceFromHomey(vehicleData));
 		await this.setCapabilityValue('vehicle_state', TeslaAPI.getState(vehicleData));
-		await this.setCapabilityValue('charge_power', TeslaAPI.getChargePower(vehicleData));
+		await this.setCapabilityValue('vehicle_charge_power', TeslaAPI.getChargePower(vehicleData));
 		await this.setCapabilityValue('vehicle_speed', TeslaAPI.getVehicleSpeed(vehicleData));
+		await this.setCapabilityValue('vehicle_location', this.getLocation(vehicleData));
 	}
 }
 

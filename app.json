@@ -50,18 +50,100 @@
         "id": "log-to-console"
       },
       {
+        "id": "defrost-for-a-while",
+        "title": {
+          "en": "Activate for a while",
+          "sv": "Slå på ett tag"
+        },
+        "titleFormatted": {
+          "en": "Activate for [[minutes]] minutes",
+          "sv": "Slå på i [[minutes]] minuter"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=defrost"
+          },
+          {
+            "type": "number",
+            "name": "minutes",
+            "placeholder": {
+              "en": "Minutes",
+              "sv": "Minuter"
+            },
+            "min": 1,
+            "max": 120,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "hvac-for-a-while",
+        "title": {
+          "en": "Activate for a while",
+          "sv": "Slå på ett tag"
+        },
+        "titleFormatted": {
+          "en": "Activate for [[minutes]] minutes",
+          "sv": "Slå på i [[minutes]] minuter"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=hvac"
+          },
+          {
+            "type": "number",
+            "name": "minutes",
+            "placeholder": {
+              "en": "Minutes",
+              "sv": "Minuter"
+            },
+            "min": 1,
+            "max": 120,
+            "step": 1
+          }
+        ]
+      },
+      {
         "id": "wake-up",
         "title": {
-          "en": "Wake up"
-        },
-        "hint": {
-          "en": "Makes your Tesla go online."
+          "en": "Wake up",
+          "sv": "Väck bilen"
         },
         "args": [
           {
             "type": "device",
             "name": "device",
             "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "vehicle-set-location",
+        "title": {
+          "en": "Set current location",
+          "sv": "Ange aktuell plats"
+        },
+        "titleFormatted": {
+          "en": "Set current location to [[location]]",
+          "sv": "Sätt aktuell plats till [[location]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          },
+          {
+            "type": "text",
+            "name": "location",
+            "placeholder": {
+              "en": "Location",
+              "sv": "Plats"
+            }
           }
         ]
       }
@@ -220,6 +302,34 @@
             "filter": "driver_id=vehicle"
           }
         ]
+      },
+      {
+        "id": "inner-temperature-changed",
+        "title": {
+          "en": "Inner temperature changed",
+          "sv": "Innertemperaturen ändrades"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "outer-temperature-changed",
+        "title": {
+          "en": "Outer temperature changed",
+          "sv": "Yttertemperaturen ändrades"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
       }
     ],
     "conditions": [
@@ -296,10 +406,11 @@
       {
         "id": "vehicle-is-near-location",
         "title": {
-          "en": "Is !{{near|not near}} a location"
+          "en": "Är !{{nära|inte nära}} en plats"
         },
         "titleFormatted": {
-          "en": "!{{Is at|Is not at}} [[location]] - [[latitude]], [[longitude]]"
+          "en": "!{{Is at|Is not at}} [[location]] ([[latitude]], [[longitude]])",
+          "sv": "!{{Är på plats|Är inte på plats}} [[location]] ([[latitude]], [[longitude]])"
         },
         "args": [
           {
@@ -334,10 +445,12 @@
       {
         "id": "vehicle-is-near-location-with-radius",
         "title": {
-          "en": "Is !{{near|not near}} a location with a radius"
+          "en": "Is !{{near|not near}} a location with a radius",
+          "sv": "Är !{{nära|inte nära}} a plats inom en radie"
         },
         "titleFormatted": {
-          "en": "Is !{{near|not near}} [[location]] within a radius of [[radius]] km - [[latitude]], [[longitude]]"
+          "en": "Is !{{near|not near}} [[location]] within a radius of [[radius]] km ([[latitude]], [[longitude]])",
+          "sv": "Är !{{nära|inte nära}} [[location]] inom en radie på [[radius]] km ([[latitude]], [[longitude]])"
         },
         "args": [
           {
@@ -744,17 +857,18 @@
       },
       "class": "other",
       "capabilities": [
-        "charging_speed",
-        "charge_power",
+        "vehicle_location",
+        "vehicle_charging_speed",
+        "vehicle_charge_power",
         "vehicle_speed",
-        "distance_from_homey",
-        "odometer",
+        "vehicle_distance_from_homey",
+        "vehicle_odometer",
         "vehicle_state",
-        "inner_temperature",
-        "outer_temperature",
+        "vehicle_inside_temperature",
+        "vehicle_outside_temperature",
         "measure_battery",
-        "battery_range",
-        "charging_state"
+        "vehicle_battery_range",
+        "vehicle_charging_state"
       ],
       "platforms": [
         "local"
@@ -778,33 +892,6 @@
             "en": "Specify the poll interval in minutes. When polling, it does not wake up your vehicle. It only fetches the online/offline state.",
             "sv": "Ange hur ofta bilens tillstånd ska uppdateras i minuter. Det kommer inte att väcka bilen utan det är bara tillståndet som hämtas. Online eller Offline."
           }
-        },
-        {
-          "id": "locationA",
-          "type": "text",
-          "label": {
-            "en": "Location A",
-            "sv": "Plats A"
-          },
-          "value": ""
-        },
-        {
-          "id": "locationB",
-          "type": "text",
-          "label": {
-            "en": "Location B",
-            "sv": "Plats B"
-          },
-          "value": ""
-        },
-        {
-          "id": "locationC",
-          "type": "text",
-          "label": {
-            "en": "Location C",
-            "sv": "Plats C"
-          },
-          "value": ""
         }
       ],
       "pair": [
@@ -857,7 +944,7 @@
     }
   ],
   "capabilities": {
-    "battery_range": {
+    "vehicle_battery_range": {
       "type": "number",
       "title": {
         "en": "Battery range",
@@ -868,9 +955,9 @@
       "units": {
         "en": "km"
       },
-      "icon": "./assets/capabilities/battery_range.svg"
+      "icon": "./assets/capabilities/vehicle_battery_range.svg"
     },
-    "charge_power": {
+    "vehicle_charge_power": {
       "type": "number",
       "title": {
         "en": "Charge power",
@@ -881,9 +968,9 @@
       "units": {
         "en": "W"
       },
-      "icon": "./assets/capabilities/charge_power.svg"
+      "icon": "./assets/capabilities/vehicle_charge_power.svg"
     },
-    "charging_speed": {
+    "vehicle_charging_speed": {
       "type": "number",
       "title": {
         "en": "Charging speed",
@@ -894,9 +981,9 @@
       "units": {
         "en": "km/h"
       },
-      "icon": "./assets/capabilities/charging_speed.svg"
+      "icon": "./assets/capabilities/vehicle_charging_speed.svg"
     },
-    "charging_state": {
+    "vehicle_charging_state": {
       "type": "string",
       "title": {
         "en": "Charging state",
@@ -904,9 +991,9 @@
       },
       "getable": true,
       "setable": false,
-      "icon": "./assets/capabilities/charging_state.svg"
+      "icon": "./assets/capabilities/vehicle_charging_state.svg"
     },
-    "distance_from_homey": {
+    "vehicle_distance_from_homey": {
       "type": "number",
       "title": {
         "en": "Away from Homey",
@@ -917,9 +1004,9 @@
       "units": {
         "en": "km"
       },
-      "icon": "./assets/capabilities/distance_from_homey.svg"
+      "icon": "./assets/capabilities/vehicle_distance_from_homey.svg"
     },
-    "inner_temperature": {
+    "vehicle_inside_temperature": {
       "type": "number",
       "title": {
         "en": "Inner temperature",
@@ -930,9 +1017,19 @@
       "units": {
         "en": "°C"
       },
-      "icon": "./assets/capabilities/inner_temperature.svg"
+      "icon": "./assets/capabilities/vehicle_inside_temperature.svg"
     },
-    "odometer": {
+    "vehicle_location": {
+      "type": "string",
+      "title": {
+        "en": "Location",
+        "sv": "Plats"
+      },
+      "getable": true,
+      "setable": true,
+      "icon": "./assets/capabilities/vehicle_location.svg"
+    },
+    "vehicle_odometer": {
       "type": "number",
       "title": {
         "en": "Odometer",
@@ -943,9 +1040,9 @@
       "units": {
         "en": "km"
       },
-      "icon": "./assets/capabilities/odometer.svg"
+      "icon": "./assets/capabilities/vehicle_odometer.svg"
     },
-    "outer_temperature": {
+    "vehicle_outside_temperature": {
       "type": "number",
       "title": {
         "en": "Outer temperature",
@@ -956,7 +1053,7 @@
       "units": {
         "en": "°C"
       },
-      "icon": "./assets/capabilities/outer_temperature.svg"
+      "icon": "./assets/capabilities/vehicle_outside_temperature.svg"
     },
     "vehicle_speed": {
       "type": "number",

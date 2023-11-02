@@ -5,7 +5,7 @@
     "getable": true,
     "setable": false,
     "units": { "en": "km" },
-    "icon": "./assets/capabilities/battery_range.svg"
+    "icon": "./assets/capabilities/vehicle_battery_range.svg"
 
     
   }

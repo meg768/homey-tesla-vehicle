@@ -1,0 +1,29 @@
+{
+    
+	"actions": [
+		{
+			"id": "defrost-for-a-while",
+			"title": {
+				"en": "Activate for a while",
+				"sv": "Slå på ett tag"
+			},
+			"titleFormatted": {
+				"en": "Activate for [[minutes]] minutes",
+				"sv": "Slå på i [[minutes]] minuter"
+			},
+			"args": [
+				{
+					"type": "number",
+					"name": "minutes",
+					"placeholder": {
+						"en": "Minutes",
+						"sv": "Minuter"
+					},
+					"min": 1,
+					"max": 120,
+					"step": 1
+				}
+			]
+		}
+	]
+}

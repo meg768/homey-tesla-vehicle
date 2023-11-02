@@ -4,5 +4,5 @@
 	"getable": true,
 	"setable": false,
 	"units": { "en": "°C" },
-	"icon": "./assets/capabilities/inner_temperature.svg"
+	"icon": "./assets/capabilities/vehicle_inside_temperature.svg"
 }

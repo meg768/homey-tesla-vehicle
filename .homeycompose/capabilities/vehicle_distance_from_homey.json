@@ -5,6 +5,6 @@
     "getable": true,
     "setable": false,
     "units": { "en": "km" },
-    "icon": "./assets/capabilities/distance_from_homey.svg"
+    "icon": "./assets/capabilities/vehicle_distance_from_homey.svg"
     
   }
