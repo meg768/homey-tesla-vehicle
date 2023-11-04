@@ -78,14 +78,21 @@
 			}
 		},
 		{
-			"id": "inner-temperature-changed",
+			"id": "vehicle-named-location-changed",
+			"title": {
+				"en": "Named location changed",
+				"sv": "Namngiven plats ändrades"
+			}
+		},
+		{
+			"id": "vehicle-inside-temperature-changed",
 			"title": {
 				"en": "Inner temperature changed",
 				"sv": "Innertemperaturen ändrades"
 			}
 		},
 		{
-			"id": "outer-temperature-changed",
+			"id": "vehicle-outside-temperature-changed",
 			"title": {
 				"en": "Outer temperature changed",
 				"sv": "Yttertemperaturen ändrades"
@@ -207,21 +214,21 @@
 	],
 	"actions": [
 		{
-			"id": "wake-up",
+			"id": "vehicle-wake-up",
 			"title": {
 				"en": "Wake up",
 				"sv": "Väck bilen"
 			}
 		},
 		{
-			"id": "vehicle-set-location",
+			"id": "vehicle-set-named-location",
 			"title": {
-				"en": "Set current location",
-				"sv": "Ange aktuell plats"
+				"en": "Set named location",
+				"sv": "Ange namngiven plats"
 			},
 			"titleFormatted": {
-				"en": "Set current location to [[location]]",
-				"sv": "Sätt aktuell plats till [[location]]"
+				"en": "Set named location to [[location]]",
+				"sv": "Sätt namngiven plats till [[location]]"
 			},
 			"args": [
 				{

@@ -36,83 +36,20 @@ class MyApp extends Homey.App {
 
 
 
-		this.addCondition('vehicle-is-near-location', async (args, state) => {
-			let { device, latitude, longitude, radius } = args;
-            return device.isNearLocation(latitude, longitude, 0.2);
-		});
+		this.addCondition('vehicle-is-near-location');
+        this.addCondition('vehicle-is-near-location-with-radius');
+		this.addCondition('vehicle-is-charging');
+        this.addCondition('vehicle-is-locked');
+        this.addCondition('vehicle-is-online');
+        this.addCondition('vehicle-is-driving');
+        this.addCondition('vehicle-is-at-home');
 
-        this.addCondition('vehicle-is-near-location-with-radius', async (args, state) => {
-			let { device, latitude, longitude, radius } = args;
-            return device.isNearLocation(latitude, longitude, radius);
-		});
+        this.addAction('vehicle-set-named-location');
+		this.addAction('vehicle-wake-up');
 
-		this.addCondition('vehicle-is-charging', async (args, state) => {
-            let {device} = args;
-            return device.isCharging();
-		});
-
-		this.addCondition('vehicle-is-locked', async (args, state) => {
-            let {device} = args;
-            return device.isLocked();
-		});
-
-		this.addCondition('vehicle-is-online', async (args, state) => {
-            let {device} = args;
-            return device.isOnline();
-		});
-
-		this.addCondition('vehicle-is-driving', async (args, state) => {
-            let {device} = args;
-            return device.isDriving();
-			
-		});
-
-		this.addCondition('vehicle-is-at-home', async (args, state) => {
-            let {device} = args;
-            return device.isAtHome();
-		});
-
-
-		this.addAction('wake-up', async (args) => {
-            let {device} = args;
-			await device.wakeUp();
-		});
-
-        this.addAction('defrost-for-a-while', async () => {
-            let {device, minutes} = args;
-            let timer = this.getTimer('defrost-for-a-while-timer');
-
-            await device.vehicle.setDefrostState(true);
-            await device.vehicle.updateVehicleData(2000);
-
-            timer.setTimer(minutes * 60000, async () => {
-                await device.vehicle.setDefrostState(false);
-                await device.vehicle.updateVehicleData(2000);
-            });
-
-        });
+        this.addAction('defrost-for-a-while');
+        this.addAction('hvac-for-a-while');
         
-        this.addAction('hvac-for-a-while', async () => {
-            let {device, minutes} = args;
-            let timer = this.getTimer('hvac-for-a-while-timer');
-
-            await device.vehicle.setClimateState(true);
-            await device.vehicle.updateVehicleData(2000);
-
-            timer.setTimer(minutes * 60000, async () => {
-                await device.vehicle.setClimateState(false);
-                await device.vehicle.updateVehicleData(2000);
-            });
-
-        });
-
-        this.addAction('vehicle-set-location', async (args) => {
-            let {device, location} = args;
-
-            this.log(`${JSON.stringify(device.getData())}`);
-            await device.setCapabilityValue('vehicle_location', location);
-
-        });
 
     }
 
@@ -185,12 +122,32 @@ class MyApp extends Homey.App {
 
 	async addAction(name, fn) {
 		let action = this.homey.flow.getActionCard(name);
-		action.registerRunListener(fn);
+
+        if (fn == undefined) {
+            action.registerRunListener(async (args) => {
+                let {device, ...parameters} = args;
+                await device.onAction(name, parameters);
+            });
+    
+        }
+        else
+    		action.registerRunListener(fn);
 	}
 
     async addCondition(name, fn) {
 		let condition = this.homey.flow.getConditionCard(name);
-		condition.registerRunListener(fn);
+
+        if (fn == undefined) {
+            condition.registerRunListener(async (args) => {
+                let {device, ...parameters} = args;
+                return await device.onCondition(name, parameters);
+            });
+    
+        }
+        else {
+            condition.registerRunListener(fn);
+
+        }
 
 	}
 
