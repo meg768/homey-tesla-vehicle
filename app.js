@@ -44,7 +44,7 @@ class MyApp extends Homey.App {
         this.addCondition('vehicle-is-driving');
         this.addCondition('vehicle-is-at-home');
 
-        this.addAction('vehicle-set-named-location');
+        this.addAction('vehicle-set-location');
 		this.addAction('vehicle-wake-up');
 
         this.addAction('defrost-for-a-while');

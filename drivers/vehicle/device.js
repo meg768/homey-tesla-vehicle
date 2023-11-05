@@ -58,21 +58,42 @@ class MyDevice extends Device {
 
 	async onAction(name, args) {
 		switch (name) {
-            case 'vehicle-wake-up': {
+			case 'vehicle-wake-up': {
 				await this.vehicle.getVehicleData();
-                break;
+				break;
 			}
 
-			case 'vehicle-set-named-location': {
+			case 'vehicle-set-location': {
 				let { location } = args;
 
-				this.log(`${JSON.stringify(this.getData())}`);
-				await this.setCapabilityValue('vehicle_location', location);
+				let setLocation = async (location) => {
+					await this.setCapabilityValue('vehicle_location', location);
 
-				if (this.vehicleLocation != location) {
-					this.vehicleLocation = location;
-					this.trigger('vehicle-named-location-changed');
-				}
+					if (this.vehicleLocation != location) {
+						this.vehicleLocation = location;
+						this.trigger('vehicle-location-changed');
+					}
+				};
+
+				await setLocation(location);
+
+				/*
+
+				let timer = this.app.getTimer('vehicle-set-location');
+
+				timer.setTimer(60 * 60000, async () => {
+ 					if (this.isAtHome()) {
+						location = 'Hemma';
+					} else {
+						location = '-';
+					}
+
+                    await setLocation(location);
+                
+                });
+
+                */
+
 				break;
 			}
 		}
@@ -86,23 +107,23 @@ class MyDevice extends Device {
 			case 'vehicle-is-locked': {
 				return this.isLocked();
 			}
-            case 'vehicle-is-online': {
-                return this.isOnline();
-            }
-            case 'vehicle-is-charging': {
-                return this.isCharging();
-            }
-            case 'vehicle-is-near-location': {
-                let { latitude, longitude, radius } = args;
-                return this.isNearLocation(latitude, longitude, 0.2);
-            }
-            case 'vehicle-is-near-location-with-radius': {
-                let { latitude, longitude, radius } = args;
-                return this.isNearLocation(latitude, longitude, radius);
-            }
+			case 'vehicle-is-online': {
+				return this.isOnline();
+			}
+			case 'vehicle-is-charging': {
+				return this.isCharging();
+			}
+			case 'vehicle-is-near-location': {
+				let { latitude, longitude, radius } = args;
+				return this.isNearLocation(latitude, longitude, 0.2);
+			}
+			case 'vehicle-is-near-location-with-radius': {
+				let { latitude, longitude, radius } = args;
+				return this.isNearLocation(latitude, longitude, radius);
+			}
 		}
 
-        return false;
+		return false;
 	}
 
 	async setVehicleDataRefreshInterval(delay = 0) {
@@ -191,8 +212,8 @@ class MyDevice extends Device {
 		return this.getDistanceFromLocation(vehicleData, latitude, longitude);
 	}
 
-	getLocation(vehicleData) {
-		return `${vehicleData.drive_state.latitude} ${vehicleData.drive_state.longitude}`;
+	getPosition(vehicleData) {
+		return `${vehicleData.drive_state.latitude}, ${vehicleData.drive_state.longitude}`;
 	}
 
 	async onVehicleData(vehicleData) {
@@ -238,9 +259,17 @@ class MyDevice extends Device {
 	}
 
 	async updateTriggers(vehicleData) {
-		if (this.getLocation(this.vehicleData) != this.getLocation(vehicleData)) {
-			await this.trigger('vehicle-location-changed');
+		if (this.getPosition(this.vehicleData) != this.getPosition(vehicleData)) {
+			await this.trigger('vehicle-position-changed');
 		}
+		if (TeslaAPI.isLocked(this.vehicleData) != TeslaAPI.isLocked(vehicleData)) {
+			if (TeslaAPI.isLocked(vehicleData)) {
+				await this.trigger('vehicle-locked');
+			} else {
+				await this.trigger('vehicle-unlocked');
+			}
+		}
+
 
 		if (TeslaAPI.isCharging(this.vehicleData) != TeslaAPI.isCharging(vehicleData)) {
 			if (TeslaAPI.isCharging(vehicleData)) {
@@ -280,18 +309,79 @@ class MyDevice extends Device {
 		}
 	}
 
+	getOdometer(vehicleData) {
+		let odometer = TeslaAPI.getOdometer(vehicleData);
+	}
+
+	getVehicleState(vehicleData) {
+		switch (vehicleData.state) {
+			case 'online': {
+				return 'Online';
+			}
+		}
+
+		return 'Offline';
+	}
+
+	getChargingState(vehicleData) {
+		switch (vehicleData.charge_state.charging_state) {
+			case 'Disconnected': {
+				return 'Urkopplad';
+			}
+			case 'Connected': {
+				return 'Laddar';
+			}
+		}
+
+		return vehicleData.charge_state.charging_state;
+	}
+
+	getChargePower(vehicleData) {
+		return Math.round(vehicleData.charge_state.charge_rate * vehicleData.charge_state.charger_voltage);
+	}
+
+	getBatteryRange(vehicleData) {
+		return Math.round(vehicleData.charge_state.battery_range * 1.609344);
+	}
+
+	getOdometer(vehicleData) {
+		return Math.round(vehicleData.vehicle_state.odometer * 1.609344);
+	}
+
+	getVehicleSpeed(vehicleData) {
+		if (typeof vehicleData.drive_state.speed == 'number') {
+			return Math.round(vehicleData.drive_state.speed * 1.609344);
+		}
+
+		return 0;
+	}
+	getInsideTemperature(vehicleData) {
+		return vehicleData.climate_state.inside_temp;
+	}
+
+	getOutsideTemperature(vehicleData) {
+		return vehicleData.climate_state.outside_temp;
+	}
+
 	async updateCapabilities(vehicleData) {
+		function formatNumber(number) {
+			if (typeof number != 'number') {
+				number = parseFloat(number);
+			}
+			return new Intl.NumberFormat().format(number);
+		}
+
 		await this.setCapabilityValue('measure_battery', TeslaAPI.getBatteryLevel(vehicleData));
 
-		await this.setCapabilityValue('vehicle_inside_temperature', TeslaAPI.getInsideTemperature(vehicleData));
-		await this.setCapabilityValue('vehicle_outside_temperature', TeslaAPI.getOutsideTemperature(vehicleData));
-		await this.setCapabilityValue('vehicle_battery_range', TeslaAPI.getBatteryRange(vehicleData));
-		await this.setCapabilityValue('vehicle_charging_state', TeslaAPI.getChargingState(vehicleData));
-		await this.setCapabilityValue('vehicle_odometer', TeslaAPI.getOdometer(vehicleData));
+		await this.setCapabilityValue('vehicle_inside_temperature', this.getInsideTemperature(vehicleData));
+		await this.setCapabilityValue('vehicle_outside_temperature', this.getOutsideTemperature(vehicleData));
+		await this.setCapabilityValue('vehicle_battery_range', this.getBatteryRange(vehicleData));
+		await this.setCapabilityValue('vehicle_charging_state', this.getChargingState(vehicleData));
+		await this.setCapabilityValue('vehicle_odometer', this.getOdometer(vehicleData));
 		await this.setCapabilityValue('vehicle_distance_from_homey', this.getDistanceFromHomey(vehicleData));
-		await this.setCapabilityValue('vehicle_state', TeslaAPI.getState(vehicleData));
-		await this.setCapabilityValue('vehicle_charge_power', TeslaAPI.getChargePower(vehicleData));
-		await this.setCapabilityValue('vehicle_speed', TeslaAPI.getVehicleSpeed(vehicleData));
+		await this.setCapabilityValue('vehicle_state', this.getVehicleState(vehicleData));
+		await this.setCapabilityValue('vehicle_charge_power', this.getChargePower(vehicleData));
+		await this.setCapabilityValue('vehicle_speed', this.getVehicleSpeed(vehicleData));
 		await this.setCapabilityValue('vehicle_location', this.vehicleLocation);
 	}
 }

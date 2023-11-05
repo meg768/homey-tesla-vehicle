@@ -18,6 +18,8 @@
     "DeviceSteeringWheelHeaterInstanceName": "Rattvärme",
     "DeviceDefrostInstanceName": "Avfrostning",
     "DeviceLockInstanceName": "Lås",
+    "DeviceDoorInstanceName": "Dörrarna",
+
     
     
 	"Device Vehicle Texts": "--------------------------------------",

@@ -11,7 +11,14 @@
 			"id": "vehicle-location-changed",
 			"title": {
 				"en": "Location changed",
-				"sv": "Ändrade plats"
+				"sv": "Plats ändrades"
+			}
+		},
+		{
+			"id": "vehicle-position-changed",
+			"title": {
+				"en": "Position changed",
+				"sv": "Position ändrades"
 			}
 		},
 		{
@@ -24,22 +31,36 @@
 		{
 			"id": "vehicle-state-changed",
 			"title": {
-				"en": "State changed",
-				"sv": "Online/offline ändrades"
+				"en": "State changed (online/offline)",
+				"sv": "Tillstånd ändrades (online/offline)"
 			}
 		},
 		{
 			"id": "vehicle-online",
 			"title": {
-				"en": "Online",
-				"sv": "Online"
+				"en": "Is online",
+				"sv": "Är online"
 			}
 		},
 		{
 			"id": "vehicle-offline",
 			"title": {
-				"en": "Offline",
-				"sv": "Offline"
+				"en": "Is offline",
+				"sv": "Är offline"
+			}
+		},
+		{
+			"id": "vehicle-locked",
+			"title": {
+				"en": "Locked",
+				"sv": "Låstes"
+			}
+		},
+		{
+			"id": "vehicle-unlocked",
+			"title": {
+				"en": "Unlocked",
+				"sv": "Låstes upp"
 			}
 		},
 		{
@@ -59,15 +80,15 @@
 		{
 			"id": "vehicle-charging-started",
 			"title": {
-				"en": "Started charging",
-				"sv": "Började ladda"
+				"en": "Charging started",
+				"sv": "Laddning påbörjades"
 			}
 		},
 		{
 			"id": "vehicle-charging-stopped",
 			"title": {
-				"en": "Stopped charging",
-				"sv": "Slutade ladda"
+				"en": "Charging stopped",
+				"sv": "Laddning avslutades"
 			}
 		},
 		{
@@ -75,13 +96,6 @@
 			"title": {
 				"en": "Speed changed",
 				"sv": "Hastigheten ändrades"
-			}
-		},
-		{
-			"id": "vehicle-named-location-changed",
-			"title": {
-				"en": "Named location changed",
-				"sv": "Namngiven plats ändrades"
 			}
 		},
 		{
@@ -110,15 +124,15 @@
 		{
 			"id": "vehicle-is-charging",
 			"title": {
-				"en": "!{{Is|Is not}} charging",
-				"sv": "!{{Laddar|Laddar inte}}"
+				"en": "Car !{{is|is not}} charging",
+				"sv": "Bilen !{{laddar|laddar inte}}"
 			}
 		},
 		{
 			"id": "vehicle-is-driving",
 			"title": {
-				"en": "!{{Is|Is not}} driving",
-				"sv": "!{{Kör|Är Parkerad}}"
+				"en": "Car !{{is driving|is parked}}",
+				"sv": "Bilen !{{kör|är parkerad}}"
 			}
 		},
 		{
@@ -221,14 +235,14 @@
 			}
 		},
 		{
-			"id": "vehicle-set-named-location",
+			"id": "vehicle-set-location",
 			"title": {
-				"en": "Set named location",
-				"sv": "Ange namngiven plats"
+				"en": "Set location",
+				"sv": "Ange plats"
 			},
 			"titleFormatted": {
-				"en": "Set named location to [[location]]",
-				"sv": "Sätt namngiven plats till [[location]]"
+				"en": "Set location to [[location]]",
+				"sv": "Sätt plats till [[location]]"
 			},
 			"args": [
 				{

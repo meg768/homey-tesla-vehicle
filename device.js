@@ -13,6 +13,7 @@ module.exports = class extends Homey.Device {
 
 	async onInit() {
         
+        this.app = this.homey.app;
         this.debug = this.log;
         this.vehicle = await this.homey.app.registerDevice(this);
 

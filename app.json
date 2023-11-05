@@ -122,14 +122,14 @@
         ]
       },
       {
-        "id": "vehicle-set-named-location",
+        "id": "vehicle-set-location",
         "title": {
-          "en": "Set named location",
-          "sv": "Ange namngiven plats"
+          "en": "Set location",
+          "sv": "Ange plats"
         },
         "titleFormatted": {
-          "en": "Set named location to [[location]]",
-          "sv": "Sätt namngiven plats till [[location]]"
+          "en": "Set location to [[location]]",
+          "sv": "Sätt plats till [[location]]"
         },
         "args": [
           {
@@ -167,7 +167,21 @@
         "id": "vehicle-location-changed",
         "title": {
           "en": "Location changed",
-          "sv": "Ändrade plats"
+          "sv": "Plats ändrades"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "vehicle-position-changed",
+        "title": {
+          "en": "Position changed",
+          "sv": "Position ändrades"
         },
         "args": [
           {
@@ -194,8 +208,8 @@
       {
         "id": "vehicle-state-changed",
         "title": {
-          "en": "State changed",
-          "sv": "Online/offline ändrades"
+          "en": "State changed (online/offline)",
+          "sv": "Tillstånd ändrades (online/offline)"
         },
         "args": [
           {
@@ -208,8 +222,8 @@
       {
         "id": "vehicle-online",
         "title": {
-          "en": "Online",
-          "sv": "Online"
+          "en": "Is online",
+          "sv": "Är online"
         },
         "args": [
           {
@@ -222,8 +236,36 @@
       {
         "id": "vehicle-offline",
         "title": {
-          "en": "Offline",
-          "sv": "Offline"
+          "en": "Is offline",
+          "sv": "Är offline"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "vehicle-locked",
+        "title": {
+          "en": "Locked",
+          "sv": "Låstes"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "vehicle-unlocked",
+        "title": {
+          "en": "Unlocked",
+          "sv": "Låstes upp"
         },
         "args": [
           {
@@ -264,8 +306,8 @@
       {
         "id": "vehicle-charging-started",
         "title": {
-          "en": "Started charging",
-          "sv": "Började ladda"
+          "en": "Charging started",
+          "sv": "Laddning påbörjades"
         },
         "args": [
           {
@@ -278,8 +320,8 @@
       {
         "id": "vehicle-charging-stopped",
         "title": {
-          "en": "Stopped charging",
-          "sv": "Slutade ladda"
+          "en": "Charging stopped",
+          "sv": "Laddning avslutades"
         },
         "args": [
           {
@@ -294,20 +336,6 @@
         "title": {
           "en": "Speed changed",
           "sv": "Hastigheten ändrades"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=vehicle"
-          }
-        ]
-      },
-      {
-        "id": "vehicle-named-location-changed",
-        "title": {
-          "en": "Named location changed",
-          "sv": "Namngiven plats ändrades"
         },
         "args": [
           {
@@ -364,8 +392,8 @@
       {
         "id": "vehicle-is-charging",
         "title": {
-          "en": "!{{Is|Is not}} charging",
-          "sv": "!{{Laddar|Laddar inte}}"
+          "en": "Car !{{is|is not}} charging",
+          "sv": "Bilen !{{laddar|laddar inte}}"
         },
         "args": [
           {
@@ -378,8 +406,8 @@
       {
         "id": "vehicle-is-driving",
         "title": {
-          "en": "!{{Is|Is not}} driving",
-          "sv": "!{{Kör|Är Parkerad}}"
+          "en": "Car !{{is driving|is parked}}",
+          "sv": "Bilen !{{kör|är parkerad}}"
         },
         "args": [
           {
@@ -538,6 +566,54 @@
         }
       ],
       "id": "defrost"
+    },
+    {
+      "name": {
+        "en": "Doors",
+        "sv": "Dörrarna"
+      },
+      "class": "button",
+      "capabilities": [
+        "onoff"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [],
+      "images": {
+        "small": "/drivers/doors/assets/images/small.png",
+        "large": "/drivers/doors/assets/images/large.png",
+        "xlarge": "/drivers/doors/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "doors",
+      "settings": [
+        {
+          "id": "remoteStartDrivePassword",
+          "type": "text",
+          "label": {
+            "en": "Password for keyless driving",
+            "sv": "Lösenord för nyckellös körning"
+          },
+          "hint": {
+            "en": "If specified your car will be ready to drive without your keycard present when unlocking.",
+            "sv": "Anger du lösenord här behöver du inte din bilnyckel (kortet) för att köra iväg när du låser upp."
+          },
+          "value": ""
+        }
+      ]
     },
     {
       "name": {
@@ -872,7 +948,6 @@
       "class": "other",
       "capabilities": [
         "vehicle_location",
-        "vehicle_charging_speed",
         "vehicle_charge_power",
         "vehicle_speed",
         "vehicle_distance_from_homey",
@@ -962,7 +1037,7 @@
       "type": "number",
       "title": {
         "en": "Battery range",
-        "sv": "Kilometer"
+        "sv": "Räckvidd"
       },
       "getable": true,
       "setable": false,

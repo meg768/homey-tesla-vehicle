@@ -23,5 +23,6 @@
   "DeviceVehicleDisconnected": "Urkopplad",
   "DeviceVehicleStopped": "Stoppades",
   "this-is-the-end": "Hate commas in JSON",
-  "DeviceSteeringWheelHeaterInstanceName": "Rattvärme"
+  "DeviceSteeringWheelHeaterInstanceName": "Rattvärme",
+  "DeviceDoorInstanceName": "Dörrarna"
 }

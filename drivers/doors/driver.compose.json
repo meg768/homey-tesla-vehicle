@@ -1,10 +1,12 @@
 {
 	"name": {
-		"en": "Tesla",
-		"sv": "Tesla"
+		"en": "Doors",
+		"sv": "Dörrarna"
 	},
-	"class": "other",
-	"capabilities": ["vehicle_location", "vehicle_charge_power", "vehicle_speed", "vehicle_distance_from_homey", "vehicle_odometer", "vehicle_state", "vehicle_inside_temperature", "vehicle_outside_temperature", "measure_battery", "vehicle_battery_range", "vehicle_charging_state"],
+
+	"class": "button",
+	"capabilities": ["onoff"],
+
 	"platforms": ["local"],
 	"connectivity": [],
 	"images": {
@@ -13,9 +15,6 @@
 		"xlarge": "{{driverAssetsPath}}/images/xlarge.png"
 	},
 
-	"settings": {
-		"pollInterval": 5
-	},
 	"pair": [
 		{
 			"id": "list_devices",

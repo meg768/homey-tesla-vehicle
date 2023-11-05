@@ -1,7 +1,7 @@
 
 {
     "type": "number",
-    "title": { "en": "Battery range", "sv": "Kilometer" },
+    "title": { "en": "Battery range", "sv": "Räckvidd" },
     "getable": true,
     "setable": false,
     "units": { "en": "km" },

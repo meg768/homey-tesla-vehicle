@@ -52,5 +52,6 @@
   "DeviceSteeringWwheelHeaterInstanceName": "Steering wheel heater",
   "DeviceDefrostInstanceName": "Defrost",
   "DeviceLockInstanceName": "Lock",
-  "DeviceSteeringWheelHeaterInstanceName": "Steering wheel heater"
+  "DeviceSteeringWheelHeaterInstanceName": "Steering wheel heater",
+  "DeviceDoorInstanceName": "Doors"
 }

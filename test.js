@@ -1,10 +1,24 @@
 
 
-for (let A = 1; A < 100; A++) {
-    for (let B = 1; B < 100; B++) {
-        for (let C = 1; C < 100; C++) {
-            let D = A/(B+C) + B/(A+C) + C/(A+B);
-            console.log(`${D}`);
-        }
-    }
+
+const number = 123456.789;
+
+function formatNumber(number) {
+    return new Intl.NumberFormat().format(number)
 }
+
+console.log(
+  new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(
+    number,
+  ),
+);
+
+console.log(
+    new Intl.NumberFormat().format(
+      number,
+    ),
+  );
+  
+
+console.log(formatNumber(number));
+// Expected output: "1,23,000"
