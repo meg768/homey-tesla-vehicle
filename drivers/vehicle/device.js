@@ -310,7 +310,7 @@ class MyDevice extends Device {
 	}
 
 	getOdometer(vehicleData) {
-		let odometer = TeslaAPI.getOdometer(vehicleData);
+		return TeslaAPI.getOdometer(vehicleData);
 	}
 
 	getVehicleState(vehicleData) {
@@ -342,10 +342,6 @@ class MyDevice extends Device {
 
 	getBatteryRange(vehicleData) {
 		return Math.round(vehicleData.charge_state.battery_range * 1.609344);
-	}
-
-	getOdometer(vehicleData) {
-		return Math.round(vehicleData.vehicle_state.odometer * 1.609344);
 	}
 
 	getVehicleSpeed(vehicleData) {
