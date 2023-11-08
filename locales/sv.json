@@ -2,7 +2,7 @@
   "InvalidAccessToken": "Nyckeln fungerade inte. Använd ett verktyg som 'Auth for Tesla' för att generera en giltig nyckel. Försök igen med en annan nyckel.",
   "InnerTemperature": "Inner temperature",
   "General error messages": "--------------------------------------",
-  "NoAPI": "För att hitta den här enheten måste du först ange en nyckel under 'Inställningar'.",
+  "NoAPI": "För att hitta den här enheten måste du först ange en giltig nyckel under 'Inställningar'.",
   "SpecifyAccessToken": "En nyckel måste anges.",
   "Device Instance Names": "--------------------------------------",
   "DeviceHvacInstanceName": "Fläkten",
