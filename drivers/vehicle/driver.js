@@ -1,10 +1,13 @@
-'use strict';
+const Homey = require('homey');
 
-const { Driver } = require('homey');
+class Driver extends Homey.Driver {
 
-module.exports = class MyDriver extends Driver {
+    
 
-	async onPairListDevices() {
+    async onPairListDevices() {
 		return await this.homey.app.getPairListDevices();
 	}
+
 }
+
+module.exports = Driver;

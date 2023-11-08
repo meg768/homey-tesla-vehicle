@@ -12,15 +12,15 @@ https://www.svgrepo.com/svg/114988/turn-off?edit=true
 https://thenounproject.com/browse/icons/term/car-trunk/
 */
 class Vehicle extends Events {
-	constructor({ app, vehicleID }) {
+	constructor({ homey, api, vehicleID }) {
 		super();
 
-		this.app = app;
-		this.log = app.log;
+		this.api = api;
+        this.homey = homey;
+		this.log = this.homey.app.log;
+		this.debug = this.homey.app.log;
 		this.vehicleID = vehicleID;
-		this.debug = app.debug;
 		this.vehicleData = null;
-        this.vehiceState = 'wtf';
 
         this.setMaxListeners(20);
 
@@ -29,7 +29,7 @@ class Vehicle extends Events {
 	async onUninit() {}
 
 	getAPI() {
-		return this.app.api;
+		return this.api;
 	}
 
 	async request(method, command, options) {
@@ -102,40 +102,33 @@ class Vehicle extends Events {
         await this.post('command/remote_steering_wheel_heater_request', { on: state });
     }
 
-	async getVehicleState() {
+	async poll() {
 		this.log(`Fetching vehicle state.`);
+
 		let vehicle = await this.getAPI().getVehicle(this.vehicleID);
 
 		if (vehicle && typeof vehicle.state == 'string') {
-            // If vehicle state changed - notify
-            if (this.vehicleState != vehicle.state) {
-                this.vehicleState = vehicle.state;
-                this.emit('vehicle_state', this.vehicleState);
-            }
+            this.vehicleData.state = vehicle.state;
+            this.log(`Vehicle is ${this.vehicleData.state}`);
 
             // Freebie?!
 			if (vehicle.state == 'online') {
 				await this.getVehicleData();
 			}
+            else {
+                // Emit the data
+                this.emit('vehicle_data', this.vehicleData);
 
-			return this.vehicleState;
+            }
+
 		}
 
-		return 'unknown';
+        return this.vehiceData;
+
 	}
 
 	async getVehicleData() {
 		this.vehicleData = await this.getAPI().request(this.vehicleID, 'GET', 'vehicle_data');
-
-		if (this.vehicleData && typeof this.vehicleData.state == 'string') {
-
-            // Emit vehicle state if changed
-            if (this.vehiceState != this.vehicleData.state) {
-                this.vehiceState = this.vehicleData.state;
-                this.emit('vehicle_state', this.vehicleState);
-            }
-
-		}
 
         // Emit the data
 		this.emit('vehicle_data', this.vehicleData);

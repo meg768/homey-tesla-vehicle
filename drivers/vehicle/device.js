@@ -41,7 +41,7 @@ class MyDevice extends Device {
 
 			if (interval > 0) {
 				try {
-					await this.vehicle.getVehicleState();
+					await this.vehicle.poll();
 				} catch (error) {
 					this.log(`Failed polling vehicle state. ${error.stack}`);
 				}
@@ -240,25 +240,19 @@ class MyDevice extends Device {
 		}
 	}
 
-	async onVehicleState(vehicleState) {
-		await super.onVehicleState(vehicleState);
-
-		if (this.vehicleState != vehicleState) {
-			this.vehicleState = vehicleState;
-
-			if (vehicleState == 'online') {
-				await this.setCapabilityValue('vehicle_state', 'Online');
-				this.trigger('vehicle-online');
-			} else {
-				await this.setCapabilityValue('vehicle_state', 'Offline');
-				this.trigger('vehicle-offline');
-			}
-
-			this.trigger('vehicle-state-changed');
-		}
-	}
+    
 
 	async updateTriggers(vehicleData) {
+		if (this.vehicleData.state != vehicleData.state) {
+			this.trigger('vehicle-state-changed');
+
+			if (vehicleData.state == 'online') {
+				this.trigger('vehicle-online');
+			} else {
+				this.trigger('vehicle-offline');
+			}
+		}
+
 		if (this.getPosition(this.vehicleData) != this.getPosition(vehicleData)) {
 			await this.trigger('vehicle-position-changed');
 		}
@@ -269,7 +263,6 @@ class MyDevice extends Device {
 				await this.trigger('vehicle-unlocked');
 			}
 		}
-
 
 		if (TeslaAPI.isCharging(this.vehicleData) != TeslaAPI.isCharging(vehicleData)) {
 			if (TeslaAPI.isCharging(vehicleData)) {
@@ -337,28 +330,29 @@ class MyDevice extends Device {
 	}
 
 	getChargePower(vehicleData) {
-		return Math.round(vehicleData.charge_state.charge_rate * vehicleData.charge_state.charger_voltage);
+		return TeslaAPI.getChargePower(vehicleData);
 	}
 
 	getBatteryRange(vehicleData) {
-		return Math.round(vehicleData.charge_state.battery_range * 1.609344);
+		return TeslaAPI.getBatteryRange(this.vehicleData);
 	}
 
 	getVehicleSpeed(vehicleData) {
-		if (typeof vehicleData.drive_state.speed == 'number') {
-			return Math.round(vehicleData.drive_state.speed * 1.609344);
-		}
-
-		return 0;
+        return TeslaAPI.getVehicleSpeed(vehicleData);
 	}
-	getInsideTemperature(vehicleData) {
-		return vehicleData.climate_state.inside_temp;
+
+    getInsideTemperature(vehicleData) {
+		return TeslaAPI.getInsideTemperature(vehicleData);
 	}
 
 	getOutsideTemperature(vehicleData) {
-		return vehicleData.climate_state.outside_temp;
+		return TeslaAPI.getOutsideTemperature(vehicleData);
 	}
 
+    getBatteryLevel(vehicleData) {
+        return TeslaAPI.getBatteryLevel(vehicleData);
+    }
+    
 	async updateCapabilities(vehicleData) {
 		function formatNumber(number) {
 			if (typeof number != 'number') {
@@ -367,8 +361,7 @@ class MyDevice extends Device {
 			return new Intl.NumberFormat().format(number);
 		}
 
-		await this.setCapabilityValue('measure_battery', TeslaAPI.getBatteryLevel(vehicleData));
-
+		await this.setCapabilityValue('measure_battery', this.getBatteryLevel(vehicleData));
 		await this.setCapabilityValue('vehicle_inside_temperature', this.getInsideTemperature(vehicleData));
 		await this.setCapabilityValue('vehicle_outside_temperature', this.getOutsideTemperature(vehicleData));
 		await this.setCapabilityValue('vehicle_battery_range', this.getBatteryRange(vehicleData));

@@ -8,8 +8,7 @@ module.exports = class extends Homey.Device {
     async onVehicleData(vehicleData) {
     }
 
-    async onVehicleState(vehicleState) {
-    }
+
 
 	async onInit() {
         
@@ -21,9 +20,7 @@ module.exports = class extends Homey.Device {
             await this.onVehicleData(vehicleData);
 		});
 
-		this.vehicle.on('vehicle_state', async (vehicleState) => {
-            await this.onVehicleState(vehicleState);
-		});
+
 	}
 
     async onUninit() {

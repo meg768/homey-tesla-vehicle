@@ -34,10 +34,10 @@ class MyDevice extends Device {
 
     }
 
-    async onVehicleState(vehicleState) {
-		await super.onVehicleState(vehicleState);
+    async onVehicleData(vehicleData) {
+		await super.onVehicleData(vehicleData);
 
-		if (vehicleState != 'online') {
+		if (vehicleData.state != 'online') {
             this.ping();
 		}
 	}

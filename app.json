@@ -570,7 +570,7 @@
     {
       "name": {
         "en": "Doors",
-        "sv": "Dörrarna"
+        "sv": "Dörrar"
       },
       "class": "button",
       "capabilities": [
@@ -598,7 +598,6 @@
           "template": "add_devices"
         }
       ],
-      "id": "doors",
       "settings": [
         {
           "id": "remoteStartDrivePassword",
@@ -613,7 +612,8 @@
           },
           "value": ""
         }
-      ]
+      ],
+      "id": "doors"
     },
     {
       "name": {
@@ -745,7 +745,6 @@
           "template": "add_devices"
         }
       ],
-      "id": "lock",
       "settings": [
         {
           "id": "remoteStartDrivePassword",
@@ -760,7 +759,8 @@
           },
           "value": ""
         }
-      ]
+      ],
+      "id": "lock"
     },
     {
       "name": {
@@ -827,52 +827,6 @@
         }
       ],
       "id": "ping"
-    },
-    {
-      "name": {
-        "en": "Settings",
-        "sv": "Inställningar"
-      },
-      "class": "other",
-      "capabilities": [],
-      "platforms": [
-        "local"
-      ],
-      "connectivity": [],
-      "images": {
-        "small": "/drivers/settings/assets/images/small.png",
-        "large": "/drivers/settings/assets/images/large.png",
-        "xlarge": "/drivers/settings/assets/images/xlarge.png"
-      },
-      "pair": [
-        {
-          "id": "list_devices",
-          "template": "list_devices",
-          "navigation": {
-            "next": "add_devices"
-          }
-        },
-        {
-          "id": "add_devices",
-          "template": "add_devices"
-        }
-      ],
-      "id": "settings",
-      "settings": [
-        {
-          "id": "refreshToken",
-          "type": "text",
-          "label": {
-            "en": "Security token issued by Tesla",
-            "sv": "Säkerhetsnyckel från Tesla"
-          },
-          "value": "",
-          "hint": {
-            "en": "A mandatory token used to communicate with Tesla. Use a tool like 'Auth for Tesla' to generate such a token. Often refered as a 'refresh token'",
-            "sv": "En obligatorisk nyckel för att komma åt din Tesla. Använd verktyg som 'Auth for Tesla' för att generera en sådan nyckel. Kallas ofta en 'refresh token'."
-          }
-        }
-      ]
     },
     {
       "name": {

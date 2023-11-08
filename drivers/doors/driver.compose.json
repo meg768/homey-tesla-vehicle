@@ -1,31 +1,47 @@
 {
-	"name": {
-		"en": "Doors",
-		"sv": "Dörrarna"
-	},
-
-	"class": "button",
-	"capabilities": ["onoff"],
-
-	"platforms": ["local"],
-	"connectivity": [],
-	"images": {
-		"small": "{{driverAssetsPath}}/images/small.png",
-		"large": "{{driverAssetsPath}}/images/large.png",
-		"xlarge": "{{driverAssetsPath}}/images/xlarge.png"
-	},
-
-	"pair": [
-		{
-			"id": "list_devices",
-			"template": "list_devices",
-			"navigation": {
-				"next": "add_devices"
-			}
-		},
-		{
-			"id": "add_devices",
-			"template": "add_devices"
-		}
-	]
+  "name": {
+    "en": "Doors",
+    "sv": "Dörrar"
+  },
+  "class": "button",
+  "capabilities": [
+    "onoff"
+  ],
+  "platforms": [
+    "local"
+  ],
+  "connectivity": [],
+  "images": {
+    "small": "/drivers/doors/assets/images/small.png",
+    "large": "/drivers/doors/assets/images/large.png",
+    "xlarge": "/drivers/doors/assets/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "settings": [
+    {
+      "id": "remoteStartDrivePassword",
+      "type": "text",
+      "label": {
+        "en": "Password for keyless driving",
+        "sv": "Lösenord för nyckellös körning"
+      },
+      "hint": {
+        "en": "If specified your car will be ready to drive without your keycard present when unlocking.",
+        "sv": "Anger du lösenord här behöver du inte din bilnyckel (kortet) för att köra iväg när du låser upp."
+      },
+      "value": ""
+    }
+  ]
 }

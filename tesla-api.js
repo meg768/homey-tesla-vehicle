@@ -326,16 +326,18 @@ class TeslaAPI {
 			var request = new Request('https://auth.tesla.com');
 			var reply = await request.post('oauth2/v3/token', options);
 
-			if (!reply || !reply.body) throw new Error(`Jibberish from Tesla when trying to get an access token.`);
+			if (!reply || !reply.body) {
+				throw new Error(`Jibberish from Tesla when trying to get an access token.`);
+			}
+
+			if (reply.body.expires_in == undefined) {
+				throw new Error(`Invalid response from Tesla. Cannot get access token expire date. Maybe the refresh key is wrong.`);
+			}
 
 			return reply.body;
 		};
 
 		var token = await getAccessToken();
-
-		if (token.expires_in == undefined) {
-			throw new Error(`Invalid response from Tesla. Cannot get access token expire date. ${JSON.stringify(token)}`);
-		}
 
 		var options = {
 			headers: {

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- The '/homey.js' script must be included in your settings view to work -->
+		<script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+	</head>
+	<body>
+		<fieldset class="homey-form-fieldset">
+			<legend class="homey-form-legend">Refresh token</legend>
+
+			<div class="homey-form-group">
+				<label class="homey-form-label" for="token">Use a tool like 'Auth for Tesla' to generate a valid token</label>
+				<textarea class="homey-form-textarea" id="token" type="text" rows="8" value=""></textarea>
+			</div>
+		</fieldset>
+
+		<button id="save" class="homey-button-primary-full">Save changes</button>
+
+		<script type="text/javascript">
+
+			// a method named 'onHomeyReady' must be present in your code
+			function onHomeyReady(Homey) {
+				console.log(` onHomeyReady`);
+
+				var tokenElement = document.getElementById('token');
+				var saveElement = document.getElementById('save');
+
+				Homey.on('meg768', (data) => {
+					Homey.alert(data);
+				});
+
+				Homey.get('token', function (error, token) {
+					if (error) {
+						return Homey.alert(error);
+					} else {
+						tokenElement.value = token;
+					}
+				});
+
+				saveElement.addEventListener('click', async function (event) {
+					let token = tokenElement.value;
+
+					try {
+						Homey.set('token', token, function (error, result) {});
+					} catch (error) {
+						Homey.alert(error);
+					}
+				});
+
+				// Tell Homey we're ready to be displayed
+				Homey.ready();
+			}
+		</script>
+	</body>
+</html>

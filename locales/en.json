@@ -1,4 +1,8 @@
 {
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Please log in"
+  },
   "InvaldAccessToken": "Invalid access token.",
   "InnerTemperature": "Inner temperature",
   "InvalidAccessToken": "The access token didn´t work. Use a tool like 'Auth for Tesla' to generate a valid token. Try again with another token.",

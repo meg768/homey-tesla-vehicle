@@ -1,31 +1,32 @@
 {
-	"name": {
-		"en": "Trunk",
-		"sv": "Baklucka"
-	},
-
-	"class": "button",
-	"capabilities": ["onoff"],
-
-	"platforms": ["local"],
-	"connectivity": [],
-	"images": {
-		"small": "{{driverAssetsPath}}/images/small.png",
-		"large": "{{driverAssetsPath}}/images/large.png",
-		"xlarge": "{{driverAssetsPath}}/images/xlarge.png"
-	},
-
-	"pair": [
-		{
-			"id": "list_devices",
-			"template": "list_devices",
-			"navigation": {
-				"next": "add_devices"
-			}
-		},
-		{
-			"id": "add_devices",
-			"template": "add_devices"
-		}
-	]
+  "name": {
+    "en": "Trunk",
+    "sv": "Baklucka"
+  },
+  "class": "button",
+  "capabilities": [
+    "onoff"
+  ],
+  "platforms": [
+    "local"
+  ],
+  "connectivity": [],
+  "images": {
+    "small": "/drivers/trunk/assets/images/small.png",
+    "large": "/drivers/trunk/assets/images/large.png",
+    "xlarge": "/drivers/trunk/assets/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
 }
