@@ -16,14 +16,13 @@ class Vehicle extends Events {
 		super();
 
 		this.api = api;
-        this.homey = homey;
+		this.homey = homey;
 		this.log = this.homey.app.log;
 		this.debug = this.homey.app.log;
 		this.vehicleID = vehicleID;
 		this.vehicleData = null;
 
-        this.setMaxListeners(20);
-
+		this.setMaxListeners(20);
 	}
 
 	async onUninit() {}
@@ -43,7 +42,6 @@ class Vehicle extends Events {
 	async get(command, options) {
 		return await this.request('GET', command, options);
 	}
-
 
 	async setClimateState(state) {
 		this.log(`Setting HVAC state to ${state ? 'ON' : 'OFF'}.`);
@@ -97,10 +95,10 @@ class Vehicle extends Events {
 		await this.post('command/window_control', payload);
 	}
 
-    async setSteeringWheelHeaterState(state) {
-        this.log(`Setting steering wheel heater state to ${state ? 'ON' : 'OFF'}.`);
-        await this.post('command/remote_steering_wheel_heater_request', { on: state });
-    }
+	async setSteeringWheelHeaterState(state) {
+		this.log(`Setting steering wheel heater state to ${state ? 'ON' : 'OFF'}.`);
+		await this.post('command/remote_steering_wheel_heater_request', { on: state });
+	}
 
 	async poll() {
 		this.log(`Fetching vehicle state.`);
@@ -108,29 +106,25 @@ class Vehicle extends Events {
 		let vehicle = await this.getAPI().getVehicle(this.vehicleID);
 
 		if (vehicle && typeof vehicle.state == 'string') {
-            this.vehicleData.state = vehicle.state;
-            this.log(`Vehicle is ${this.vehicleData.state}`);
+			this.vehicleData.state = vehicle.state;
+			this.log(`Vehicle is ${this.vehicleData.state}`);
 
-            // Freebie?!
+			// Freebie?!
 			if (vehicle.state == 'online') {
 				await this.getVehicleData();
+			} else {
+				// Emit the data
+				this.emit('vehicle_data', this.vehicleData);
 			}
-            else {
-                // Emit the data
-                this.emit('vehicle_data', this.vehicleData);
-
-            }
-
 		}
 
-        return this.vehiceData;
-
+		return this.vehiceData;
 	}
 
 	async getVehicleData() {
 		this.vehicleData = await this.getAPI().request(this.vehicleID, 'GET', 'vehicle_data');
 
-        // Emit the data
+		// Emit the data
 		this.emit('vehicle_data', this.vehicleData);
 
 		return this.vehicleData;
@@ -149,7 +143,155 @@ class Vehicle extends Events {
 			}
 		}, delay);
 	}
-}
 
+	getVehicleSpeed(vehicleData = this.vehicleData) {
+		if (typeof vehicleData.drive_state.speed == 'number') {
+			return Math.round(vehicleData.drive_state.speed * 1.609344);
+		}
+
+		return 0;
+	}
+
+	getOdometer(vehicleData = this.vehicleData) {
+		return Math.round(vehicleData.vehicle_state.odometer * 1.609344);
+	}
+
+	getChargingState(vehicleData = this.vehicleData) {
+		return vehicleData.charge_state.charging_state;
+	}
+
+	getBatteryLevel(vehicleData = this.vehicleData) {
+		return vehicleData.charge_state.battery_level;
+	}
+
+	getInsideTemperature(vehicleData = this.vehicleData) {
+		return vehicleData.climate_state.inside_temp;
+	}
+
+	getOutsideTemperature(vehicleData = this.vehicleData) {
+		return vehicleData.climate_state.outside_temp;
+	}
+
+	isLocked(vehicleData = this.vehicleData) {
+		return vehicleData.vehicle_state.locked ? true : false;
+	}
+
+	isOnline(vehicleData = this.vehicleData) {
+		return vehicleData.state == 'online';
+	}
+
+	isCharging(vehicleData = this.vehicleData) {
+		return vehicleData.charge_state.charging_state == 'Charging';
+	}
+
+	isDriving(vehicleData = this.vehicleData) {
+		if (!vehicleData.drive_state.shift_state) {
+			return false;
+		}
+		return vehicleData.drive_state.shift_state != 'P';
+	}
+
+	getChargePower(vehicleData = this.vehicleData) {
+		return Math.round(vehicleData.charge_state.charge_rate * vehicleData.charge_state.charger_voltage);
+	}
+
+	getBatteryRange(vehicleData = this.vehicleData) {
+		return Math.round(vehicleData.charge_state.battery_range * 1.609344);
+	}
+
+	isClimateOn(vehicleData = this.vehicleData) {
+		return vehicleData.climate_state.is_climate_on ? true : false;
+	}
+
+	isSteeringWheelHeaterOn(vehicleData = this.vehicleData) {
+		return vehicleData.climate_state.steering_wheel_heater ? true : false;
+	}
+
+	getDistanceFromLocation(vehicleData, latitude, longitude) {
+		function deg2rad(deg) {
+			return deg * (Math.PI / 180);
+		}
+
+		function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+			var R = 6371; // Radius of the earth in km
+			var dLat = deg2rad(lat2 - lat1); // deg2rad below
+			var dLon = deg2rad(lon2 - lon1);
+			var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+			var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+			var d = R * c; // Distance in km
+			return d;
+		}
+
+		let distance = 0;
+		let homeyLatitude = latitude;
+		let homeyLongitude = longitude;
+		let vehicleLatitude = vehicleData.drive_state.latitude;
+		let vehicleLongitude = vehicleData.drive_state.longitude;
+
+		if (homeyLatitude && homeyLongitude && vehicleLatitude && vehicleLongitude) {
+			distance = getDistanceFromLatLonInKm(homeyLatitude, homeyLongitude, vehicleLatitude, vehicleLongitude);
+		}
+
+		return Math.round(distance * 10) / 10;
+	}
+
+    getPosition(vehicleData = this.vehicleData) {
+		return `${vehicleData.drive_state.latitude}, ${vehicleData.drive_state.longitude}`;
+	}
+
+    isAtHome(vehicleData = this.vehicleData) {
+		return this.getDistanceFromHomey(vehicleData) < 0.2;
+	}
+
+	getDistanceFromHomey(vehicleData = this.vehicleData) {
+		let latitude = this.homey.geolocation.getLatitude();
+		let longitude = this.homey.geolocation.getLongitude();
+		return this.getDistanceFromLocation(vehicleData, latitude, longitude);
+	}
+
+	getChargingSpeed(vehicleData = this.vehicleData) {
+		let chargePower = this.getChargePower(vehicleData);
+		let chargingRate = chargePower / 171;
+		return Math.round(chargingRate * 10) / 10;
+	}
+
+	isTrunkOpen(vehicleData = this.vehicleData) {
+		return vehicleData.vehicle_state.rt != 0;
+	}
+
+	isFrunkOpen(vehicleData = this.vehicleData) {
+		return vehicleData.vehicle_state.ft != 0;
+	}
+
+	isDefrosting(vehicleData = this.vehicleData) {
+		return vehicleData.climate_state.defrost_mode != 0;
+	}
+
+	isAnyWindowOpen(vehicleData = this.vehicleData) {
+		if (vehicleData.vehicle_state.fd_window) {
+			return true;
+		}
+
+		return false;
+
+		if (vehicleData.vehicle_state.rd_window) {
+			return true;
+		}
+
+		if (vehicleData.vehicle_state.fp_window) {
+			return true;
+		}
+
+		if (vehicleData.vehicle_state.rp_window) {
+			return true;
+		}
+
+		return false;
+	}
+
+	getState(vehicleData = this.vehicleData) {
+		return vehicleData.state;
+	}
+}
 
 module.exports = Vehicle;

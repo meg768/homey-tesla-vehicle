@@ -8,7 +8,7 @@ class MyDevice extends Device {
 		await super.onInit();
 
 		// Get initial value
-		this.state = TeslaAPI.isAnyWindowOpen(this.vehicle.vehicleData);
+		this.state = this.vehicle.isAnyWindowOpen(this.vehicle.vehicleData);
 		await this.setCapabilityValue('onoff', this.state);
 
 		this.registerCapabilityListener('onoff', async (value, options) => {
@@ -21,7 +21,7 @@ class MyDevice extends Device {
 		await super.onVehicleData(vehicleData);
 
 		try {
-			let state = TeslaAPI.isAnyWindowOpen(vehicleData);
+			let state = this.vehicle.isAnyWindowOpen(vehicleData);
 
 			if (this.state != state) {
 				this.state = state;

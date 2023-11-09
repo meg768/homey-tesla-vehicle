@@ -8,7 +8,7 @@ module.exports = class extends Device {
 		await super.onInit();
 
 		// Get initial value
-		this.state = TeslaAPI.isLocked(this.vehicle.vehicleData);
+		this.state = this.vehicle.isLocked(this.vehicle.vehicleData);
 		await this.setCapabilityValue('locked', this.state);
 
 		this.registerCapabilityListener('locked', async (value, options) => {
@@ -46,7 +46,7 @@ module.exports = class extends Device {
 		await super.onVehicleData(vehicleData);
 
 		try {
-			let state = TeslaAPI.isLocked(vehicleData);
+			let state = this.vehicle.isLocked(vehicleData);
 
 			if (this.state != state) {
 				this.state = state;

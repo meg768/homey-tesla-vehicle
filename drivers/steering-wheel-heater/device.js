@@ -8,7 +8,7 @@ class MyDevice extends Device {
 		await super.onInit();
 
 		// Get initial value
-		this.state = TeslaAPI.isSteeringWheelHeaterOn(this.vehicle.vehicleData);
+		this.state = this.vehicle.isSteeringWheelHeaterOn(this.vehicle.vehicleData);
 		await this.setCapabilityValue('onoff', this.state);
 
 		this.registerCapabilityListener('onoff', async (value, options) => {
@@ -22,7 +22,7 @@ class MyDevice extends Device {
 		await super.onVehicleData(vehicleData);
 
 		try {
-			let state = TeslaAPI.isSteeringWheelHeaterOn(vehicleData);
+			let state = this.vehicle.isSteeringWheelHeaterOn(vehicleData);
 
 			if (this.state != state) {
 				this.state = state;

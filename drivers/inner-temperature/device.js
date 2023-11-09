@@ -8,7 +8,7 @@ module.exports = class extends Device {
 		await super.onInit();
 
 		// Get initial value
-		this.temperature = TeslaAPI.getInsideTemperature(this.vehicle.vehicleData);
+		this.temperature = this.vehicle.getInsideTemperature(this.vehicle.vehicleData);
 		await this.setCapabilityValue('measure_temperature', this.temperature);
 	}
 
@@ -16,7 +16,7 @@ module.exports = class extends Device {
 		await super.onVehicleData(vehicleData);
 
 		try {
-			let temperature = TeslaAPI.getInsideTemperature(vehicleData);
+			let temperature = this.vehicle.getInsideTemperature(vehicleData);
 
 			if (this.temperature != temperature) {
 				this.temperature = temperature;

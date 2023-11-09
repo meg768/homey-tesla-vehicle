@@ -10,7 +10,7 @@ module.exports = class MyDevice extends Device {
         await super.onInit();
 
 		// Get initial value
-		this.state = TeslaAPI.isTrunkOpen(this.vehicle.vehicleData);
+		this.state = this.vehicle.isTrunkOpen(this.vehicle.vehicleData);
 		await this.setCapabilityValue('onoff', this.state);
 
         this.registerCapabilityListener('onoff', async (value, options) => {
@@ -27,7 +27,7 @@ module.exports = class MyDevice extends Device {
 
     async onVehicleData(vehicleData) {
         try {
-            let state = TeslaAPI.isTrunkOpen(vehicleData);
+            let state = this.vehicle.isTrunkOpen(vehicleData);
 
             if (this.state != state) {
                 this.state = state;

@@ -8,7 +8,7 @@ module.exports = class extends Device {
 		await super.onInit();
 
 		// Get initial value
-		this.state = TeslaAPI.isClimateOn(this.vehicle.vehicleData);
+		this.state = this.vehicle.isClimateOn(this.vehicle.vehicleData);
 		await this.setCapabilityValue('onoff', this.state);
 
 		this.registerCapabilityListener('onoff', async (value, options) => {
@@ -19,7 +19,7 @@ module.exports = class extends Device {
 
 	async onVehicleData(vehicleData) {
 		try {
-			let state = TeslaAPI.isClimateOn(vehicleData);
+			let state = this.vehicle.isClimateOn(vehicleData);
 
 			if (this.state != state) {
 				this.state = state;
