@@ -273,6 +273,7 @@ class MyDevice extends Device {
 		}
 
 		if (TeslaAPI.isDriving(this.vehicleData) != TeslaAPI.isDriving(vehicleData)) {
+			this.log(`Vehicle driving state is ${TeslaAPI.isDriving(vehicleData) ? 'TRUE' : 'FALSE'}`);
 			if (TeslaAPI.isDriving(vehicleData)) {
 				await this.trigger('vehicle-started-driving');
 			} else {
@@ -289,15 +290,16 @@ class MyDevice extends Device {
 		}
 
 		if (TeslaAPI.getVehicleSpeed(this.vehicleData) != TeslaAPI.getVehicleSpeed(vehicleData)) {
+			this.log(`Vehicle speed is now ${TeslaAPI.getVehicleSpeed(vehicleData)}`);
 			await this.trigger('vehicle-speed-changed');
 		}
 
 		if (TeslaAPI.getInsideTemperature(this.vehicleData) != TeslaAPI.getInsideTemperature(vehicleData)) {
-			this.log(`Inner temperature is now ${TeslaAPI.getInsideTemperature(vehicleData)}`);
+			this.log(`Inside temperature is now ${TeslaAPI.getInsideTemperature(vehicleData)}`);
 			await this.trigger('vehicle-inside-temperature-changed');
 		}
 		if (TeslaAPI.getOutsideTemperature(this.vehicleData) != TeslaAPI.getOutsideTemperature(vehicleData)) {
-			this.log(`Outer temperature is now ${TeslaAPI.getOutsideTemperature(vehicleData)}`);
+			this.log(`Outside temperature is now ${TeslaAPI.getOutsideTemperature(vehicleData)}`);
 			await this.trigger('vehicle-outside-temperature-changed');
 		}
 	}
