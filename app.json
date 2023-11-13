@@ -372,6 +372,32 @@
             "filter": "driver_id=vehicle"
           }
         ]
+      },
+      {
+        "id": "vehicle-arrived-at-location",
+        "title": {
+          "en": "Arrived at location",
+          "sv": "Anlände till plats"
+        },
+        "titleFormatted": {
+          "en": "Arrived at location [[location]]",
+          "sv": "Anlände till plats [[location]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          },
+          {
+            "type": "text",
+            "name": "location",
+            "placeholder": {
+              "en": "Location",
+              "sv": "Plats"
+            }
+          }
+        ]
       }
     ],
     "conditions": [
@@ -909,6 +935,7 @@
         "vehicle_state",
         "vehicle_inside_temperature",
         "vehicle_outside_temperature",
+        "measure_outside_temperature",
         "measure_battery",
         "vehicle_battery_range",
         "vehicle_charging_state"
@@ -987,6 +1014,19 @@
     }
   ],
   "capabilities": {
+    "measure_outside_temperature": {
+      "type": "number",
+      "title": {
+        "en": "Outer temperature",
+        "sv": "Yttertemperatur"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "°C"
+      },
+      "icon": "./assets/capabilities/vehicle_outside_temperature.svg"
+    },
     "vehicle_battery_range": {
       "type": "number",
       "title": {

@@ -1,0 +1,10 @@
+
+{
+    "type": "number",
+    "title": { "en": "Outer temperature", "sv": "Yttertemperatur" },
+    "getable": true,
+    "setable": false,
+    "units": { "en": "°C" },
+    "icon": "./assets/capabilities/vehicle_outside_temperature.svg"
+    
+  }

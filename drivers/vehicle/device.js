@@ -11,18 +11,48 @@ class MyDevice extends Device {
 	async onInit() {
 		await super.onInit();
 
-		this.vehicleStateTimer = null;
-		this.vehicleDataTimer = null;
 		this.vehicleLocation = '-';
 
 		// Get initial value
 		this.vehicleData = JSON.parse(JSON.stringify(this.vehicle.vehicleData));
-		this.vehicleState = 'xxx';
+
+        
+		this.registerCapabilityListener('vehicle_location', async (value, options) => {
+            return await this.setLocation(value);
+		});
 
 		await this.updateCapabilities(this.vehicle.vehicleData);
-
 		await this.pollVehicleState(this.getSetting('pollInterval'));
 	}
+
+    async setLocation(location) {
+        if (this.vehicleLocation != location) {
+            this.vehicleLocation = location;
+
+            let vehicleArrivedAtLocation = this.homey.flow.getDeviceTriggerCard('vehicle-arrived-at-location');
+            let args = await vehicleArrivedAtLocation.getArgumentValues(this);
+
+            vehicleArrivedAtLocation.registerRunListener(async (args, state) => {
+                return args.location == state.location;
+            });
+
+            for (let arg of args) {
+
+                if (arg.location == this.vehicleLocation) {
+                    let tokens = {};
+                    let state = {};
+
+                    state.location = this.vehicleLocation;
+                    await vehicleArrivedAtLocation.trigger(this, tokens, state);
+
+                    this.log(`Triggering vehicle-arrived-at-location ${this.vehicleLocation}`);
+                }
+            }
+
+            await this.trigger('vehicle-location-changed');
+        }
+
+    };
 
 	async onUninit() {
 		await super.onUninit();
@@ -30,30 +60,6 @@ class MyDevice extends Device {
 		// Turn off timers
 		this.setVehicleDataRefreshInterval(0);
 		this.pollVehicleState(0);
-	}
-
-	async pollVehicleState(interval) {
-		let loop = async () => {
-			if (this.vehicleStateTimer) {
-				clearTimeout(this.vehicleStateTimer);
-				this.vehicleStateTimer = null;
-			}
-
-			if (interval > 0) {
-				try {
-					await this.vehicle.poll();
-				} catch (error) {
-					this.log(`Failed polling vehicle state. ${error.stack}`);
-				}
-
-				this.log(`Next vehicle state poll is in ${interval} minute(s).`);
-				this.vehicleStateTimer = setTimeout(loop, interval * 60000);
-			} else {
-				this.log(`Polling stopped.`);
-			}
-		};
-
-		loop();
 	}
 
 	async onAction(name, args) {
@@ -65,35 +71,9 @@ class MyDevice extends Device {
 
 			case 'vehicle-set-location': {
 				let { location } = args;
-
-				let setLocation = async (location) => {
-					await this.setCapabilityValue('vehicle_location', location);
-
-					if (this.vehicleLocation != location) {
-						this.vehicleLocation = location;
-						this.trigger('vehicle-location-changed');
-					}
-				};
-
-				await setLocation(location);
-
-				/*
-
-				let timer = this.app.getTimer('vehicle-set-location');
-
-				timer.setTimer(60 * 60000, async () => {
- 					if (this.isAtHome()) {
-						location = 'Hemma';
-					} else {
-						location = '-';
-					}
-
-                    await setLocation(location);
-                
-                });
-
-                */
-
+                this.log(`settings location ${location}`);
+                await this.setCapabilityValue('vehicle_location', location);
+                await this.setLocation(location);
 				break;
 			}
 		}
@@ -126,21 +106,42 @@ class MyDevice extends Device {
 		return false;
 	}
 
+	async pollVehicleState(interval) {
+		let timer = this.app.getTimer('VehiclePollTimer');
+
+		let loop = async () => {
+			timer.cancel();
+
+			if (interval > 0) {
+				try {
+					await this.vehicle.poll();
+				} catch (error) {
+					this.log(`Failed polling vehicle state. ${error.stack}`);
+				}
+
+				this.log(`Next vehicle state poll is in ${interval} minute(s).`);
+				timer.setTimer(interval * 60000, loop);
+			} else {
+				this.log(`Polling stopped.`);
+			}
+		};
+
+		loop();
+	}
 	async setVehicleDataRefreshInterval(delay = 0) {
-		if (this.vehicleDataTimer) {
-			clearTimeout(this.vehicleDataTimer);
-			this.vehicleDataTimer = null;
-		}
+		let timer = this.app.getTimer('VehicleDataFetchTimer');
+
+		timer.cancel();
 
 		if (delay > 0) {
-			this.vehicleDataTimer = setTimeout(async () => {
+			timer.setTimer(delay * 60000, async () => {
 				try {
 					this.log(`Performing refresh on vehicle data.`);
 					await this.vehicle.getVehicleData();
 				} catch (error) {
 					this.log(`Failed delayed fetching of vehicle data. ${error.stack}`);
 				}
-			}, delay * 60000);
+			});
 		}
 	}
 
@@ -167,8 +168,6 @@ class MyDevice extends Device {
 			this.log(error.stack);
 		}
 	}
-
-    
 
 	async updateTriggers(vehicleData) {
 		if (this.vehicleData.state != vehicleData.state) {
@@ -233,31 +232,6 @@ class MyDevice extends Device {
 		}
 	}
 
-
-
-	getVehicleState(vehicleData) {
-		switch (vehicleData.state) {
-			case 'online': {
-				return 'Online';
-			}
-		}
-
-		return 'Offline';
-	}
-
-	getChargingState(vehicleData) {
-		switch (vehicleData.charge_state.charging_state) {
-			case 'Disconnected': {
-				return 'Urkopplad';
-			}
-			case 'Connected': {
-				return 'Laddar';
-			}
-		}
-
-		return vehicleData.charge_state.charging_state;
-	}
-
 	async updateCapabilities(vehicleData) {
 		function formatNumber(number) {
 			if (typeof number != 'number') {
@@ -268,17 +242,18 @@ class MyDevice extends Device {
 
 		await this.setCapabilityValue('measure_battery', this.vehicle.getBatteryLevel(vehicleData));
 		await this.setCapabilityValue('vehicle_inside_temperature', this.vehicle.getInsideTemperature(vehicleData));
-		await this.setCapabilityValue('vehicle_outside_temperature', this.vehicle.getOutsideTemperature(vehicleData));
-		await this.setCapabilityValue('vehicle_battery_range', this.vehicle.getBatteryRange(vehicleData));
-		await this.setCapabilityValue('vehicle_charging_state', this.vehicle.getChargingState(vehicleData));
+
+        await this.setCapabilityValue('vehicle_outside_temperature', this.vehicle.getOutsideTemperature(vehicleData));
+		await this.setCapabilityValue('measure_outside_temperature', this.vehicle.getOutsideTemperature(vehicleData));
+
+        await this.setCapabilityValue('vehicle_battery_range', this.vehicle.getBatteryRange(vehicleData));
+		await this.setCapabilityValue('vehicle_charging_state', this.vehicle.getLocalizedChargingState(vehicleData));
 		await this.setCapabilityValue('vehicle_odometer', this.vehicle.getOdometer(vehicleData));
 		await this.setCapabilityValue('vehicle_distance_from_homey', this.vehicle.getDistanceFromHomey(vehicleData));
-		await this.setCapabilityValue('vehicle_state', this.vehicle.getState(vehicleData));
+		await this.setCapabilityValue('vehicle_state', this.vehicle.getLocalizedState(vehicleData));
 		await this.setCapabilityValue('vehicle_charge_power', this.vehicle.getChargePower(vehicleData));
 		await this.setCapabilityValue('vehicle_speed', this.vehicle.getVehicleSpeed(vehicleData));
-
-
-        await this.setCapabilityValue('vehicle_location', this.vehicleLocation);
+		await this.setCapabilityValue('vehicle_location', this.vehicleLocation);
 	}
 }
 

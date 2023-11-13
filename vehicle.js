@@ -160,6 +160,23 @@ class Vehicle extends Events {
 		return vehicleData.charge_state.charging_state;
 	}
 
+	getLocalizedChargingState(vehicleData) {
+
+        let state = this.getChargingState();
+
+		switch (state) {
+			case 'Disconnected': {
+				return 'Urkopplad';
+			}
+			case 'Connected': {
+				return 'Laddar';
+			}
+		}
+
+		return state;
+	}
+
+
 	getBatteryLevel(vehicleData = this.vehicleData) {
 		return vehicleData.charge_state.battery_level;
 	}
@@ -291,6 +308,18 @@ class Vehicle extends Events {
 
 	getState(vehicleData = this.vehicleData) {
 		return vehicleData.state;
+	}
+
+	getLocalizedState(vehicleData) {
+        let state = this.getState();
+
+		switch (state) {
+			case 'online': {
+				return 'Online';
+			}
+		}
+
+		return 'Offline';
 	}
 }
 
