@@ -25,7 +25,7 @@ class MyApp extends Homey.App {
 					this.api = null;
 					this.vehicles = null;
 					this.log(`Token changed. Creating a new Tesla API.`);
-                    await this.setToken();
+					await this.setToken();
 				} catch (error) {
 					this.log(`Invalid token. ${error.stack}`);
 				}
@@ -33,16 +33,11 @@ class MyApp extends Homey.App {
 			this.homey.emit('meg768', { data: 32 });
 		});
 
-
-        try {
-            await this.setToken();
-
-        }
-        catch(error) {
-            this.log(error.stack);
-
-        }
-
+		try {
+			await this.setToken();
+		} catch (error) {
+			this.log(error.stack);
+		}
 
 		this.addAction('log-to-console', async (args) => {
 			const { message } = args;
@@ -59,10 +54,8 @@ class MyApp extends Homey.App {
 
 		this.addAction('set_location');
 		this.addAction('wake_up');
-
 		this.addAction('defrost_for_a_while');
 		this.addAction('hvac_for_a_while');
-
 	}
 
 	getTimer(id) {
@@ -89,48 +82,45 @@ class MyApp extends Homey.App {
 	}
 
 	async getAPI() {
+		if (!this.api) {
+			let token = this.homey.settings.get('token');
+			let api = new TeslaAPI({ debug: this.log, log: this.log, token: token });
 
-        if (!this.api) {
-            let token = this.homey.settings.get('token');
-            let api = new TeslaAPI({ debug: this.log, log: this.log, token: token });
+			this.api = api;
+		}
 
-            this.api = api;
-        }
-
-        return this.api;
+		return this.api;
 	}
 
-    async setToken() {
-
-        this.api = null;
-        this.vehicles = null;
-        await this.getVehicles();
-    }
+	async setToken() {
+		this.api = null;
+		this.vehicles = null;
+		await this.getVehicles();
+	}
 
 	async getVehicles() {
-        if (!this.vehicles) {
-            let api = await this.getAPI();
-            let vehicles = await api.getVehicles();
-            let instances = {};
-    
-            for (let vehicle of vehicles) {
-                let instance = new Vehicle({ homey: this.homey, api: api, vehicleID: vehicle.id_s });
-                let vehicleData = await instance.getVehicleData();
-    
-                this.log(JSON.stringify(vehicleData));
-    
-                instances[vehicle.id_s] = instance;
-            }
-    
-            this.vehicles = instances;
-    
-        }
+		if (!this.vehicles) {
+			let api = await this.getAPI();
+			let vehicles = await api.getVehicles();
+			let instances = {};
 
-        return this.vehicles;
+			for (let vehicle of vehicles) {
+				let instance = new Vehicle({ homey: this.homey, api: api, vehicleID: vehicle.id_s });
+				let vehicleData = await instance.getVehicleData();
+
+				this.log(JSON.stringify(vehicleData));
+
+				instances[vehicle.id_s] = instance;
+			}
+
+			this.vehicles = instances;
+		}
+
+		return this.vehicles;
 	}
 
 	async getVehicle(vehicleID) {
-        let vehicles = await this.getVehicles();
+		let vehicles = await this.getVehicles();
 		return vehicles[vehicleID];
 	}
 
@@ -165,20 +155,18 @@ class MyApp extends Homey.App {
 	}
 
 	async getPairListDevices(description) {
-
 		let token = this.homey.settings.get('token');
 
-        if (!this.api) {
+		if (!this.api) {
 			throw new Error(this.homey.__('NoAPI'));
-        }
-
+		}
 
 		let api = await this.getAPI();
 		let vehicles = await api.getVehicles();
 		let devices = [];
 
 		function getDeviceName(vehicle) {
-			let name = vehicle.vin;
+			let name = vehicles.length == 1 ? 'Tesla' : vehicle.vin;
 
 			if (typeof vehicle.display_name == 'string' && vehicle.display_name != '') {
 				name = vehicle.display_name;

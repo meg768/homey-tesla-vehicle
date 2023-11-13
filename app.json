@@ -169,6 +169,17 @@
           "en": "Location changed",
           "sv": "Plats ändrades"
         },
+        "tokens": [
+          {
+            "title": {
+              "en": "Location",
+              "sv": "Plats"
+            },
+            "name": "location",
+            "type": "string",
+            "example": "Stockholm"
+          }
+        ],
         "args": [
           {
             "type": "device",
@@ -383,6 +394,17 @@
           "en": "Arrived at location [[location]]",
           "sv": "Anlände till plats [[location]]"
         },
+        "tokens": [
+          {
+            "title": {
+              "en": "Location",
+              "sv": "Plats"
+            },
+            "name": "location",
+            "type": "string",
+            "example": "Stockholm"
+          }
+        ],
         "args": [
           {
             "type": "device",

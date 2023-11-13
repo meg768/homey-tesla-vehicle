@@ -1,302 +1,323 @@
 {
-  "triggers": [
-    {
-      "id": "inside_geofence",
-      "title": {
-        "en": "Came home",
-        "sv": "Kom hem"
-      },
-      "args": []
-    },
-    {
-      "id": "location_changed",
-      "title": {
-        "en": "Location changed",
-        "sv": "Plats ändrades"
-      },
-      "args": []
-    },
-    {
-      "id": "position_changed",
-      "title": {
-        "en": "Position changed",
-        "sv": "Position ändrades"
-      },
-      "args": []
-    },
-    {
-      "id": "outside_geofence",
-      "title": {
-        "en": "Left home",
-        "sv": "Körde hemifrån"
-      },
-      "args": []
-    },
-    {
-      "id": "state_changed",
-      "title": {
-        "en": "State changed (online/offline)",
-        "sv": "Tillstånd ändrades (online/offline)"
-      },
-      "args": []
-    },
-    {
-      "id": "online",
-      "title": {
-        "en": "Is online",
-        "sv": "Är online"
-      },
-      "args": []
-    },
-    {
-      "id": "offline",
-      "title": {
-        "en": "Is offline",
-        "sv": "Är offline"
-      },
-      "args": []
-    },
-    {
-      "id": "locked",
-      "title": {
-        "en": "Locked",
-        "sv": "Låstes"
-      },
-      "args": []
-    },
-    {
-      "id": "unlocked",
-      "title": {
-        "en": "Unlocked",
-        "sv": "Låstes upp"
-      },
-      "args": []
-    },
-    {
-      "id": "started_driving",
-      "title": {
-        "en": "Started driving",
-        "sv": "Började köra"
-      },
-      "args": []
-    },
-    {
-      "id": "stopped_driving",
-      "title": {
-        "en": "Parked",
-        "sv": "Parkerades"
-      },
-      "args": []
-    },
-    {
-      "id": "started_charging",
-      "title": {
-        "en": "Charging started",
-        "sv": "Laddning påbörjades"
-      },
-      "args": []
-    },
-    {
-      "id": "stopped_charging",
-      "title": {
-        "en": "Charging stopped",
-        "sv": "Laddning avslutades"
-      },
-      "args": []
-    },
-    {
-      "id": "measure_speed_changed",
-      "title": {
-        "en": "Speed changed",
-        "sv": "Hastigheten ändrades"
-      },
-      "args": []
-    },
-    {
-      "id": "measure_inside_temperature_changed",
-      "title": {
-        "en": "Inner temperature changed",
-        "sv": "Innertemperaturen ändrades"
-      },
-      "args": []
-    },
-    {
-      "id": "measure_outside_temperature_changed",
-      "title": {
-        "en": "Outer temperature changed",
-        "sv": "Yttertemperaturen ändrades"
-      },
-      "args": []
-    },
-    {
-      "id": "arrived_at_location",
-      "title": {
-        "en": "Arrived at location",
-        "sv": "Anlände till plats"
-      },
-      "titleFormatted": {
-        "en": "Arrived at location [[location]]",
-        "sv": "Anlände till plats [[location]]"
-      },
-      "args": [
-        {
-          "type": "text",
-          "name": "location",
-          "placeholder": {
-            "en": "Location",
-            "sv": "Plats"
-          }
-        }
-      ]
-    }
-  ],
-  "conditions": [
-    {
-      "id": "is_at_home",
-      "title": {
-        "en": "!{{Is|Is not}} home",
-        "sv": "!{{Är hemma|Är inte hemma}}"
-      },
-      "args": []
-    },
-    {
-      "id": "is_charging",
-      "title": {
-        "en": "Car !{{is|is not}} charging",
-        "sv": "Bilen !{{laddar|laddar inte}}"
-      },
-      "args": []
-    },
-    {
-      "id": "is_driving",
-      "title": {
-        "en": "Car !{{is driving|is parked}}",
-        "sv": "Bilen !{{kör|är parkerad}}"
-      },
-      "args": []
-    },
-    {
-      "id": "is_online",
-      "title": {
-        "en": "Is !{{online|offline}}",
-        "sv": "Är !{{online|online}}"
-      },
-      "args": []
-    },
-    {
-      "id": "is_locked",
-      "title": {
-        "en": "Is !{{locked|unlocked}} locked",
-        "sv": "Är !{{Låst|upplåst}}"
-      },
-      "args": []
-    },
-    {
-      "id": "is_near_location",
-      "title": {
-        "en": "Är !{{nära|inte nära}} en plats"
-      },
-      "titleFormatted": {
-        "en": "!{{Is at|Is not at}} [[location]] ([[latitude]], [[longitude]])",
-        "sv": "!{{Är på plats|Är inte på plats}} [[location]] ([[latitude]], [[longitude]])"
-      },
-      "args": [
-        {
-          "type": "text",
-          "name": "location",
-          "placeholder": {
-            "en": "Location",
-            "sv": "Plats"
-          }
-        },
-        {
-          "type": "number",
-          "name": "latitude",
-          "placeholder": {
-            "en": "Latitude"
-          }
-        },
-        {
-          "type": "number",
-          "name": "longitude",
-          "placeholder": {
-            "en": "Longitude"
-          }
-        }
-      ]
-    },
-    {
-      "id": "is_near_location_with_radius",
-      "title": {
-        "en": "Is !{{near|not near}} a location with a radius",
-        "sv": "Är !{{nära|inte nära}} a plats inom en radie"
-      },
-      "titleFormatted": {
-        "en": "Is !{{near|not near}} [[location]] within a radius of [[radius]] km ([[latitude]], [[longitude]])",
-        "sv": "Är !{{nära|inte nära}} [[location]] inom en radie på [[radius]] km ([[latitude]], [[longitude]])"
-      },
-      "args": [
-        {
-          "type": "text",
-          "name": "location",
-          "placeholder": {
-            "en": "Location",
-            "sv": "Plats"
-          }
-        },
-        {
-          "type": "number",
-          "name": "radius",
-          "placeholder": {
-            "en": "Radius"
-          }
-        },
-        {
-          "type": "number",
-          "name": "latitude",
-          "placeholder": {
-            "en": "Latitude"
-          }
-        },
-        {
-          "type": "number",
-          "name": "longitude",
-          "placeholder": {
-            "en": "Longitude"
-          }
-        }
-      ]
-    }
-  ],
-  "actions": [
-    {
-      "id": "wake_up",
-      "title": {
-        "en": "Wake up",
-        "sv": "Väck bilen"
-      },
-      "args": []
-    },
-    {
-      "id": "set_location",
-      "title": {
-        "en": "Set location",
-        "sv": "Ange plats"
-      },
-      "titleFormatted": {
-        "en": "Set location to [[location]]",
-        "sv": "Sätt plats till [[location]]"
-      },
-      "args": [
-        {
-          "type": "text",
-          "name": "location",
-          "placeholder": {
-            "en": "Location",
-            "sv": "Plats"
-          }
-        }
-      ]
-    }
-  ]
+	"triggers": [
+		{
+			"id": "inside_geofence",
+			"title": {
+				"en": "Came home",
+				"sv": "Kom hem"
+			},
+			"args": []
+		},
+		{
+			"id": "location_changed",
+			"title": {
+				"en": "Location changed",
+				"sv": "Plats ändrades"
+			},
+
+            "tokens": [
+				{
+					"title": { "en": "Location", "sv": "Plats" },
+					"name": "location",
+					"type": "string",
+					"example": "Stockholm"
+				}
+			],
+
+
+			"args": []
+		},
+		{
+			"id": "position_changed",
+			"title": {
+				"en": "Position changed",
+				"sv": "Position ändrades"
+			},
+			"args": []
+		},
+		{
+			"id": "outside_geofence",
+			"title": {
+				"en": "Left home",
+				"sv": "Körde hemifrån"
+			},
+			"args": []
+		},
+		{
+			"id": "state_changed",
+			"title": {
+				"en": "State changed (online/offline)",
+				"sv": "Tillstånd ändrades (online/offline)"
+			},
+			"args": []
+		},
+		{
+			"id": "online",
+			"title": {
+				"en": "Is online",
+				"sv": "Är online"
+			},
+			"args": []
+		},
+		{
+			"id": "offline",
+			"title": {
+				"en": "Is offline",
+				"sv": "Är offline"
+			},
+			"args": []
+		},
+		{
+			"id": "locked",
+			"title": {
+				"en": "Locked",
+				"sv": "Låstes"
+			},
+			"args": []
+		},
+		{
+			"id": "unlocked",
+			"title": {
+				"en": "Unlocked",
+				"sv": "Låstes upp"
+			},
+			"args": []
+		},
+		{
+			"id": "started_driving",
+			"title": {
+				"en": "Started driving",
+				"sv": "Började köra"
+			},
+			"args": []
+		},
+		{
+			"id": "stopped_driving",
+			"title": {
+				"en": "Parked",
+				"sv": "Parkerades"
+			},
+			"args": []
+		},
+		{
+			"id": "started_charging",
+			"title": {
+				"en": "Charging started",
+				"sv": "Laddning påbörjades"
+			},
+			"args": []
+		},
+		{
+			"id": "stopped_charging",
+			"title": {
+				"en": "Charging stopped",
+				"sv": "Laddning avslutades"
+			},
+			"args": []
+		},
+		{
+			"id": "measure_speed_changed",
+			"title": {
+				"en": "Speed changed",
+				"sv": "Hastigheten ändrades"
+			},
+			"args": []
+		},
+		{
+			"id": "measure_inside_temperature_changed",
+			"title": {
+				"en": "Inner temperature changed",
+				"sv": "Innertemperaturen ändrades"
+			},
+			"args": []
+		},
+		{
+			"id": "measure_outside_temperature_changed",
+			"title": {
+				"en": "Outer temperature changed",
+				"sv": "Yttertemperaturen ändrades"
+			},
+			"args": []
+		},
+		{
+			"id": "arrived_at_location",
+			"title": {
+				"en": "Arrived at location",
+				"sv": "Anlände till plats"
+			},
+			"titleFormatted": {
+				"en": "Arrived at location [[location]]",
+				"sv": "Anlände till plats [[location]]"
+			},
+            "tokens": [
+				{
+					"title": { "en": "Location", "sv": "Plats" },
+					"name": "location",
+					"type": "string",
+					"example": "Stockholm"
+				}
+			],
+
+
+			"args": [
+				{
+					"type": "text",
+					"name": "location",
+					"placeholder": {
+						"en": "Location",
+						"sv": "Plats"
+					}
+				}
+			]
+		}
+	],
+	"conditions": [
+		{
+			"id": "is_at_home",
+			"title": {
+				"en": "!{{Is|Is not}} home",
+				"sv": "!{{Är hemma|Är inte hemma}}"
+			},
+			"args": []
+		},
+		{
+			"id": "is_charging",
+			"title": {
+				"en": "Car !{{is|is not}} charging",
+				"sv": "Bilen !{{laddar|laddar inte}}"
+			},
+			"args": []
+		},
+		{
+			"id": "is_driving",
+			"title": {
+				"en": "Car !{{is driving|is parked}}",
+				"sv": "Bilen !{{kör|är parkerad}}"
+			},
+			"args": []
+		},
+		{
+			"id": "is_online",
+			"title": {
+				"en": "Is !{{online|offline}}",
+				"sv": "Är !{{online|online}}"
+			},
+			"args": []
+		},
+		{
+			"id": "is_locked",
+			"title": {
+				"en": "Is !{{locked|unlocked}} locked",
+				"sv": "Är !{{Låst|upplåst}}"
+			},
+			"args": []
+		},
+		{
+			"id": "is_near_location",
+			"title": {
+				"en": "Är !{{nära|inte nära}} en plats"
+			},
+			"titleFormatted": {
+				"en": "!{{Is at|Is not at}} [[location]] ([[latitude]], [[longitude]])",
+				"sv": "!{{Är på plats|Är inte på plats}} [[location]] ([[latitude]], [[longitude]])"
+			},
+			"args": [
+				{
+					"type": "text",
+					"name": "location",
+					"placeholder": {
+						"en": "Location",
+						"sv": "Plats"
+					}
+				},
+				{
+					"type": "number",
+					"name": "latitude",
+					"placeholder": {
+						"en": "Latitude"
+					}
+				},
+				{
+					"type": "number",
+					"name": "longitude",
+					"placeholder": {
+						"en": "Longitude"
+					}
+				}
+			]
+		},
+		{
+			"id": "is_near_location_with_radius",
+			"title": {
+				"en": "Is !{{near|not near}} a location with a radius",
+				"sv": "Är !{{nära|inte nära}} a plats inom en radie"
+			},
+			"titleFormatted": {
+				"en": "Is !{{near|not near}} [[location]] within a radius of [[radius]] km ([[latitude]], [[longitude]])",
+				"sv": "Är !{{nära|inte nära}} [[location]] inom en radie på [[radius]] km ([[latitude]], [[longitude]])"
+			},
+			"args": [
+				{
+					"type": "text",
+					"name": "location",
+					"placeholder": {
+						"en": "Location",
+						"sv": "Plats"
+					}
+				},
+				{
+					"type": "number",
+					"name": "radius",
+					"placeholder": {
+						"en": "Radius"
+					}
+				},
+				{
+					"type": "number",
+					"name": "latitude",
+					"placeholder": {
+						"en": "Latitude"
+					}
+				},
+				{
+					"type": "number",
+					"name": "longitude",
+					"placeholder": {
+						"en": "Longitude"
+					}
+				}
+			]
+		}
+	],
+	"actions": [
+		{
+			"id": "wake_up",
+			"title": {
+				"en": "Wake up",
+				"sv": "Väck bilen"
+			},
+			"args": []
+		},
+		{
+			"id": "set_location",
+			"title": {
+				"en": "Set location",
+				"sv": "Ange plats"
+			},
+			"titleFormatted": {
+				"en": "Set location to [[location]]",
+				"sv": "Sätt plats till [[location]]"
+			},
+			"args": [
+				{
+					"type": "text",
+					"name": "location",
+					"placeholder": {
+						"en": "Location",
+						"sv": "Plats"
+					}
+				}
+			]
+		}
+	]
 }
