@@ -166,9 +166,12 @@ class Vehicle extends Events {
 
 		switch (state) {
 			case 'Disconnected': {
-				return 'Urkopplad';
+				return 'Inte ansluten';
 			}
 			case 'Connected': {
+				return 'Ansluten';
+			}
+			case 'Charging': {
 				return 'Laddar';
 			}
 		}

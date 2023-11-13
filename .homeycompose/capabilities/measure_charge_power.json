@@ -5,6 +5,6 @@
     "getable": true,
     "setable": false,
     "units": { "en": "W" },
-    "icon": "./assets/capabilities/vehicle_charge_power.svg"
+    "icon": "./assets/capabilities/measure_charge_power.svg"
     
   }

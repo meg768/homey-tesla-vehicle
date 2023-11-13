@@ -1,7 +1,7 @@
 {
   "actions": [
     {
-      "id": "defrost-for-a-while",
+      "id": "defrost_for_a_while",
       "title": {
         "en": "Activate for a while",
         "sv": "Slå på ett tag"

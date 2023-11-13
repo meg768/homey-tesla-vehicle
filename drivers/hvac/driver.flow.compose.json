@@ -1,7 +1,7 @@
 {
   "actions": [
     {
-      "id": "hvac-for-a-while",
+      "id": "hvac_for_a_while",
       "title": {
         "en": "Activate for a while",
         "sv": "Slå på ett tag"

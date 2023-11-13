@@ -17,7 +17,7 @@ class MyDevice extends Device {
 		this.vehicleData = JSON.parse(JSON.stringify(this.vehicle.vehicleData));
 
         
-		this.registerCapabilityListener('vehicle_location', async (value, options) => {
+		this.registerCapabilityListener('location', async (value, options) => {
             return await this.setLocation(value);
 		});
 
@@ -29,7 +29,7 @@ class MyDevice extends Device {
         if (this.vehicleLocation != location) {
             this.vehicleLocation = location;
 
-            let vehicleArrivedAtLocation = this.homey.flow.getDeviceTriggerCard('vehicle-arrived-at-location');
+            let vehicleArrivedAtLocation = this.homey.flow.getDeviceTriggerCard('arrived_at_location');
             let args = await vehicleArrivedAtLocation.getArgumentValues(this);
 
             vehicleArrivedAtLocation.registerRunListener(async (args, state) => {
@@ -49,7 +49,7 @@ class MyDevice extends Device {
                 }
             }
 
-            await this.trigger('vehicle-location-changed');
+            //await this.trigger('vehicle_location_changed');
         }
 
     };
@@ -64,12 +64,12 @@ class MyDevice extends Device {
 
 	async onAction(name, args) {
 		switch (name) {
-			case 'vehicle-wake-up': {
+			case 'wake-up': {
 				await this.vehicle.getVehicleData();
 				break;
 			}
 
-			case 'vehicle-set-location': {
+			case 'set_location': {
 				let { location } = args;
                 this.log(`settings location ${location}`);
                 await this.setCapabilityValue('vehicle_location', location);
@@ -81,23 +81,23 @@ class MyDevice extends Device {
 
 	async onCondition(name, args) {
 		switch (name) {
-			case 'vehicle-is-at-home': {
+			case 'is_at_home': {
 				return this.isAtHome();
 			}
-			case 'vehicle-is-locked': {
+			case 'is_locked': {
 				return this.isLocked();
 			}
-			case 'vehicle-is-online': {
+			case 'is_online': {
 				return this.isOnline();
 			}
-			case 'vehicle-is-charging': {
+			case 'is_charging': {
 				return this.isCharging();
 			}
-			case 'vehicle-is-near-location': {
+			case 'is_near_location': {
 				let { latitude, longitude, radius } = args;
 				return this.isNearLocation(latitude, longitude, 0.2);
 			}
-			case 'vehicle-is-near-location-with-radius': {
+			case 'is_near_location_with_radius': {
 				let { latitude, longitude, radius } = args;
 				return this.isNearLocation(latitude, longitude, radius);
 			}
@@ -171,65 +171,50 @@ class MyDevice extends Device {
 
 	async updateTriggers(vehicleData) {
 		if (this.vehicleData.state != vehicleData.state) {
-			this.trigger('vehicle-state-changed');
 
 			if (vehicleData.state == 'online') {
-				this.trigger('vehicle-online');
+				this.trigger('online');
 			} else {
-				this.trigger('vehicle-offline');
+				this.trigger('offline');
 			}
 		}
 
 		if (this.vehicle.getPosition(this.vehicleData) != this.vehicle.getPosition(vehicleData)) {
-			await this.trigger('vehicle-position-changed');
+			await this.trigger('position_changed');
 		}
 
 		if (this.vehicle.isLocked(this.vehicleData) != this.vehicle.isLocked(vehicleData)) {
 			if (this.vehicle.isLocked(vehicleData)) {
-				await this.trigger('vehicle-locked');
+				await this.trigger('locked');
 			} else {
-				await this.trigger('vehicle-unlocked');
+				await this.trigger('unlocked');
 			}
 		}
 
 		if (this.vehicle.isCharging(this.vehicleData) != this.vehicle.isCharging(vehicleData)) {
 			if (this.vehicle.isCharging(vehicleData)) {
-				await this.trigger('vehicle-charging-started');
+				await this.trigger('started_charging');
 			} else {
-				await this.trigger('vehicle-charging-stopped');
+				await this.trigger('stopped_charging');
 			}
 		}
 
 		if (this.vehicle.isDriving(this.vehicleData) != this.vehicle.isDriving(vehicleData)) {
-			this.log(`Vehicle driving state is ${this.vehicle.isDriving(vehicleData) ? 'TRUE' : 'FALSE'}`);
 			if (this.vehicle.isDriving(vehicleData)) {
-				await this.trigger('vehicle-started-driving');
+				await this.trigger('started_driving');
 			} else {
-				await this.trigger('vehicle-stopped-driving');
+				await this.trigger('stopped_driving');
 			}
 		}
 
 		if (this.vehicle.isAtHome(this.vehicleData) != this.vehicle.isAtHome(vehicleData)) {
 			if (this.vehicle.isAtHome(vehicleData)) {
-				await this.trigger('vehicle-inside-geofence');
+				await this.trigger('inside_geofence');
 			} else {
-				await this.trigger('vehicle-outside-geofence');
+				await this.trigger('outside_geofence');
 			}
 		}
 
-		if (this.vehicle.getVehicleSpeed(this.vehicleData) != this.vehicle.getVehicleSpeed(vehicleData)) {
-			this.log(`Vehicle speed is now ${this.vehicle.getVehicleSpeed(vehicleData)}`);
-			await this.trigger('vehicle-speed-changed');
-		}
-
-		if (this.vehicle.getInsideTemperature(this.vehicleData) != this.vehicle.getInsideTemperature(vehicleData)) {
-			this.log(`Inside temperature is now ${this.vehicle.getInsideTemperature(vehicleData)}`);
-			await this.trigger('vehicle-inside-temperature-changed');
-		}
-		if (this.vehicle.getOutsideTemperature(this.vehicleData) != this.vehicle.getOutsideTemperature(vehicleData)) {
-			this.log(`Outside temperature is now ${this.vehicle.getOutsideTemperature(vehicleData)}`);
-			await this.trigger('vehicle-outside-temperature-changed');
-		}
 	}
 
 	async updateCapabilities(vehicleData) {
@@ -241,19 +226,22 @@ class MyDevice extends Device {
 		}
 
 		await this.setCapabilityValue('measure_battery', this.vehicle.getBatteryLevel(vehicleData));
-		await this.setCapabilityValue('vehicle_inside_temperature', this.vehicle.getInsideTemperature(vehicleData));
-
-        await this.setCapabilityValue('vehicle_outside_temperature', this.vehicle.getOutsideTemperature(vehicleData));
+		await this.setCapabilityValue('measure_inside_temperature', this.vehicle.getInsideTemperature(vehicleData));
 		await this.setCapabilityValue('measure_outside_temperature', this.vehicle.getOutsideTemperature(vehicleData));
+		await this.setCapabilityValue('measure_speed', this.vehicle.getVehicleSpeed(vehicleData));
 
-        await this.setCapabilityValue('vehicle_battery_range', this.vehicle.getBatteryRange(vehicleData));
-		await this.setCapabilityValue('vehicle_charging_state', this.vehicle.getLocalizedChargingState(vehicleData));
-		await this.setCapabilityValue('vehicle_odometer', this.vehicle.getOdometer(vehicleData));
-		await this.setCapabilityValue('vehicle_distance_from_homey', this.vehicle.getDistanceFromHomey(vehicleData));
-		await this.setCapabilityValue('vehicle_state', this.vehicle.getLocalizedState(vehicleData));
-		await this.setCapabilityValue('vehicle_charge_power', this.vehicle.getChargePower(vehicleData));
-		await this.setCapabilityValue('vehicle_speed', this.vehicle.getVehicleSpeed(vehicleData));
-		await this.setCapabilityValue('vehicle_location', this.vehicleLocation);
+        await this.setCapabilityValue('measure_odometer', this.vehicle.getOdometer(vehicleData));
+
+		await this.setCapabilityValue('state', this.vehicle.getLocalizedState(vehicleData));
+        await this.setCapabilityValue('charging_state', this.vehicle.getLocalizedChargingState(vehicleData));
+
+        await this.setCapabilityValue('measure_battery_range', this.vehicle.getBatteryRange(vehicleData));
+		await this.setCapabilityValue('measure_distance_from_homey', this.vehicle.getDistanceFromHomey(vehicleData));
+		await this.setCapabilityValue('measure_charge_power', this.vehicle.getChargePower(vehicleData));
+		await this.setCapabilityValue('location', this.vehicleLocation);
+
+
+
 	}
 }
 

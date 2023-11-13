@@ -5,6 +5,6 @@
     "getable": true,
     "setable": false,
     "units": { "en": "°C" },
-    "icon": "./assets/capabilities/vehicle_outside_temperature.svg"
+    "icon": "./assets/capabilities/measure_outside_temperature.svg"
     
   }

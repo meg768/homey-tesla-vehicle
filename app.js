@@ -49,19 +49,19 @@ class MyApp extends Homey.App {
 			this.log(message);
 		});
 
-		this.addCondition('vehicle-is-near-location');
-		this.addCondition('vehicle-is-near-location-with-radius');
-		this.addCondition('vehicle-is-charging');
-		this.addCondition('vehicle-is-locked');
-		this.addCondition('vehicle-is-online');
-		this.addCondition('vehicle-is-driving');
-		this.addCondition('vehicle-is-at-home');
+		this.addCondition('is_near_location');
+		this.addCondition('is_near_location_with_radius');
+		this.addCondition('is_charging');
+		this.addCondition('is_locked');
+		this.addCondition('is_online');
+		this.addCondition('is_driving');
+		this.addCondition('is_at_home');
 
-		this.addAction('vehicle-set-location');
-		this.addAction('vehicle-wake-up');
+		this.addAction('set_location');
+		this.addAction('wake_up');
 
-		this.addAction('defrost-for-a-while');
-		this.addAction('hvac-for-a-while');
+		this.addAction('defrost_for_a_while');
+		this.addAction('hvac_for_a_while');
 
 	}
 

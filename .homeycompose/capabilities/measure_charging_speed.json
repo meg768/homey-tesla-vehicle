@@ -5,6 +5,6 @@
     "getable": true,
     "setable": false,
     "units": { "en": "km/h" },
-    "icon": "./assets/capabilities/vehicle_charging_speed.svg"
+    "icon": "./assets/capabilities/measure_charging_speed.svg"
     
   }

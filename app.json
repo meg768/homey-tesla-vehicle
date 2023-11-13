@@ -50,7 +50,7 @@
         "id": "log-to-console"
       },
       {
-        "id": "defrost-for-a-while",
+        "id": "defrost_for_a_while",
         "title": {
           "en": "Activate for a while",
           "sv": "Slå på ett tag"
@@ -79,7 +79,7 @@
         ]
       },
       {
-        "id": "hvac-for-a-while",
+        "id": "hvac_for_a_while",
         "title": {
           "en": "Activate for a while",
           "sv": "Slå på ett tag"
@@ -108,7 +108,7 @@
         ]
       },
       {
-        "id": "vehicle-wake-up",
+        "id": "wake_up",
         "title": {
           "en": "Wake up",
           "sv": "Väck bilen"
@@ -122,7 +122,7 @@
         ]
       },
       {
-        "id": "vehicle-set-location",
+        "id": "set_location",
         "title": {
           "en": "Set location",
           "sv": "Ange plats"
@@ -150,7 +150,7 @@
     ],
     "triggers": [
       {
-        "id": "vehicle-inside-geofence",
+        "id": "inside_geofence",
         "title": {
           "en": "Came home",
           "sv": "Kom hem"
@@ -164,7 +164,7 @@
         ]
       },
       {
-        "id": "vehicle-location-changed",
+        "id": "location_changed",
         "title": {
           "en": "Location changed",
           "sv": "Plats ändrades"
@@ -178,7 +178,7 @@
         ]
       },
       {
-        "id": "vehicle-position-changed",
+        "id": "position_changed",
         "title": {
           "en": "Position changed",
           "sv": "Position ändrades"
@@ -192,7 +192,7 @@
         ]
       },
       {
-        "id": "vehicle-outside-geofence",
+        "id": "outside_geofence",
         "title": {
           "en": "Left home",
           "sv": "Körde hemifrån"
@@ -206,7 +206,7 @@
         ]
       },
       {
-        "id": "vehicle-state-changed",
+        "id": "state_changed",
         "title": {
           "en": "State changed (online/offline)",
           "sv": "Tillstånd ändrades (online/offline)"
@@ -220,7 +220,7 @@
         ]
       },
       {
-        "id": "vehicle-online",
+        "id": "online",
         "title": {
           "en": "Is online",
           "sv": "Är online"
@@ -234,7 +234,7 @@
         ]
       },
       {
-        "id": "vehicle-offline",
+        "id": "offline",
         "title": {
           "en": "Is offline",
           "sv": "Är offline"
@@ -248,7 +248,7 @@
         ]
       },
       {
-        "id": "vehicle-locked",
+        "id": "locked",
         "title": {
           "en": "Locked",
           "sv": "Låstes"
@@ -262,7 +262,7 @@
         ]
       },
       {
-        "id": "vehicle-unlocked",
+        "id": "unlocked",
         "title": {
           "en": "Unlocked",
           "sv": "Låstes upp"
@@ -276,7 +276,7 @@
         ]
       },
       {
-        "id": "vehicle-started-driving",
+        "id": "started_driving",
         "title": {
           "en": "Started driving",
           "sv": "Började köra"
@@ -290,7 +290,7 @@
         ]
       },
       {
-        "id": "vehicle-stopped-driving",
+        "id": "stopped_driving",
         "title": {
           "en": "Parked",
           "sv": "Parkerades"
@@ -304,7 +304,7 @@
         ]
       },
       {
-        "id": "vehicle-charging-started",
+        "id": "started_charging",
         "title": {
           "en": "Charging started",
           "sv": "Laddning påbörjades"
@@ -318,7 +318,7 @@
         ]
       },
       {
-        "id": "vehicle-charging-stopped",
+        "id": "stopped_charging",
         "title": {
           "en": "Charging stopped",
           "sv": "Laddning avslutades"
@@ -332,7 +332,7 @@
         ]
       },
       {
-        "id": "vehicle-speed-changed",
+        "id": "measure_speed_changed",
         "title": {
           "en": "Speed changed",
           "sv": "Hastigheten ändrades"
@@ -346,7 +346,7 @@
         ]
       },
       {
-        "id": "vehicle-inside-temperature-changed",
+        "id": "measure_inside_temperature_changed",
         "title": {
           "en": "Inner temperature changed",
           "sv": "Innertemperaturen ändrades"
@@ -360,7 +360,7 @@
         ]
       },
       {
-        "id": "vehicle-outside-temperature-changed",
+        "id": "measure_outside_temperature_changed",
         "title": {
           "en": "Outer temperature changed",
           "sv": "Yttertemperaturen ändrades"
@@ -374,7 +374,7 @@
         ]
       },
       {
-        "id": "vehicle-arrived-at-location",
+        "id": "arrived_at_location",
         "title": {
           "en": "Arrived at location",
           "sv": "Anlände till plats"
@@ -402,7 +402,7 @@
     ],
     "conditions": [
       {
-        "id": "vehicle-is-at-home",
+        "id": "is_at_home",
         "title": {
           "en": "!{{Is|Is not}} home",
           "sv": "!{{Är hemma|Är inte hemma}}"
@@ -416,7 +416,7 @@
         ]
       },
       {
-        "id": "vehicle-is-charging",
+        "id": "is_charging",
         "title": {
           "en": "Car !{{is|is not}} charging",
           "sv": "Bilen !{{laddar|laddar inte}}"
@@ -430,7 +430,7 @@
         ]
       },
       {
-        "id": "vehicle-is-driving",
+        "id": "is_driving",
         "title": {
           "en": "Car !{{is driving|is parked}}",
           "sv": "Bilen !{{kör|är parkerad}}"
@@ -444,7 +444,7 @@
         ]
       },
       {
-        "id": "vehicle-is-online",
+        "id": "is_online",
         "title": {
           "en": "Is !{{online|offline}}",
           "sv": "Är !{{online|online}}"
@@ -458,7 +458,7 @@
         ]
       },
       {
-        "id": "vehicle-is-locked",
+        "id": "is_locked",
         "title": {
           "en": "Is !{{locked|unlocked}} locked",
           "sv": "Är !{{Låst|upplåst}}"
@@ -472,7 +472,7 @@
         ]
       },
       {
-        "id": "vehicle-is-near-location",
+        "id": "is_near_location",
         "title": {
           "en": "Är !{{nära|inte nära}} en plats"
         },
@@ -511,7 +511,7 @@
         ]
       },
       {
-        "id": "vehicle-is-near-location-with-radius",
+        "id": "is_near_location_with_radius",
         "title": {
           "en": "Is !{{near|not near}} a location with a radius",
           "sv": "Är !{{nära|inte nära}} a plats inom en radie"
@@ -927,18 +927,17 @@
       },
       "class": "other",
       "capabilities": [
-        "vehicle_location",
-        "vehicle_charge_power",
-        "vehicle_speed",
-        "vehicle_distance_from_homey",
-        "vehicle_odometer",
-        "vehicle_state",
-        "vehicle_inside_temperature",
-        "vehicle_outside_temperature",
+        "location",
+        "measure_charge_power",
+        "measure_speed",
+        "measure_distance_from_homey",
+        "measure_odometer",
+        "state",
+        "measure_inside_temperature",
         "measure_outside_temperature",
         "measure_battery",
-        "vehicle_battery_range",
-        "vehicle_charging_state"
+        "measure_battery_range",
+        "charging_state"
       ],
       "platforms": [
         "local"
@@ -1014,6 +1013,104 @@
     }
   ],
   "capabilities": {
+    "charging_state": {
+      "type": "string",
+      "title": {
+        "en": "Charging state",
+        "sv": "Laddning"
+      },
+      "getable": true,
+      "setable": false,
+      "icon": "./assets/capabilities/charging_state.svg"
+    },
+    "location": {
+      "type": "string",
+      "title": {
+        "en": "Location",
+        "sv": "Plats"
+      },
+      "getable": true,
+      "setable": true,
+      "icon": "./assets/capabilities/location.svg"
+    },
+    "measure_battery_range": {
+      "type": "number",
+      "title": {
+        "en": "Battery range",
+        "sv": "Räckvidd"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "km"
+      },
+      "icon": "./assets/capabilities/measure_battery_range.svg"
+    },
+    "measure_charge_power": {
+      "type": "number",
+      "title": {
+        "en": "Charge power",
+        "sv": "Laddningseffekt"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "W"
+      },
+      "icon": "./assets/capabilities/measure_charge_power.svg"
+    },
+    "measure_charging_speed": {
+      "type": "number",
+      "title": {
+        "en": "Charging speed",
+        "sv": "Laddningshastighet"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "km/h"
+      },
+      "icon": "./assets/capabilities/measure_charging_speed.svg"
+    },
+    "measure_distance_from_homey": {
+      "type": "number",
+      "title": {
+        "en": "Away from Homey",
+        "sv": "Avstånd hemifrån"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "km"
+      },
+      "icon": "./assets/capabilities/measure_distance_from_homey.svg"
+    },
+    "measure_inside_temperature": {
+      "type": "number",
+      "title": {
+        "en": "Inner temperature",
+        "sv": "Innertemperatur"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "°C"
+      },
+      "icon": "./assets/capabilities/measure_inside_temperature.svg"
+    },
+    "measure_odometer": {
+      "type": "number",
+      "title": {
+        "en": "Odometer",
+        "sv": "Odometer"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "km"
+      },
+      "icon": "./assets/capabilities/measure_odometer.svg"
+    },
     "measure_outside_temperature": {
       "type": "number",
       "title": {
@@ -1025,120 +1122,9 @@
       "units": {
         "en": "°C"
       },
-      "icon": "./assets/capabilities/vehicle_outside_temperature.svg"
+      "icon": "./assets/capabilities/measure_outside_temperature.svg"
     },
-    "vehicle_battery_range": {
-      "type": "number",
-      "title": {
-        "en": "Battery range",
-        "sv": "Räckvidd"
-      },
-      "getable": true,
-      "setable": false,
-      "units": {
-        "en": "km"
-      },
-      "icon": "./assets/capabilities/vehicle_battery_range.svg"
-    },
-    "vehicle_charge_power": {
-      "type": "number",
-      "title": {
-        "en": "Charge power",
-        "sv": "Laddningseffekt"
-      },
-      "getable": true,
-      "setable": false,
-      "units": {
-        "en": "W"
-      },
-      "icon": "./assets/capabilities/vehicle_charge_power.svg"
-    },
-    "vehicle_charging_speed": {
-      "type": "number",
-      "title": {
-        "en": "Charging speed",
-        "sv": "Laddningshastighet"
-      },
-      "getable": true,
-      "setable": false,
-      "units": {
-        "en": "km/h"
-      },
-      "icon": "./assets/capabilities/vehicle_charging_speed.svg"
-    },
-    "vehicle_charging_state": {
-      "type": "string",
-      "title": {
-        "en": "Charging state",
-        "sv": "Laddning"
-      },
-      "getable": true,
-      "setable": false,
-      "icon": "./assets/capabilities/vehicle_charging_state.svg"
-    },
-    "vehicle_distance_from_homey": {
-      "type": "number",
-      "title": {
-        "en": "Away from Homey",
-        "sv": "Avstånd hemifrån"
-      },
-      "getable": true,
-      "setable": false,
-      "units": {
-        "en": "km"
-      },
-      "icon": "./assets/capabilities/vehicle_distance_from_homey.svg"
-    },
-    "vehicle_inside_temperature": {
-      "type": "number",
-      "title": {
-        "en": "Inner temperature",
-        "sv": "Innertemperatur"
-      },
-      "getable": true,
-      "setable": false,
-      "units": {
-        "en": "°C"
-      },
-      "icon": "./assets/capabilities/vehicle_inside_temperature.svg"
-    },
-    "vehicle_location": {
-      "type": "string",
-      "title": {
-        "en": "Location",
-        "sv": "Plats"
-      },
-      "getable": true,
-      "setable": true,
-      "icon": "./assets/capabilities/vehicle_location.svg"
-    },
-    "vehicle_odometer": {
-      "type": "number",
-      "title": {
-        "en": "Odometer",
-        "sv": "Odometer"
-      },
-      "getable": true,
-      "setable": false,
-      "units": {
-        "en": "km"
-      },
-      "icon": "./assets/capabilities/vehicle_odometer.svg"
-    },
-    "vehicle_outside_temperature": {
-      "type": "number",
-      "title": {
-        "en": "Outer temperature",
-        "sv": "Yttertemperatur"
-      },
-      "getable": true,
-      "setable": false,
-      "units": {
-        "en": "°C"
-      },
-      "icon": "./assets/capabilities/vehicle_outside_temperature.svg"
-    },
-    "vehicle_speed": {
+    "measure_speed": {
       "type": "number",
       "title": {
         "en": "Speed",
@@ -1149,9 +1135,9 @@
       "units": {
         "en": "km/h"
       },
-      "icon": "./assets/capabilities/vehicle_speed.svg"
+      "icon": "./assets/capabilities/measure_speed.svg"
     },
-    "vehicle_state": {
+    "state": {
       "type": "string",
       "title": {
         "en": "State",
@@ -1159,7 +1145,7 @@
       },
       "getable": true,
       "setable": false,
-      "icon": "./assets/capabilities/vehicle_state.svg"
+      "icon": "./assets/capabilities/state.svg"
     }
   }
 }
