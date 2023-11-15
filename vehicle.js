@@ -174,6 +174,12 @@ class Vehicle extends Events {
 			case 'Charging': {
 				return 'Laddar';
 			}
+			case 'Stopped': {
+				return 'Stoppad';
+			}
+			case 'Complete': {
+				return 'Klart';
+			}
 		}
 
 		return state;
@@ -212,7 +218,9 @@ class Vehicle extends Events {
 	}
 
 	getChargePower(vehicleData = this.vehicleData) {
-		return Math.round(vehicleData.charge_state.charge_rate * vehicleData.charge_state.charger_voltage);
+        let W = vehicleData.charge_state.charger_actual_current * vehicleData.charge_state.charger_voltage;
+        let kW = W / 1000;
+		return Math.round(kW * 10) / 10;
 	}
 
 	getBatteryRange(vehicleData = this.vehicleData) {
@@ -270,9 +278,25 @@ class Vehicle extends Events {
 	}
 
 	getChargingSpeed(vehicleData = this.vehicleData) {
-		let chargePower = this.getChargePower(vehicleData);
-		let chargingRate = chargePower / 171;
-		return Math.round(chargingRate * 10) / 10;
+
+        // kW
+        let chargePower = (vehicleData.charge_state.charger_actual_current * vehicleData.charge_state.charger_voltage) / 1000;
+
+        let factor = 0;
+        
+        // Battery range in miles (mi)
+        factor = vehicleData.charge_state.est_battery_range;
+
+        // mi -> km
+        factor = factor * 1.609344;
+
+        // Battery range at 100% (km)
+        factor = factor / (vehicleData.charge_state.battery_level / 100);
+
+        // 75 kWh/km
+        factor = 75 / factor;
+
+		return Math.round(chargePower / factor);
 	}
 
 	isTrunkOpen(vehicleData = this.vehicleData) {

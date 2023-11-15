@@ -949,6 +949,7 @@
       },
       "class": "other",
       "capabilities": [
+        "measure_charging_speed",
         "location",
         "measure_charge_power",
         "measure_speed",
@@ -1077,7 +1078,7 @@
       "getable": true,
       "setable": false,
       "units": {
-        "en": "W"
+        "en": "kW"
       },
       "icon": "./assets/capabilities/measure_charge_power.svg"
     },

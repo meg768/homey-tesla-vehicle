@@ -27,14 +27,14 @@ module.exports = class extends Homey.Device {
 		await this.homey.app.unregisterDevice(this);
     }
 
-	async trigger(name, args) {
-		if (args) {
-			this.log(`Triggering '${name}' with parameters ${JSON.stringify(args)}`);
+	async trigger(name, tokens, state) {
+		if (tokens) {
+			this.log(`Triggering '${name}' with tokens ${JSON.stringify(tokens)}`);
 		} else {
 			this.log(`Triggering '${name}'}`);
 		}
 		const triggerCard = this.homey.flow.getDeviceTriggerCard(name);
-		await triggerCard.trigger(this, args);
+		await triggerCard.trigger(this, tokens, state);
 	}
 }
 

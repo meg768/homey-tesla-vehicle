@@ -4,7 +4,7 @@
     "title": { "en": "Charge power", "sv":"Laddningseffekt" },
     "getable": true,
     "setable": false,
-    "units": { "en": "W" },
+    "units": { "en": "kW" },
     "icon": "./assets/capabilities/measure_charge_power.svg"
     
   }

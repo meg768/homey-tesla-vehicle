@@ -17,51 +17,32 @@ class MyDevice extends Device {
 		this.vehicleData = JSON.parse(JSON.stringify(this.vehicle.vehicleData));
 
 		this.registerCapabilityListener('location', async (value, options) => {
-            this.log(` CAPABILITYCHANGED`);
 			return await this.setLocation(value);
 		});
 
-		let vehicleArrivedAtLocation = this.homey.flow.getDeviceTriggerCard('arrived_at_location');
+        // Only trigger when location is correct
+        if (true) {
+            let vehicleArrivedAtLocation = this.homey.flow.getDeviceTriggerCard('arrived_at_location');
 
-		vehicleArrivedAtLocation.registerRunListener(async (args, state) => {
-			this.log(`args - ${JSON.stringify(args)}`);
-			this.log(`state - ${JSON.stringify(state)}`);
-			return args.location == state.location;
-		});
+            vehicleArrivedAtLocation.registerRunListener(async (args, state) => {
+                return args.location == state.location;
+            });
+    
+        }
 
-		await this.updateCapabilities(this.vehicle.vehicleData);
+        await this.updateCapabilities(this.vehicle.vehicleData);
 		await this.pollVehicleState(this.getSetting('pollInterval'));
 	}
 
 	async setLocation(location) {
 		if (this.vehicleLocation != location) {
 			this.vehicleLocation = location;
-			/*
+			
             let vehicleArrivedAtLocation = this.homey.flow.getDeviceTriggerCard('arrived_at_location');
-            let args = await vehicleArrivedAtLocation.getArgumentValues(this);
+            let tokens = { location: this.vehicleLocation };
+            let state = { location: this.vehicleLocation };
 
-            vehicleArrivedAtLocation.registerRunListener(async (args, state) => {
-                return args.location == state.location;
-            });
-*/
-
-			let vehicleArrivedAtLocation = this.homey.flow.getDeviceTriggerCard('arrived_at_location');
-
-			let args = await vehicleArrivedAtLocation.getArgumentValues(this);
-
-			for (let arg of args) {
-				if (arg.location == this.vehicleLocation) {
-					this.log(`arg - ${JSON.stringify(arg)}`);
-
-					let tokens = { location: this.vehicleLocation };
-					let state = { location: this.vehicleLocation };
-					this.log(`Triggering vehicle-arrived-at-location ${this.vehicleLocation}`);
-
-					state.location = this.vehicleLocation;
-					await vehicleArrivedAtLocation.trigger(this, tokens, state);
-
-				}
-			}
+            vehicleArrivedAtLocation.trigger(this, tokens, state);
 
 		}
 	}
@@ -84,8 +65,7 @@ class MyDevice extends Device {
 			case 'set_location': {
 				let { location } = args;
 				await this.setCapabilityValue('location', location);
-                //this.log(`Capability sedt`);
-				//await this.setLocation(location);
+				await this.setLocation(location);
 				break;
 			}
 		}
@@ -249,6 +229,9 @@ class MyDevice extends Device {
 		await this.setCapabilityValue('measure_distance_from_homey', this.vehicle.getDistanceFromHomey(vehicleData));
 		await this.setCapabilityValue('measure_charge_power', this.vehicle.getChargePower(vehicleData));
 		await this.setCapabilityValue('location', this.vehicleLocation);
+
+		await this.setCapabilityValue('measure_charging_speed', this.vehicle.getChargingSpeed(vehicleData));
+                
 	}
 }
 
