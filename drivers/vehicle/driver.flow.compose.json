@@ -1,6 +1,45 @@
 {
 	"triggers": [
 		{
+			"id": "near_position_within_radius",
+			"title": {
+				"en": "Near a position within a radius",
+				"sv": "Nära en position inom en angiven radie"
+			},
+			"titleFormatted": {
+				"en": "Near a [[latitude]], [[longitude]] within a radius of [[radius]] km",
+				"sv": "Nära position [[latitude]], [[longitude]] inom en radie på [[radius]] km"
+			},
+			"args": [
+				{
+					"type": "number",
+					"name": "latitude",
+					"placeholder": {
+						"en": "Latitude",
+                        "sv": "Latitud"
+					}
+				},
+				{
+					"type": "number",
+					"name": "longitude",
+					"placeholder": {
+						"en": "Longitude",
+                        "sv": "Longitud"
+					}
+				},
+				{
+					"type": "number",
+					"name": "radius",
+					"placeholder": {
+						"en": "Radius",
+                        "sv": "Radie"
+					}
+				}
+			]
+		},
+
+
+		{
 			"id": "inside_geofence",
 			"title": {
 				"en": "Came home",
@@ -211,40 +250,6 @@
 				"sv": "Är !{{Låst|upplåst}}"
 			},
 			"args": []
-		},
-		{
-			"id": "is_near_location",
-			"title": {
-				"en": "Är !{{nära|inte nära}} en plats"
-			},
-			"titleFormatted": {
-				"en": "!{{Is at|Is not at}} [[location]] ([[latitude]], [[longitude]])",
-				"sv": "!{{Är på plats|Är inte på plats}} [[location]] ([[latitude]], [[longitude]])"
-			},
-			"args": [
-				{
-					"type": "text",
-					"name": "location",
-					"placeholder": {
-						"en": "Location",
-						"sv": "Plats"
-					}
-				},
-				{
-					"type": "number",
-					"name": "latitude",
-					"placeholder": {
-						"en": "Latitude"
-					}
-				},
-				{
-					"type": "number",
-					"name": "longitude",
-					"placeholder": {
-						"en": "Longitude"
-					}
-				}
-			]
 		},
 		{
 			"id": "is_near_location_with_radius",

@@ -1,7 +1,7 @@
 'use strict';
 
 const Device = require('../../device');
-const TeslaAPI = require('../../tesla-api');
+
 
 module.exports = class extends Device {
 	async onInit() {
@@ -12,6 +12,10 @@ module.exports = class extends Device {
 		this.registerCapabilityListener('onoff', async (value, options) => {
 			if (value) {
 				await this.vehicle.actuateFrunk();
+
+                setTimeout(async () => {
+                    await this.setCapabilityValue('onoff', false);
+                }, 2000);
 			}
 		});
 	}

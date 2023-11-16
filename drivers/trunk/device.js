@@ -1,7 +1,7 @@
 'use strict';
 
 const Device = require('../../device');
-const TeslaAPI = require('../../tesla-api');
+
 
 
 module.exports = class MyDevice extends Device {
@@ -10,13 +10,13 @@ module.exports = class MyDevice extends Device {
         await super.onInit();
 
 		// Get initial value
-		this.state = this.vehicle.isTrunkOpen(this.vehicle.vehicleData);
-		await this.setCapabilityValue('onoff', this.state);
+		this.locked = !this.vehicle.isTrunkOpen(this.vehicle.vehicleData);
+		await this.setCapabilityValue('locked', this.locked);
 
-        this.registerCapabilityListener('onoff', async (value, options) => {
-            let state = value ? true : false;
+        this.registerCapabilityListener('locked', async (value, options) => {
+            let locked = value ? true : false;
 
-            if (this.state != state) {
+            if (this.locked != locked) {
                 await this.vehicle.actuateTrunk();
                 await this.vehicle.updateVehicleData(3000);
             }
@@ -27,12 +27,12 @@ module.exports = class MyDevice extends Device {
 
     async onVehicleData(vehicleData) {
         try {
-            let state = this.vehicle.isTrunkOpen(vehicleData);
+            let locked = !this.vehicle.isTrunkOpen(vehicleData);
 
-            if (this.state != state) {
-                this.state = state;
-                this.log(`Updating trunk state to ${this.state ? 'ON' : 'OFF'}.`);
-                this.setCapabilityValue('onoff', this.state);
+            if (this.locked != locked) {
+                this.locked = locked;
+                this.log(`Updating trunk lock to ${this.locked ? 'LOCKED' : 'UNLOCKED'}.`);
+                this.setCapabilityValue('locked', this.locked);
             }
         } catch (error) {
             this.log(error.stack);

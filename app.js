@@ -30,7 +30,6 @@ class MyApp extends Homey.App {
 					this.log(`Invalid token. ${error.stack}`);
 				}
 			}
-			this.homey.emit('meg768', { data: 32 });
 		});
 
 		try {
@@ -44,7 +43,6 @@ class MyApp extends Homey.App {
 			this.log(message);
 		});
 
-		this.addCondition('is_near_location');
 		this.addCondition('is_near_location_with_radius');
 		this.addCondition('is_charging');
 		this.addCondition('is_locked');

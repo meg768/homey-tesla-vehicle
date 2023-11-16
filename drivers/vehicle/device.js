@@ -57,7 +57,7 @@ class MyDevice extends Device {
 
 	async onAction(name, args) {
 		switch (name) {
-			case 'wake-up': {
+			case 'wake_up': {
 				await this.vehicle.getVehicleData();
 				break;
 			}
@@ -84,10 +84,6 @@ class MyDevice extends Device {
 			}
 			case 'is_charging': {
 				return this.isCharging();
-			}
-			case 'is_near_location': {
-				let { latitude, longitude, radius } = args;
-				return this.isNearLocation(latitude, longitude, 0.2);
 			}
 			case 'is_near_location_with_radius': {
 				let { latitude, longitude, radius } = args;
@@ -171,7 +167,21 @@ class MyDevice extends Device {
 		}
 
 		if (this.vehicle.getPosition(this.vehicleData) != this.vehicle.getPosition(vehicleData)) {
-			await this.trigger('position_changed');
+/*
+            let triggerCard = this.homey.flow.getDeviceTriggerCard('near_position_within_radius');
+
+            triggerCard.registerRunListener( async (args, state) => {
+                let distance = this.vehicle.getDistanceFromLocation(args.latitude, args.longitude, state.latitude, state.longitude);
+                return distance <= state.radius;
+            });
+
+            let state = {};
+            state.latiude = vehicleData.latyitede;
+            state.longitude = vehicleData.longitude;
+            state.radius = 
+            await triggerCard.trigger(this, {}, state);
+*/
+            await this.trigger('position_changed');
 		}
 
 		if (this.vehicle.isLocked(this.vehicleData) != this.vehicle.isLocked(vehicleData)) {

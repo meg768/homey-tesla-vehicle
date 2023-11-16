@@ -3,9 +3,9 @@
     "en": "Trunk",
     "sv": "Baklucka"
   },
-  "class": "button",
+  "class": "lock",
   "capabilities": [
-    "onoff"
+    "locked"
   ],
   "platforms": [
     "local"
