@@ -1,5 +1,4 @@
 var Events = require('events');
-var QueryString  = require('querystring');
 
 // https://developer.tesla.com/docs/fleet-api
 
@@ -19,84 +18,80 @@ function isString(arg) {
 	return typeof arg === 'string';
 }
 
+
+
 function Request() {
+
 	var Path = require('path');
 	var URL = require('url');
 	var self = this;
 
-	function debug() {}
+	function debug() {
+	};
 
 	function constructor() {
-		var options = { protocol: 'https:' };
 
-		if (isObject(arguments[0])) {
-			Object.assign(options, arguments[0]);
-		} else if (isString(arguments[0])) {
-			var url = new URL.parse(arguments[0]);
+		var options = {protocol:'https:'};
 
-			if (url.protocol != undefined) options.protocol = url.protocol;
 
-			if (url.port != undefined) options.port = url.port;
 
-			if (url.hostname != undefined) options.hostname = url.hostname;
+        var url = new URL.parse(arguments[0]);
 
-			if (url.path != undefined) options.path = url.path;
+        if (url.protocol != undefined)
+            options.protocol = url.protocol;
 
-			if (isObject(arguments[1])) Object.assign(options, arguments[1]);
-		}
+        if (url.port != undefined)
+            options.port = url.port;
+
+        if (url.hostname != undefined)
+            options.hostname = url.hostname;
+
+        if (url.path != undefined)
+            options.path = url.path;
+
+        if (isObject(arguments[1]))
+            Object.assign(options, arguments[1]);
+
 
 		if (options.debug) {
-			debug = isFunction(options.debug) ? options.debug : console.log;
-		}
+            debug = isFunction(options.debug) ? options.debug : console.log;
+        }
 
 		self.defaultOptions = Object.assign({}, options);
 
 		debug('Default options', self.defaultOptions);
 	}
 
-	this.get = function () {
+	this.get = function() {
 		return self.request.apply(self, ['GET'].concat(Array.prototype.slice.call(arguments)));
-	};
+	}
 
-	this.delete = function () {
+	this.delete = function() {
 		return self.request.apply(self, ['DELETE'].concat(Array.prototype.slice.call(arguments)));
-	};
+	}
 
-	this.post = function () {
+	this.post = function() {
 		return self.request.apply(self, ['POST'].concat(Array.prototype.slice.call(arguments)));
-	};
+	}
 
-	this.put = function () {
+	this.put = function() {
 		return self.request.apply(self, ['PUT'].concat(Array.prototype.slice.call(arguments)));
-	};
+	}
 
-	this.request = function () {
+	this.request = function(method, path, options = {}) {
+
 		debug('Request arguments:', arguments);
 
-		var self = this;
-		var https = require('https');
-		var http = require('http');
-		var options = {};
+		var self    = this;
+		var https   = require('https');
+		var http    = require('http');
 
-		if (isString(arguments[0])) {
-			if (isString(arguments[1])) {
-				options.method = arguments[0];
-				options.path = arguments[1];
+        options = {method:method, path:path, ...options};
 
-				Object.assign(options, arguments[2]);
-			} else {
-				options.method = arguments[0];
-				Object.assign(options, arguments[1]);
-			}
-		} else if (isObject(arguments[0])) {
-			options = arguments[0];
-		} else {
-			return Promise.reject('Missing options.');
-		}
-
+        
 		debug('Request options:', options);
-
-		return new Promise(function (resolve, reject) {
+		
+	    return new Promise(function(resolve, reject) {
 			var data = isObject(options.body) ? JSON.stringify(options.body) : options.body;
 			var headers = {};
 
@@ -104,12 +99,14 @@ function Request() {
 				for (var key in self.defaultOptions.headers) {
 					headers[key.toLowerCase()] = self.defaultOptions.headers[key];
 				}
+
 			}
 
 			if (options.headers != undefined) {
 				for (var key in options.headers) {
 					headers[key.toLowerCase()] = options.headers[key];
 				}
+
 			}
 
 			// If default options includes a path, join the two
@@ -119,28 +116,30 @@ function Request() {
 
 			headers['content-length'] = data == undefined ? 0 : Buffer.from(data).length;
 
-			if (isObject(options.body)) headers['content-type'] = 'application/json;charset=utf-8';
+			if (isObject(options.body)) 
+				headers['content-type'] = 'application/json;charset=utf-8';
 
 			var params = {};
-			Object.assign(params, self.defaultOptions, options, { headers: headers });
+			Object.assign(params, self.defaultOptions, options, {headers:headers});
 
-			var iface = params.protocol === 'https:' ? https : http;
+			var iface = params.protocol === "https:" ? https : http;
 
 			debug('Request params:', params);
 
-			params.timeout = 100;
+            params.timeout = 100;
 
-			var request = iface.request(params, function (response) {
-				response.setEncoding('utf8');
+	        var request = iface.request(params, function(response) {
+
+				response.setEncoding('utf8');				
 
 				var body = [];
 
-				response.on('data', function (chunk) {
+				response.on('data', function(chunk) {
 					body.push(chunk);
 				});
 
-				response.on('end', function () {
-					body = body.join('');
+	            response.on('end', function() {
+	                body = body.join('');
 
 					var contentType = '';
 
@@ -148,37 +147,336 @@ function Request() {
 						contentType = response.headers['content-type'];
 					}
 
-					if (contentType.match('application/json')) {
+					if (contentType.match("application/json")) {
 						try {
 							body = JSON.parse(body);
-						} catch (error) {}
+		                }
+						catch (error) {
+		                }
 					}
 
-					var reply = {
-						statusCode: response.statusCode,
-						statusMessage: response.statusMessage,
-						headers: response.headers,
-						body: body,
-					};
+	                var reply = {
+	                    statusCode     : response.statusCode,
+	                    statusMessage  : response.statusMessage,
+	                    headers        : response.headers,
+	                    body           : body
+	                };
 
-					resolve(reply);
-				});
-			});
+	                resolve(reply);
+	            })
+	        });
 
-			if (data) {
-				request.write(data);
-			}
+	        if (data) {
+	            request.write(data);
+	        }
 
-			request.on('error', function (error) {
+			request.on('error', function(error) {
 				reject(error);
 			});
 
-			request.end();
-		});
+	        request.end();
+	    })
 	};
+
 
 	constructor.apply(self, arguments);
 }
+
+
+
+function RequestYES() {
+
+	var Path = require('path');
+	var URL = require('url');
+	var self = this;
+
+	function debug() {
+	};
+
+	function constructor() {
+
+		var options = {protocol:'https:'};
+
+		if (isObject(arguments[0])) {
+			Object.assign(options, arguments[0]);
+		}
+
+		else if (isString(arguments[0])) {
+			var url = new URL.parse(arguments[0]);
+
+			if (url.protocol != undefined)
+				options.protocol = url.protocol;
+
+			if (url.port != undefined)
+				options.port = url.port;
+
+			if (url.hostname != undefined)
+				options.hostname = url.hostname;
+
+			if (url.path != undefined)
+				options.path = url.path;
+
+			if (isObject(arguments[1]))
+				Object.assign(options, arguments[1]);
+
+		}
+
+		if (options.debug) {
+            debug = isFunction(options.debug) ? options.debug : console.log;
+        }
+
+		self.defaultOptions = Object.assign({}, options);
+
+		debug('Default options', self.defaultOptions);
+	}
+
+	this.get = function() {
+		return self.request.apply(self, ['GET'].concat(Array.prototype.slice.call(arguments)));
+	}
+
+	this.delete = function() {
+		return self.request.apply(self, ['DELETE'].concat(Array.prototype.slice.call(arguments)));
+	}
+
+	this.post = function() {
+		return self.request.apply(self, ['POST'].concat(Array.prototype.slice.call(arguments)));
+	}
+
+	this.put = function() {
+		return self.request.apply(self, ['PUT'].concat(Array.prototype.slice.call(arguments)));
+	}
+
+	this.request = function() {
+
+		debug('Request arguments:', arguments);
+
+		var self    = this;
+		var https   = require('https');
+		var http    = require('http');
+		var options = {};
+
+		if (isString(arguments[0])) {
+			if (isString(arguments[1])) {
+				options.method = arguments[0];
+				options.path   = arguments[1];
+
+				Object.assign(options, arguments[2]);
+			}
+			else {
+				options.method = arguments[0];
+				Object.assign(options, arguments[1]);
+			}
+		}
+		else if (isObject(arguments[0])) {
+			options = arguments[0];
+		}
+		else {
+			return Promise.reject('Missing options.');
+		}
+
+		debug('Request options:', options);
+		
+	    return new Promise(function(resolve, reject) {
+			var data = isObject(options.body) ? JSON.stringify(options.body) : options.body;
+			var headers = {};
+
+			if (self.defaultOptions.headers != undefined) {
+				for (var key in self.defaultOptions.headers) {
+					headers[key.toLowerCase()] = self.defaultOptions.headers[key];
+				}
+
+			}
+
+			if (options.headers != undefined) {
+				for (var key in options.headers) {
+					headers[key.toLowerCase()] = options.headers[key];
+				}
+
+			}
+
+			// If default options includes a path, join the two
+			if (isString(self.defaultOptions.path) && isString(options.path)) {
+				options.path = Path.join(self.defaultOptions.path, options.path);
+			}
+
+			headers['content-length'] = data == undefined ? 0 : Buffer.from(data).length;
+
+			if (isObject(options.body)) 
+				headers['content-type'] = 'application/json;charset=utf-8';
+
+			var params = {};
+			Object.assign(params, self.defaultOptions, options, {headers:headers});
+
+			var iface = params.protocol === "https:" ? https : http;
+
+			debug('Request params:', params);
+
+            params.timeout = 100;
+
+	        var request = iface.request(params, function(response) {
+
+				response.setEncoding('utf8');				
+
+				var body = [];
+
+				response.on('data', function(chunk) {
+					body.push(chunk);
+				});
+
+	            response.on('end', function() {
+	                body = body.join('');
+
+					var contentType = '';
+
+					if (response.headers && isString(response.headers['content-type'])) {
+						contentType = response.headers['content-type'];
+					}
+
+					if (contentType.match("application/json")) {
+						try {
+							body = JSON.parse(body);
+		                }
+						catch (error) {
+		                }
+					}
+
+	                var reply = {
+	                    statusCode     : response.statusCode,
+	                    statusMessage  : response.statusMessage,
+	                    headers        : response.headers,
+	                    body           : body
+	                };
+
+	                resolve(reply);
+	            })
+	        });
+
+	        if (data) {
+	            request.write(data);
+	        }
+
+			request.on('error', function(error) {
+				reject(error);
+			});
+
+	        request.end();
+	    })
+	};
+
+
+	constructor.apply(self, arguments);
+}
+
+
+
+class XRequest {
+    constructor(url, options = {}) {
+        let URL = require('url');
+        let parsedURL = new URL.parse(url);
+
+        this.defaultOptions = {...options};
+
+        this.debug = console.log; //isFunction(options.debug) ? options.debug : console.log;
+        this.log = isFunction(options.log) ? options.log : () => {};
+
+        if (parsedURL.protocol != undefined) this.defaultOptions.protocol = parsedURL.protocol;
+        if (parsedURL.port != undefined) this.defaultOptions.port = parsedURL.port;
+        if (parsedURL.hostname != undefined) this.defaultOptions.hostname = parsedURL.hostname;
+        if (parsedURL.path != undefined) this.defaultOptions.path = parsedURL.path;
+
+
+    }
+
+     request(method, path, options = {}) {
+        let QueryString = require('querystring');
+        let Path = require('path');
+        let https = require('https');
+        let http = require('http');
+
+        let params = {...this.defaultOptions, ...options};
+        let data = isObject(params.body) ? JSON.stringify(params.body) : params.body;
+
+        params.method = method;
+        params.path = Path.join(params.path, path);
+
+        if (isObject(options.query)) {
+            let queryString = QueryString.stringify(options.query);
+
+			if (queryString.length > 0) {
+				params.path = params.path + '?' + queryString;
+			}            
+        }
+
+
+
+        params.headers['content-length'] = data == undefined ? 0 : Buffer.from(data).length;
+
+
+        if (isObject(params.body))  {
+            params.headers['content-type'] = 'application/json;charset=utf-8';
+        }
+
+        let iface = params.protocol === "https:" ? https : http;
+
+        this.debug(`------------------${JSON.stringify(params)}`);
+
+        let request = iface.request(params, function (response) {
+            response.setEncoding('utf8');
+
+            var body = [];
+
+            response.on('data', function (chunk) {
+                body.push(chunk);
+            });
+
+            response.on('end', function () {
+                body = body.join('');
+
+                var contentType = '';
+
+                if (response.headers && isString(response.headers['content-type'])) {
+                    contentType = response.headers['content-type'];
+                }
+
+                if (contentType.match('application/json')) {
+                    try {
+                        body = JSON.parse(body);
+                    } catch (error) {}
+                }
+
+                var reply = {
+                    statusCode: response.statusCode,
+                    statusMessage: response.statusMessage,
+                    headers: response.headers,
+                    body: body,
+                };
+
+                resolve(reply);
+            });
+        });        
+
+    
+    }
+
+
+	get () {
+		return this.request.apply(this, ['GET'].concat(Array.prototype.slice.call(arguments)));
+	};
+
+	delete () {
+		return this.request.apply(this, ['DELETE'].concat(Array.prototype.slice.call(arguments)));
+	};
+
+	post () {
+		return this.request.apply(this, ['POST'].concat(Array.prototype.slice.call(arguments)));
+	};
+
+	put  () {
+		return this.request.apply(this, ['PUT'].concat(Array.prototype.slice.call(arguments)));
+	};
+
+}
+
 
 class TeslaAPI {
 	constructor(options) {
