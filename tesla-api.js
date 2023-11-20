@@ -1,4 +1,5 @@
 var Events = require('events');
+var QueryString  = require('querystring');
 
 // https://developer.tesla.com/docs/fleet-api
 

@@ -5,7 +5,7 @@
     "getable": true,
     "setable": false,
     "units": { "en": "°C" },
-    "icon": "./assets/capabilities/measure_outside_temperature.svg",
+    "icon": "./assets/capabilities/outside_temperature.svg",
     "insights": true
 
     

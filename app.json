@@ -825,14 +825,14 @@
       "capabilities": [
         "locked",
         "state",
-        "measure_battery_range",
-        "measure_charge_power",
-        "measure_charging_speed",
-        "measure_speed",
+        "battery_range",
+        "charging_power",
+        "charging_speed",
+        "speed",
         "distance_from_home",
-        "measure_inside_temperature",
-        "measure_outside_temperature",
-        "measure_odometer",
+        "inside_temperature",
+        "outside_temperature",
+        "odometer",
         "measure_battery",
         "charging_state",
         "location"
@@ -929,6 +929,48 @@
     }
   ],
   "capabilities": {
+    "battery_range": {
+      "type": "number",
+      "title": {
+        "en": "Battery range",
+        "sv": "Räckvidd"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "km"
+      },
+      "icon": "./assets/capabilities/battery_range.svg",
+      "insights": true
+    },
+    "charging_power": {
+      "type": "number",
+      "title": {
+        "en": "Charging power",
+        "sv": "Laddningseffekt"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "kW"
+      },
+      "icon": "./assets/capabilities/charging_power.svg",
+      "insights": true
+    },
+    "charging_speed": {
+      "type": "number",
+      "title": {
+        "en": "Charging speed",
+        "sv": "Laddningshastighet"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "km/h"
+      },
+      "icon": "./assets/capabilities/charging_speed.svg",
+      "insights": true
+    },
     "charging_state": {
       "type": "string",
       "title": {
@@ -953,59 +995,7 @@
       "icon": "./assets/capabilities/distance_from_home.svg",
       "insights": true
     },
-    "location": {
-      "type": "string",
-      "title": {
-        "en": "Location",
-        "sv": "Plats"
-      },
-      "getable": true,
-      "setable": true,
-      "icon": "./assets/capabilities/location.svg"
-    },
-    "measure_battery_range": {
-      "type": "number",
-      "title": {
-        "en": "Battery range",
-        "sv": "Räckvidd"
-      },
-      "getable": true,
-      "setable": false,
-      "units": {
-        "en": "km"
-      },
-      "icon": "./assets/capabilities/measure_battery_range.svg",
-      "insights": true
-    },
-    "measure_charge_power": {
-      "type": "number",
-      "title": {
-        "en": "Charge power",
-        "sv": "Laddningseffekt"
-      },
-      "getable": true,
-      "setable": false,
-      "units": {
-        "en": "kW"
-      },
-      "icon": "./assets/capabilities/measure_charge_power.svg",
-      "insights": true
-    },
-    "measure_charging_speed": {
-      "type": "number",
-      "title": {
-        "en": "Charging speed",
-        "sv": "Laddningshastighet"
-      },
-      "getable": true,
-      "setable": false,
-      "units": {
-        "en": "km/h"
-      },
-      "icon": "./assets/capabilities/measure_charging_speed.svg",
-      "insights": true
-    },
-    "measure_inside_temperature": {
+    "inside_temperature": {
       "type": "number",
       "title": {
         "en": "Inside temperature",
@@ -1016,10 +1006,20 @@
       "units": {
         "en": "°C"
       },
-      "icon": "./assets/capabilities/measure_inside_temperature.svg",
+      "icon": "./assets/capabilities/inside_temperature.svg",
       "insights": true
     },
-    "measure_odometer": {
+    "location": {
+      "type": "string",
+      "title": {
+        "en": "Location",
+        "sv": "Plats"
+      },
+      "getable": true,
+      "setable": true,
+      "icon": "./assets/capabilities/location.svg"
+    },
+    "odometer": {
       "type": "number",
       "title": {
         "en": "Odometer",
@@ -1030,9 +1030,9 @@
       "units": {
         "en": "km"
       },
-      "icon": "./assets/capabilities/measure_odometer.svg"
+      "icon": "./assets/capabilities/odometer.svg"
     },
-    "measure_outside_temperature": {
+    "outside_temperature": {
       "type": "number",
       "title": {
         "en": "Outside temperature",
@@ -1043,10 +1043,10 @@
       "units": {
         "en": "°C"
       },
-      "icon": "./assets/capabilities/measure_outside_temperature.svg",
+      "icon": "./assets/capabilities/outside_temperature.svg",
       "insights": true
     },
-    "measure_speed": {
+    "speed": {
       "type": "number",
       "title": {
         "en": "Speed",
@@ -1057,7 +1057,7 @@
       "units": {
         "en": "km/h"
       },
-      "icon": "./assets/capabilities/measure_speed.svg",
+      "icon": "./assets/capabilities/speed.svg",
       "insights": true
     },
     "state": {

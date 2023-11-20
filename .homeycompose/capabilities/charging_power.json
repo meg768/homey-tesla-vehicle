@@ -1,11 +1,11 @@
 
 {
     "type": "number",
-    "title": { "en": "Charge power", "sv":"Laddningseffekt" },
+    "title": { "en": "Charging power", "sv":"Laddningseffekt" },
     "getable": true,
     "setable": false,
     "units": { "en": "kW" },
-    "icon": "./assets/capabilities/measure_charge_power.svg",
+    "icon": "./assets/capabilities/charging_power.svg",
     "insights": true
 
     

@@ -4,7 +4,7 @@
 	"getable": true,
 	"setable": false,
 	"units": { "en": "°C" },
-	"icon": "./assets/capabilities/measure_inside_temperature.svg",
+	"icon": "./assets/capabilities/inside_temperature.svg",
     "insights": true
 
 }

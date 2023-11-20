@@ -249,21 +249,20 @@ class MyDevice extends Device {
 		await this.setCapabilityValue('locked', this.vehicle.isLocked(vehicleData));
 
 		await this.setCapabilityValue('measure_battery', this.vehicle.getBatteryLevel(vehicleData));
-		await this.setCapabilityValue('measure_inside_temperature', this.vehicle.getInsideTemperature(vehicleData));
-		await this.setCapabilityValue('measure_outside_temperature', this.vehicle.getOutsideTemperature(vehicleData));
-		await this.setCapabilityValue('measure_speed', this.vehicle.getVehicleSpeed(vehicleData));
+		await this.setCapabilityValue('inside_temperature', this.vehicle.getInsideTemperature(vehicleData));
+		await this.setCapabilityValue('outside_temperature', this.vehicle.getOutsideTemperature(vehicleData));
+		await this.setCapabilityValue('speed', this.vehicle.getVehicleSpeed(vehicleData));
 
-		await this.setCapabilityValue('measure_odometer', this.vehicle.getOdometer(vehicleData));
-
+		await this.setCapabilityValue('odometer', this.vehicle.getOdometer(vehicleData));
 		await this.setCapabilityValue('state', this.vehicle.getLocalizedState(vehicleData));
-		await this.setCapabilityValue('charging_state', this.vehicle.getLocalizedChargingState(vehicleData));
 
-		await this.setCapabilityValue('measure_battery_range', this.vehicle.getBatteryRange(vehicleData));
+		await this.setCapabilityValue('battery_range', this.vehicle.getBatteryRange(vehicleData));
 		await this.setCapabilityValue('distance_from_home', this.vehicle.getDistanceFromHomey(vehicleData));
-		await this.setCapabilityValue('measure_charge_power', this.vehicle.getChargePower(vehicleData));
 		await this.setCapabilityValue('location', this.vehicleLocation);
 
-		await this.setCapabilityValue('measure_charging_speed', this.vehicle.getChargingSpeed(vehicleData));
+		await this.setCapabilityValue('charging_power', this.vehicle.getChargePower(vehicleData));
+		await this.setCapabilityValue('charging_state', this.vehicle.getLocalizedChargingState(vehicleData));
+		await this.setCapabilityValue('charging_speed', this.vehicle.getChargingSpeed(vehicleData));
 	}
 }
 
