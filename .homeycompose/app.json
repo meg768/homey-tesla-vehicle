@@ -1,5 +1,5 @@
 {
-	"id": "se.egelberg.tesla.vehicle",
+	"id": "se.egelberg.tesla-vehicle",
 	"version": "1.0.0",
 	"compatibility": ">=5.0.0",
 	"sdk": 3,
@@ -7,7 +7,7 @@
 	"name": {
 		"en": "Tesla Vehicle"
 	},
-    "brandColor": "#cc0100",
+    "brandColor": "#d9373d",
 
 	"description": {
 		"en": "Control your Tesla with Homey",

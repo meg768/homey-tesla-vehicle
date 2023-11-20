@@ -1,0 +1,12 @@
+
+{
+    "type": "number",
+    "title": { "en": "Distance from home", "sv":"Avstånd hemifrån" },
+    "getable": true,
+    "setable": false,
+    "units": { "en": "km" },
+    "icon": "./assets/capabilities/distance_from_home.svg",
+    "insights": true
+
+    
+  }

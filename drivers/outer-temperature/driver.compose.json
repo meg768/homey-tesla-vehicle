@@ -1,6 +1,6 @@
 {
   "name": {
-    "en": "Outer temperature",
+    "en": "Outside temperature",
     "sv": "Yttertemperatur"
   },
   "class": "sensor",

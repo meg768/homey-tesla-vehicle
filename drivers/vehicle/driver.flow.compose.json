@@ -165,7 +165,7 @@
 		{
 			"id": "measure_inside_temperature_changed",
 			"title": {
-				"en": "Inner temperature changed",
+				"en": "Inside temperature changed",
 				"sv": "Innertemperaturen ändrades"
 			},
 			"args": []
@@ -173,7 +173,7 @@
 		{
 			"id": "measure_outside_temperature_changed",
 			"title": {
-				"en": "Outer temperature changed",
+				"en": "Outside temperature changed",
 				"sv": "Yttertemperaturen ändrades"
 			},
 			"args": []
@@ -214,7 +214,7 @@
 		{
 			"id": "is_at_home",
 			"title": {
-				"en": "!{{Is|Is not}} home",
+				"en": "!{{Is|Is not}} at home",
 				"sv": "!{{Är hemma|Är inte hemma}}"
 			},
 			"args": []
@@ -222,7 +222,7 @@
 		{
 			"id": "is_charging",
 			"title": {
-				"en": "Car !{{is|is not}} charging",
+				"en": "!{{Is|Is not}} charging",
 				"sv": "Bilen !{{laddar|laddar inte}}"
 			},
 			"args": []
@@ -230,7 +230,7 @@
 		{
 			"id": "is_driving",
 			"title": {
-				"en": "Car !{{is driving|is parked}}",
+				"en": "!{{Is driving|Is parked}}",
 				"sv": "Bilen !{{kör|är parkerad}}"
 			},
 			"args": []
@@ -246,8 +246,8 @@
 		{
 			"id": "is_locked",
 			"title": {
-				"en": "Is !{{locked|unlocked}} locked",
-				"sv": "Är !{{Låst|upplåst}}"
+				"en": "Is !{{locked|unlocked}}",
+				"sv": "Är !{{låst|upplåst}}"
 			},
 			"args": []
 		},

@@ -1,3 +1,1 @@
-# Tesla EV Controls
-
-Control your Tesla S/3/X/Y
+Control your Tesla vehicle using Homey. An alternative to the Tesla Smart Charger. Add buttons to control heating, defrost, trunk, frunk and more.

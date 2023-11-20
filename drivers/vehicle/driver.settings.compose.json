@@ -5,6 +5,19 @@
 		"label": { "en": "Specify default poll interval", "sv": "Uppdateringsfrekvens" },
 		"value": 3,
 		"hint": { "en": "Specify the poll interval in minutes. When polling, it does not wake up your vehicle. It only fetches the online/offline state.", "sv": "Ange hur ofta bilens tillstånd ska uppdateras i minuter. Det kommer inte att väcka bilen utan det är bara tillståndet som hämtas. Online eller Offline." }
-	}
+	},
 
+	{
+		"id": "remoteStartDrivePassword",
+		"type": "text",
+		"label": {
+			"en": "Password for keyless driving",
+			"sv": "Lösenord för nyckellös körning"
+		},
+		"hint": {
+			"en": "If specified your car will be ready to drive without your keycard present when unlocking.",
+			"sv": "Anger du lösenord här behöver du inte din bilnyckel (kortet) för att köra iväg när du låser upp."
+		},
+		"value": ""
+	}
 ]

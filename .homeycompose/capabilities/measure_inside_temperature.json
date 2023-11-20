@@ -1,8 +1,10 @@
 {
 	"type": "number",
-	"title": { "en": "Inner temperature", "sv": "Innertemperatur" },
+	"title": { "en": "Inside temperature", "sv": "Innertemperatur" },
 	"getable": true,
 	"setable": false,
 	"units": { "en": "°C" },
-	"icon": "./assets/capabilities/measure_inside_temperature.svg"
+	"icon": "./assets/capabilities/measure_inside_temperature.svg",
+    "insights": true
+
 }

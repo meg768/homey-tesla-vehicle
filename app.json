@@ -1,6 +1,6 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
-  "id": "se.egelberg.tesla.vehicle",
+  "id": "se.egelberg.tesla-vehicle",
   "version": "1.0.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
@@ -10,7 +10,7 @@
   "name": {
     "en": "Tesla Vehicle"
   },
-  "brandColor": "#cc0100",
+  "brandColor": "#d9373d",
   "description": {
     "en": "Control your Tesla with Homey",
     "sv": "Styr din Tesla med Homey"
@@ -401,7 +401,7 @@
       {
         "id": "measure_inside_temperature_changed",
         "title": {
-          "en": "Inner temperature changed",
+          "en": "Inside temperature changed",
           "sv": "Innertemperaturen ändrades"
         },
         "args": [
@@ -415,7 +415,7 @@
       {
         "id": "measure_outside_temperature_changed",
         "title": {
-          "en": "Outer temperature changed",
+          "en": "Outside temperature changed",
           "sv": "Yttertemperaturen ändrades"
         },
         "args": [
@@ -468,7 +468,7 @@
       {
         "id": "is_at_home",
         "title": {
-          "en": "!{{Is|Is not}} home",
+          "en": "!{{Is|Is not}} at home",
           "sv": "!{{Är hemma|Är inte hemma}}"
         },
         "args": [
@@ -482,7 +482,7 @@
       {
         "id": "is_charging",
         "title": {
-          "en": "Car !{{is|is not}} charging",
+          "en": "!{{Is|Is not}} charging",
           "sv": "Bilen !{{laddar|laddar inte}}"
         },
         "args": [
@@ -496,7 +496,7 @@
       {
         "id": "is_driving",
         "title": {
-          "en": "Car !{{is driving|is parked}}",
+          "en": "!{{Is driving|Is parked}}",
           "sv": "Bilen !{{kör|är parkerad}}"
         },
         "args": [
@@ -524,8 +524,8 @@
       {
         "id": "is_locked",
         "title": {
-          "en": "Is !{{locked|unlocked}} locked",
-          "sv": "Är !{{Låst|upplåst}}"
+          "en": "Is !{{locked|unlocked}}",
+          "sv": "Är !{{låst|upplåst}}"
         },
         "args": [
           {
@@ -620,54 +620,6 @@
     },
     {
       "name": {
-        "en": "Doors",
-        "sv": "Dörrar"
-      },
-      "class": "button",
-      "capabilities": [
-        "onoff"
-      ],
-      "platforms": [
-        "local"
-      ],
-      "connectivity": [],
-      "images": {
-        "small": "/drivers/doors/assets/images/small.png",
-        "large": "/drivers/doors/assets/images/large.png",
-        "xlarge": "/drivers/doors/assets/images/xlarge.png"
-      },
-      "pair": [
-        {
-          "id": "list_devices",
-          "template": "list_devices",
-          "navigation": {
-            "next": "add_devices"
-          }
-        },
-        {
-          "id": "add_devices",
-          "template": "add_devices"
-        }
-      ],
-      "settings": [
-        {
-          "id": "remoteStartDrivePassword",
-          "type": "text",
-          "label": {
-            "en": "Password for keyless driving",
-            "sv": "Lösenord för nyckellös körning"
-          },
-          "hint": {
-            "en": "If specified your car will be ready to drive without your keycard present when unlocking.",
-            "sv": "Anger du lösenord här behöver du inte din bilnyckel (kortet) för att köra iväg när du låser upp."
-          },
-          "value": ""
-        }
-      ],
-      "id": "doors"
-    },
-    {
-      "name": {
         "en": "Frunk",
         "sv": "Framlucka"
       },
@@ -734,7 +686,7 @@
     },
     {
       "name": {
-        "en": "Inner temperature",
+        "en": "Inside temperature",
         "sv": "Innertemperatur"
       },
       "class": "sensor",
@@ -767,55 +719,7 @@
     },
     {
       "name": {
-        "en": "Lock",
-        "sv": "Lås"
-      },
-      "class": "lock",
-      "capabilities": [
-        "locked"
-      ],
-      "platforms": [
-        "local"
-      ],
-      "connectivity": [],
-      "images": {
-        "small": "/drivers/lock/assets/images/small.png",
-        "large": "/drivers/lock/assets/images/large.png",
-        "xlarge": "/drivers/lock/assets/images/xlarge.png"
-      },
-      "pair": [
-        {
-          "id": "list_devices",
-          "template": "list_devices",
-          "navigation": {
-            "next": "add_devices"
-          }
-        },
-        {
-          "id": "add_devices",
-          "template": "add_devices"
-        }
-      ],
-      "settings": [
-        {
-          "id": "remoteStartDrivePassword",
-          "type": "text",
-          "label": {
-            "en": "Password for keyless driving",
-            "sv": "Lösenord för nyckellös körning"
-          },
-          "hint": {
-            "en": "If specified your car will be ready to drive without your keycard present when unlocking.",
-            "sv": "Anger du lösenord här behöver du inte din bilnyckel (kortet) för att köra iväg när du låser upp."
-          },
-          "value": ""
-        }
-      ],
-      "id": "lock"
-    },
-    {
-      "name": {
-        "en": "Outer temperature",
+        "en": "Outside temperature",
         "sv": "Yttertemperatur"
       },
       "class": "sensor",
@@ -881,39 +785,6 @@
     },
     {
       "name": {
-        "en": "Steering wheel heater",
-        "sv": "Rattvärme"
-      },
-      "class": "button",
-      "capabilities": [
-        "onoff"
-      ],
-      "platforms": [
-        "local"
-      ],
-      "connectivity": [],
-      "images": {
-        "small": "/drivers/steering-wheel-heater/assets/images/small.png",
-        "large": "/drivers/steering-wheel-heater/assets/images/large.png",
-        "xlarge": "/drivers/steering-wheel-heater/assets/images/xlarge.png"
-      },
-      "pair": [
-        {
-          "id": "list_devices",
-          "template": "list_devices",
-          "navigation": {
-            "next": "add_devices"
-          }
-        },
-        {
-          "id": "add_devices",
-          "template": "add_devices"
-        }
-      ],
-      "id": "steering-wheel-heater"
-    },
-    {
-      "name": {
         "en": "Trunk",
         "sv": "Baklucka"
       },
@@ -947,24 +818,30 @@
     },
     {
       "name": {
-        "en": "Tesla",
+        "en": "Vehicle",
         "sv": "Tesla"
       },
-      "class": "other",
+      "class": "lock",
       "capabilities": [
-        "measure_charging_speed",
-        "location",
-        "measure_charge_power",
-        "measure_speed",
-        "measure_distance_from_homey",
-        "measure_odometer",
+        "locked",
         "state",
+        "measure_battery_range",
+        "measure_charge_power",
+        "measure_charging_speed",
+        "measure_speed",
+        "distance_from_home",
         "measure_inside_temperature",
         "measure_outside_temperature",
+        "measure_odometer",
         "measure_battery",
-        "measure_battery_range",
-        "charging_state"
+        "charging_state",
+        "location"
       ],
+      "energy": {
+        "batteries": [
+          "OTHER"
+        ]
+      },
       "platforms": [
         "local"
       ],
@@ -987,6 +864,19 @@
             "en": "Specify the poll interval in minutes. When polling, it does not wake up your vehicle. It only fetches the online/offline state.",
             "sv": "Ange hur ofta bilens tillstånd ska uppdateras i minuter. Det kommer inte att väcka bilen utan det är bara tillståndet som hämtas. Online eller Offline."
           }
+        },
+        {
+          "id": "remoteStartDrivePassword",
+          "type": "text",
+          "label": {
+            "en": "Password for keyless driving",
+            "sv": "Lösenord för nyckellös körning"
+          },
+          "hint": {
+            "en": "If specified your car will be ready to drive without your keycard present when unlocking.",
+            "sv": "Anger du lösenord här behöver du inte din bilnyckel (kortet) för att köra iväg när du låser upp."
+          },
+          "value": ""
         }
       ],
       "pair": [
@@ -1049,6 +939,20 @@
       "setable": false,
       "icon": "./assets/capabilities/charging_state.svg"
     },
+    "distance_from_home": {
+      "type": "number",
+      "title": {
+        "en": "Distance from home",
+        "sv": "Avstånd hemifrån"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "km"
+      },
+      "icon": "./assets/capabilities/distance_from_home.svg",
+      "insights": true
+    },
     "location": {
       "type": "string",
       "title": {
@@ -1070,7 +974,8 @@
       "units": {
         "en": "km"
       },
-      "icon": "./assets/capabilities/measure_battery_range.svg"
+      "icon": "./assets/capabilities/measure_battery_range.svg",
+      "insights": true
     },
     "measure_charge_power": {
       "type": "number",
@@ -1083,7 +988,8 @@
       "units": {
         "en": "kW"
       },
-      "icon": "./assets/capabilities/measure_charge_power.svg"
+      "icon": "./assets/capabilities/measure_charge_power.svg",
+      "insights": true
     },
     "measure_charging_speed": {
       "type": "number",
@@ -1096,25 +1002,13 @@
       "units": {
         "en": "km/h"
       },
-      "icon": "./assets/capabilities/measure_charging_speed.svg"
-    },
-    "measure_distance_from_homey": {
-      "type": "number",
-      "title": {
-        "en": "Away from Homey",
-        "sv": "Avstånd hemifrån"
-      },
-      "getable": true,
-      "setable": false,
-      "units": {
-        "en": "km"
-      },
-      "icon": "./assets/capabilities/measure_distance_from_homey.svg"
+      "icon": "./assets/capabilities/measure_charging_speed.svg",
+      "insights": true
     },
     "measure_inside_temperature": {
       "type": "number",
       "title": {
-        "en": "Inner temperature",
+        "en": "Inside temperature",
         "sv": "Innertemperatur"
       },
       "getable": true,
@@ -1122,7 +1016,8 @@
       "units": {
         "en": "°C"
       },
-      "icon": "./assets/capabilities/measure_inside_temperature.svg"
+      "icon": "./assets/capabilities/measure_inside_temperature.svg",
+      "insights": true
     },
     "measure_odometer": {
       "type": "number",
@@ -1140,7 +1035,7 @@
     "measure_outside_temperature": {
       "type": "number",
       "title": {
-        "en": "Outer temperature",
+        "en": "Outside temperature",
         "sv": "Yttertemperatur"
       },
       "getable": true,
@@ -1148,7 +1043,8 @@
       "units": {
         "en": "°C"
       },
-      "icon": "./assets/capabilities/measure_outside_temperature.svg"
+      "icon": "./assets/capabilities/measure_outside_temperature.svg",
+      "insights": true
     },
     "measure_speed": {
       "type": "number",
@@ -1161,7 +1057,8 @@
       "units": {
         "en": "km/h"
       },
-      "icon": "./assets/capabilities/measure_speed.svg"
+      "icon": "./assets/capabilities/measure_speed.svg",
+      "insights": true
     },
     "state": {
       "type": "string",

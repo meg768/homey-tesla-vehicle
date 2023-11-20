@@ -5,6 +5,8 @@
     "getable": true,
     "setable": false,
     "units": { "en": "km/h" },
-    "icon": "./assets/capabilities/measure_speed.svg"
+    "icon": "./assets/capabilities/measure_speed.svg",
+    "insights": true
+
     
   }

@@ -36,9 +36,9 @@ module.exports = class extends Device {
 
     async onAction(name, args) {
         switch(name) {
-            case 'defrost-for-a-while': {
+            case 'defrost_for_a_while': {
                 let {minutes} = args;
-                let timer = this.app.getTimer('defrost-for-a-while-timer');
+                let timer = this.app.getTimer('defrost_for_a_while_timer');
         
                 await this.vehicle.setDefrostState(true);
                 await this.vehicle.updateVehicleData(2000);

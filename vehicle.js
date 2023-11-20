@@ -101,8 +101,6 @@ class Vehicle extends Events {
 	}
 
 	async poll() {
-		this.log(`Fetching vehicle state.`);
-
 		let vehicle = await this.getAPI().getVehicle(this.vehicleID);
 
 		if (vehicle && typeof vehicle.state == 'string') {
@@ -122,7 +120,9 @@ class Vehicle extends Events {
 	}
 
 	async getVehicleData() {
-		this.vehicleData = await this.getAPI().request(this.vehicleID, 'GET', 'vehicle_data');
+        this.log(`Fetching vehicle data.`)
+		let command = `vehicle_data?endpoints=location_data%3Bcharge_state%3Bvehicle_state%3Bclimate_state`;
+		this.vehicleData = await this.getAPI().request(this.vehicleID, 'GET', command);
 
 		// Emit the data
 		this.emit('vehicle_data', this.vehicleData);
@@ -161,8 +161,7 @@ class Vehicle extends Events {
 	}
 
 	getLocalizedChargingState(vehicleData) {
-
-        let state = this.getChargingState();
+		let state = this.getChargingState();
 
 		switch (state) {
 			case 'Disconnected': {
@@ -184,7 +183,6 @@ class Vehicle extends Events {
 
 		return state;
 	}
-
 
 	getBatteryLevel(vehicleData = this.vehicleData) {
 		return vehicleData.charge_state.battery_level;
@@ -218,8 +216,8 @@ class Vehicle extends Events {
 	}
 
 	getChargePower(vehicleData = this.vehicleData) {
-        let W = vehicleData.charge_state.charger_actual_current * vehicleData.charge_state.charger_voltage;
-        let kW = W / 1000;
+		let W = vehicleData.charge_state.charger_actual_current * vehicleData.charge_state.charger_voltage;
+		let kW = W / 1000;
 		return Math.round(kW * 10) / 10;
 	}
 
@@ -263,11 +261,11 @@ class Vehicle extends Events {
 		return Math.round(distance * 10) / 10;
 	}
 
-    getPosition(vehicleData = this.vehicleData) {
+	getPosition(vehicleData = this.vehicleData) {
 		return `${vehicleData.drive_state.latitude}, ${vehicleData.drive_state.longitude}`;
 	}
 
-    isAtHome(vehicleData = this.vehicleData) {
+	isAtHome(vehicleData = this.vehicleData) {
 		return this.getDistanceFromHomey(vehicleData) < 0.2;
 	}
 
@@ -278,23 +276,22 @@ class Vehicle extends Events {
 	}
 
 	getChargingSpeed(vehicleData = this.vehicleData) {
+		// kW
+		let chargePower = (vehicleData.charge_state.charger_actual_current * vehicleData.charge_state.charger_voltage) / 1000;
 
-        // kW
-        let chargePower = (vehicleData.charge_state.charger_actual_current * vehicleData.charge_state.charger_voltage) / 1000;
+		let factor = 0;
 
-        let factor = 0;
-        
-        // Battery range in miles (mi)
-        factor = vehicleData.charge_state.est_battery_range;
+		// Battery range in miles (mi)
+		factor = vehicleData.charge_state.est_battery_range;
 
-        // mi -> km
-        factor = factor * 1.609344;
+		// mi -> km
+		factor = factor * 1.609344;
 
-        // Battery range at 100% (km)
-        factor = factor / (vehicleData.charge_state.battery_level / 100);
+		// Battery range at 100% (km)
+		factor = factor / (vehicleData.charge_state.battery_level / 100);
 
-        // 75 kWh/km
-        factor = 75 / factor;
+		// 75 kWh/km
+		factor = 75 / factor;
 
 		return Math.round(chargePower / factor);
 	}
@@ -338,7 +335,7 @@ class Vehicle extends Events {
 	}
 
 	getLocalizedState(vehicleData) {
-        let state = this.getState();
+		let state = this.getState();
 
 		switch (state) {
 			case 'online': {

@@ -38,10 +38,6 @@ class MyApp extends Homey.App {
 			this.log(error.stack);
 		}
 
-		this.addAction('log-to-console', async (args) => {
-			const { message } = args;
-			this.log(message);
-		});
 
 		this.addCondition('is_near_location_with_radius');
 		this.addCondition('is_charging');

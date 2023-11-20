@@ -1,5 +1,7 @@
 var Events = require('events');
 
+// https://developer.tesla.com/docs/fleet-api
+
 function isString(arg) {
 	return typeof arg == 'string';
 }
@@ -248,7 +250,6 @@ class TeslaAPI {
 	}
 
 	async request(vehicleID, method, command, options) {
-		this.debug(`Tesla request ${method} ${command} ${options ? JSON.stringify(options) : ''}`);
 
 		var api = await this.getAPI();
 
@@ -331,7 +332,7 @@ class TeslaAPI {
 			}
 
 			if (reply.body.expires_in == undefined) {
-				throw new Error(`Invalid response from Tesla. Cannot get access token expire date. Maybe the refresh key is wrong.`);
+				throw new Error(`Invalid response from Tesla. Maybe the refresh token is wrong. Try again with another token.`);
 			}
 
 			return reply.body;

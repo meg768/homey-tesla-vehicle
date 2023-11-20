@@ -1,10 +1,12 @@
 
 {
     "type": "number",
-    "title": { "en": "Outer temperature", "sv": "Yttertemperatur" },
+    "title": { "en": "Outside temperature", "sv": "Yttertemperatur" },
     "getable": true,
     "setable": false,
     "units": { "en": "°C" },
-    "icon": "./assets/capabilities/measure_outside_temperature.svg"
+    "icon": "./assets/capabilities/measure_outside_temperature.svg",
+    "insights": true
+
     
   }

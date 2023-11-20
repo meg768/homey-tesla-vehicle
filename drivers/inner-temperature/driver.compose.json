@@ -1,6 +1,6 @@
 {
   "name": {
-    "en": "Inner temperature",
+    "en": "Inside temperature",
     "sv": "Innertemperatur"
   },
   "class": "sensor",

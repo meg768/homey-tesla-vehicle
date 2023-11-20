@@ -11,39 +11,62 @@ class MyDevice extends Device {
 	async onInit() {
 		await super.onInit();
 
-		this.vehicleLocation = '-';
-
 		// Get initial value
 		this.vehicleData = JSON.parse(JSON.stringify(this.vehicle.vehicleData));
+		this.vehicleLocation = '-';
+
+		this.registerCapabilityListener('locked', async (value, options) => {
+			try {
+				let locked = value ? true : false;
+
+				if (this.vehicle.isLocked() != locked) {
+					this.log(`Setting lock state to ${state ? 'LOCKED' : 'UNLOCKED'}.`);
+
+					if (locked) {
+						await this.vehicle.post('command/door_lock');
+					} else {
+						await this.vehicle.post('command/door_unlock');
+
+						let remoteStartDrivePassword = this.getSetting('remoteStartDrivePassword');
+
+						if (typeof remoteStartDrivePassword == 'string' && remoteStartDrivePassword != '') {
+							await this.vehicle.post(`command/remote_start_drive?password=${remoteStartDrivePassword}`);
+						}
+					}
+
+					await this.vehicle.updateVehicleData(2000);
+				}
+			} catch (error) {
+				this.log(error.stack);
+			}
+		});
 
 		this.registerCapabilityListener('location', async (value, options) => {
 			return await this.setLocation(value);
 		});
 
-        // Only trigger when location is correct
-        if (true) {
-            let vehicleArrivedAtLocation = this.homey.flow.getDeviceTriggerCard('arrived_at_location');
+		// Only trigger when location is correct
+		if (true) {
+			let vehicleArrivedAtLocation = this.homey.flow.getDeviceTriggerCard('arrived_at_location');
 
-            vehicleArrivedAtLocation.registerRunListener(async (args, state) => {
-                return args.location == state.location;
-            });
-    
-        }
+			vehicleArrivedAtLocation.registerRunListener(async (args, state) => {
+				return args.location == state.location;
+			});
+		}
 
-        await this.updateCapabilities(this.vehicle.vehicleData);
+		await this.updateCapabilities(this.vehicle.vehicleData);
 		await this.pollVehicleState(this.getSetting('pollInterval'));
 	}
 
 	async setLocation(location) {
 		if (this.vehicleLocation != location) {
 			this.vehicleLocation = location;
-			
-            let vehicleArrivedAtLocation = this.homey.flow.getDeviceTriggerCard('arrived_at_location');
-            let tokens = { location: this.vehicleLocation };
-            let state = { location: this.vehicleLocation };
 
-            vehicleArrivedAtLocation.trigger(this, tokens, state);
+			let vehicleArrivedAtLocation = this.homey.flow.getDeviceTriggerCard('arrived_at_location');
+			let tokens = { location: this.vehicleLocation };
+			let state = { location: this.vehicleLocation };
 
+			vehicleArrivedAtLocation.trigger(this, tokens, state);
 		}
 	}
 
@@ -137,6 +160,11 @@ class MyDevice extends Device {
 		await super.onVehicleData(vehicleData);
 
 		try {
+		} catch (error) {
+			this.log(error.stack);
+		}
+
+		try {
 			// Clear delayed fetch
 			this.setVehicleDataRefreshInterval(0);
 
@@ -167,7 +195,7 @@ class MyDevice extends Device {
 		}
 
 		if (this.vehicle.getPosition(this.vehicleData) != this.vehicle.getPosition(vehicleData)) {
-/*
+			/*
             let triggerCard = this.homey.flow.getDeviceTriggerCard('near_position_within_radius');
 
             triggerCard.registerRunListener( async (args, state) => {
@@ -181,7 +209,7 @@ class MyDevice extends Device {
             state.radius = 
             await triggerCard.trigger(this, {}, state);
 */
-            await this.trigger('position_changed');
+			await this.trigger('position_changed');
 		}
 
 		if (this.vehicle.isLocked(this.vehicleData) != this.vehicle.isLocked(vehicleData)) {
@@ -218,12 +246,7 @@ class MyDevice extends Device {
 	}
 
 	async updateCapabilities(vehicleData) {
-		function formatNumber(number) {
-			if (typeof number != 'number') {
-				number = parseFloat(number);
-			}
-			return new Intl.NumberFormat().format(number);
-		}
+		await this.setCapabilityValue('locked', this.vehicle.isLocked(vehicleData));
 
 		await this.setCapabilityValue('measure_battery', this.vehicle.getBatteryLevel(vehicleData));
 		await this.setCapabilityValue('measure_inside_temperature', this.vehicle.getInsideTemperature(vehicleData));
@@ -236,12 +259,11 @@ class MyDevice extends Device {
 		await this.setCapabilityValue('charging_state', this.vehicle.getLocalizedChargingState(vehicleData));
 
 		await this.setCapabilityValue('measure_battery_range', this.vehicle.getBatteryRange(vehicleData));
-		await this.setCapabilityValue('measure_distance_from_homey', this.vehicle.getDistanceFromHomey(vehicleData));
+		await this.setCapabilityValue('distance_from_home', this.vehicle.getDistanceFromHomey(vehicleData));
 		await this.setCapabilityValue('measure_charge_power', this.vehicle.getChargePower(vehicleData));
 		await this.setCapabilityValue('location', this.vehicleLocation);
 
 		await this.setCapabilityValue('measure_charging_speed', this.vehicle.getChargingSpeed(vehicleData));
-                
 	}
 }
 

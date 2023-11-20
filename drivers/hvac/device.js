@@ -33,9 +33,9 @@ module.exports = class extends Device {
 
     async onAction(name, args) {
         switch(name) {
-            case 'hvac-for-a-while': {
+            case 'hvac_for_a_while': {
                 let {minutes} = args;
-                let timer = this.app.getTimer('hvac-for-a-while-timer');
+                let timer = this.app.getTimer('hvac_for_a_while_timer');
         
                 await this.vehicle.setClimateState(true);
                 await this.vehicle.updateVehicleData(2000);

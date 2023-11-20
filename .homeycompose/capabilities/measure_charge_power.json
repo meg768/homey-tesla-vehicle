@@ -5,6 +5,8 @@
     "getable": true,
     "setable": false,
     "units": { "en": "kW" },
-    "icon": "./assets/capabilities/measure_charge_power.svg"
+    "icon": "./assets/capabilities/measure_charge_power.svg",
+    "insights": true
+
     
   }
