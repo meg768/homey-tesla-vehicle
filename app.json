@@ -156,7 +156,7 @@
           "sv": "Nära en position inom en angiven radie"
         },
         "titleFormatted": {
-          "en": "Near a [[latitude]], [[longitude]] within a radius of [[radius]] km",
+          "en": "Near position [[latitude]], [[longitude]] within a radius of [[radius]] km",
           "sv": "Nära position [[latitude]], [[longitude]] inom en radie på [[radius]] km"
         },
         "args": [
@@ -188,6 +188,20 @@
               "en": "Radius",
               "sv": "Radie"
             }
+          }
+        ]
+      },
+      {
+        "id": "outside_geofence",
+        "title": {
+          "en": "Left home",
+          "sv": "Körde hemifrån"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
           }
         ]
       },
@@ -245,34 +259,6 @@
         ]
       },
       {
-        "id": "outside_geofence",
-        "title": {
-          "en": "Left home",
-          "sv": "Körde hemifrån"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=vehicle"
-          }
-        ]
-      },
-      {
-        "id": "state_changed",
-        "title": {
-          "en": "State changed (online/offline)",
-          "sv": "Tillstånd ändrades (online/offline)"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=vehicle"
-          }
-        ]
-      },
-      {
         "id": "online",
         "title": {
           "en": "Is online",
@@ -291,6 +277,20 @@
         "title": {
           "en": "Is offline",
           "sv": "Är offline"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "state_changed",
+        "title": {
+          "en": "State changed (online/offline)",
+          "sv": "Tillstånd ändrades (online/offline)"
         },
         "args": [
           {
@@ -385,7 +385,7 @@
         ]
       },
       {
-        "id": "measure_speed_changed",
+        "id": "speed_changed",
         "title": {
           "en": "Speed changed",
           "sv": "Hastigheten ändrades"
@@ -399,7 +399,7 @@
         ]
       },
       {
-        "id": "measure_inside_temperature_changed",
+        "id": "inside_temperature_changed",
         "title": {
           "en": "Inside temperature changed",
           "sv": "Innertemperaturen ändrades"
@@ -413,7 +413,7 @@
         ]
       },
       {
-        "id": "measure_outside_temperature_changed",
+        "id": "outside_temperature_changed",
         "title": {
           "en": "Outside temperature changed",
           "sv": "Yttertemperaturen ändrades"
@@ -538,7 +538,7 @@
       {
         "id": "is_near_location_with_radius",
         "title": {
-          "en": "Is !{{near|not near}} a location with a radius",
+          "en": "Is !{{near|not near}} a location within a radius",
           "sv": "Är !{{nära|inte nära}} a plats inom en radie"
         },
         "titleFormatted": {

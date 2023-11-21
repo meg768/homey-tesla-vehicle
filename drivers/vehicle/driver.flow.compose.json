@@ -7,7 +7,7 @@
 				"sv": "Nära en position inom en angiven radie"
 			},
 			"titleFormatted": {
-				"en": "Near a [[latitude]], [[longitude]] within a radius of [[radius]] km",
+				"en": "Near position [[latitude]], [[longitude]] within a radius of [[radius]] km",
 				"sv": "Nära position [[latitude]], [[longitude]] inom en radie på [[radius]] km"
 			},
 			"args": [
@@ -16,7 +16,7 @@
 					"name": "latitude",
 					"placeholder": {
 						"en": "Latitude",
-                        "sv": "Latitud"
+						"sv": "Latitud"
 					}
 				},
 				{
@@ -24,7 +24,7 @@
 					"name": "longitude",
 					"placeholder": {
 						"en": "Longitude",
-                        "sv": "Longitud"
+						"sv": "Longitud"
 					}
 				},
 				{
@@ -32,48 +32,12 @@
 					"name": "radius",
 					"placeholder": {
 						"en": "Radius",
-                        "sv": "Radie"
+						"sv": "Radie"
 					}
 				}
 			]
 		},
 
-
-		{
-			"id": "inside_geofence",
-			"title": {
-				"en": "Came home",
-				"sv": "Kom hem"
-			},
-			"args": []
-		},
-		{
-			"id": "location_changed",
-			"title": {
-				"en": "Location changed",
-				"sv": "Plats ändrades"
-			},
-
-            "tokens": [
-				{
-					"title": { "en": "Location", "sv": "Plats" },
-					"name": "location",
-					"type": "string",
-					"example": "Stockholm"
-				}
-			],
-
-
-			"args": []
-		},
-		{
-			"id": "position_changed",
-			"title": {
-				"en": "Position changed",
-				"sv": "Position ändrades"
-			},
-			"args": []
-		},
 		{
 			"id": "outside_geofence",
 			"title": {
@@ -83,10 +47,37 @@
 			"args": []
 		},
 		{
-			"id": "state_changed",
+			"id": "inside_geofence",
 			"title": {
-				"en": "State changed (online/offline)",
-				"sv": "Tillstånd ändrades (online/offline)"
+				"en": "Came home",
+				"sv": "Kom hem"
+			},
+			"args": []
+		},
+
+		{
+			"id": "location_changed",
+			"title": {
+				"en": "Location changed",
+				"sv": "Plats ändrades"
+			},
+
+			"tokens": [
+				{
+					"title": { "en": "Location", "sv": "Plats" },
+					"name": "location",
+					"type": "string",
+					"example": "Stockholm"
+				}
+			],
+
+			"args": []
+		},
+		{
+			"id": "position_changed",
+			"title": {
+				"en": "Position changed",
+				"sv": "Position ändrades"
 			},
 			"args": []
 		},
@@ -107,6 +98,15 @@
 			"args": []
 		},
 		{
+			"id": "state_changed",
+			"title": {
+				"en": "State changed (online/offline)",
+				"sv": "Tillstånd ändrades (online/offline)"
+			},
+			"args": []
+		},
+
+		{
 			"id": "locked",
 			"title": {
 				"en": "Locked",
@@ -122,6 +122,7 @@
 			},
 			"args": []
 		},
+
 		{
 			"id": "started_driving",
 			"title": {
@@ -155,7 +156,7 @@
 			"args": []
 		},
 		{
-			"id": "measure_speed_changed",
+			"id": "speed_changed",
 			"title": {
 				"en": "Speed changed",
 				"sv": "Hastigheten ändrades"
@@ -163,7 +164,7 @@
 			"args": []
 		},
 		{
-			"id": "measure_inside_temperature_changed",
+			"id": "inside_temperature_changed",
 			"title": {
 				"en": "Inside temperature changed",
 				"sv": "Innertemperaturen ändrades"
@@ -171,7 +172,7 @@
 			"args": []
 		},
 		{
-			"id": "measure_outside_temperature_changed",
+			"id": "outside_temperature_changed",
 			"title": {
 				"en": "Outside temperature changed",
 				"sv": "Yttertemperaturen ändrades"
@@ -188,7 +189,7 @@
 				"en": "Arrived at location [[location]]",
 				"sv": "Anlände till plats [[location]]"
 			},
-            "tokens": [
+			"tokens": [
 				{
 					"title": { "en": "Location", "sv": "Plats" },
 					"name": "location",
@@ -196,7 +197,6 @@
 					"example": "Stockholm"
 				}
 			],
-
 
 			"args": [
 				{
@@ -254,7 +254,7 @@
 		{
 			"id": "is_near_location_with_radius",
 			"title": {
-				"en": "Is !{{near|not near}} a location with a radius",
+				"en": "Is !{{near|not near}} a location within a radius",
 				"sv": "Är !{{nära|inte nära}} a plats inom en radie"
 			},
 			"titleFormatted": {
