@@ -168,19 +168,19 @@ class Vehicle extends Events {
 
 		switch (state) {
 			case 'Disconnected': {
-				return 'Inte ansluten';
+				return this.homey.__('vehicle.chargingState.disconnected');
 			}
 			case 'Connected': {
-				return 'Ansluten';
+				return this.homey.__('vehicle.chargingState.connected');
 			}
 			case 'Charging': {
-				return 'Laddar';
+				return this.homey.__('vehicle.chargingState.charging');
 			}
 			case 'Stopped': {
-				return 'Stoppad';
+				return this.homey.__('vehicle.chargingState.stopped');
 			}
 			case 'Complete': {
-				return 'Klart';
+				return this.homey.__('vehicle.chargingState.complete');
 			}
 		}
 

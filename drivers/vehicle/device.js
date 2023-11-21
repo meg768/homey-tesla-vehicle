@@ -248,16 +248,16 @@ class MyDevice extends Device {
 	async updateCapabilities(vehicleData) {
 		await this.setCapabilityValue('locked', this.vehicle.isLocked(vehicleData));
 
-		await this.setCapabilityValue('measure_battery', this.vehicle.getBatteryLevel(vehicleData));
+		await this.setCapabilityValue('battery', this.vehicle.getBatteryLevel(vehicleData));
 		await this.setCapabilityValue('inside_temperature', this.vehicle.getInsideTemperature(vehicleData));
 		await this.setCapabilityValue('outside_temperature', this.vehicle.getOutsideTemperature(vehicleData));
 		await this.setCapabilityValue('speed', this.vehicle.getVehicleSpeed(vehicleData));
-
-		await this.setCapabilityValue('odometer', this.vehicle.getOdometer(vehicleData));
-		await this.setCapabilityValue('state', this.vehicle.getLocalizedState(vehicleData));
-
 		await this.setCapabilityValue('battery_range', this.vehicle.getBatteryRange(vehicleData));
 		await this.setCapabilityValue('distance_from_home', this.vehicle.getDistanceFromHomey(vehicleData));
+		await this.setCapabilityValue('odometer', this.vehicle.getOdometer(vehicleData));
+
+		await this.setCapabilityValue('state', this.vehicle.getLocalizedState(vehicleData));
+
 		await this.setCapabilityValue('location', this.vehicleLocation);
 
 		await this.setCapabilityValue('charging_power', this.vehicle.getChargePower(vehicleData));

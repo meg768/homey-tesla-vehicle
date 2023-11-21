@@ -1,0 +1,12 @@
+
+{
+    "type": "number",
+    "title": { "en": "Battery", "sv": "Batteri" },
+    "getable": true,
+    "setable": false,
+    "units": { "en": "%" },
+    "icon": "./assets/capabilities/battery_range.svg",
+    "insights": true
+
+    
+  }

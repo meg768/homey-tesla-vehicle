@@ -10,6 +10,6 @@ module.exports = class MyDriver extends Driver {
 
     }
 	async onPairListDevices() {
-		return await this.homey.app.getPairListDevices(this.homey.__('DevicePingInstanceName'));
+		return await this.homey.app.getPairListDevices(this.homey.__('driver.ping.name'));
 	}
 }

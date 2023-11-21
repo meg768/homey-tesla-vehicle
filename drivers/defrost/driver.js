@@ -6,6 +6,6 @@ module.exports = class MyDriver extends Driver {
 
 
 	async onPairListDevices() {
-		return await this.homey.app.getPairListDevices(this.homey.__('DeviceDefrostInstanceName'));
+		return await this.homey.app.getPairListDevices(this.homey.__('driver.defrost.name'));
 	}
 };

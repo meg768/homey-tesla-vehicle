@@ -3,27 +3,43 @@
 	"InvalidAccessToken": "The access token didn´t work. Use a tool like 'Auth for Tesla' to generate a valid token. Try again with another token.",
 	"NoAPI": "To find this device you first need to specify a Tesla refresh token in app settings. Use a tool like 'Auth for Tesla' to generate a such a token.",
     
-	"Device Instance Names": "--------------------------------------",
-	"DeviceHvacInstanceName": "Air conditioner",
-	"DevicePingInstanceName": "Ping",
-	"DevicePongInstanceName": "Pong",
-	"DeviceVentilationInstanceName": "Ventilation",
-	"DeviceInnerTemperatureInstanceName": "Inside temperature",
-	"DeviceOuterTemperatureInstanceName": "Outside temperature",
-	"DeviceFrunkInstanceName": "Frunk",
-	"DeviceTrunkInstanceName": "Trunk",
-	"DeviceVehicleInstanceName": "Tesla",
-	"DeviceSettingsInstanceName": "Settings",
-    "DeviceSteeringWheelHeaterInstanceName": "Steering wheel heater",
-    "DeviceDefrostInstanceName": "Defrost",
-    "DeviceLockInstanceName": "Lock",
-    "DeviceDoorInstanceName": "Doors",
-        
     
-	"Device Vehicle Texts": "--------------------------------------",
-	"DeviceVehicleCharging": "Charging",
-	"DeviceVehicleDisconnected": "Disconnected",
-	"DeviceVehicleStopped": "Stopped",
+    "driver": {
+        "hvac": {
+            "name": "Air conditioner"
+        },
+        "frunk": {
+            "name": "Frunk"
+        },
+        "trunk": {
+            "name": "Trunk"
+        },
+        "ventilation": {
+            "name": "Ventilation"
+        },
+        "defrost": {
+            "name": "Defrost"
+        },
+        "ping": {
+            "name": "Ping"
+        },
+        "inside-temperature": {
+            "name": "Inside temperature"
+        },
+        "outside-temperature": {
+            "name": "Outside temperature"
+        }
+    },
 
-	"this-is-the-end": "Hate commas in JSON"
+
+    "vehicle": {
+        "chargingState": {
+            "connected": "Connected",
+            "disconnected": "Disconnected",
+            "stopped": "Stopped",
+            "complete": "Complete",
+            "charging": "Charging"
+        }
+    }
+
 }

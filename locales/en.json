@@ -57,5 +57,75 @@
   "DeviceDefrostInstanceName": "Defrost",
   "DeviceLockInstanceName": "Lock",
   "DeviceSteeringWheelHeaterInstanceName": "Steering wheel heater",
-  "DeviceDoorInstanceName": "Doors"
+  "DeviceDoorInstanceName": "Doors",
+  "device": {
+    "vehicle": {
+      "chargingState": {
+        "connected": "ConnectedX",
+        "disconnected": "DisconnectedX",
+        "stopped": "StoppedX",
+        "complete": "CompleteX",
+        "charging": "ChargingX"
+      }
+    },
+    "hvac": {
+      "name": "Air conditionerX"
+    },
+    "frunk": {
+      "name": "FrunkX"
+    },
+    "trunk": {
+      "name": "TrunkX"
+    },
+    "ventilation": {
+      "name": "VentilationX"
+    },
+    "defrost": {
+      "name": "DefrostX"
+    },
+    "ping": {
+      "name": "PingX"
+    },
+    "inside-temperature": {
+      "name": "Inside temperatureX"
+    },
+    "outside-temperature": {
+      "name": "Outside temperatureX"
+    }
+  },
+  "vehicle": {
+    "chargingState": {
+      "connected": "Connected",
+      "disconnected": "Disconnected",
+      "stopped": "Stopped",
+      "complete": "Complete",
+      "charging": "Charging"
+    }
+  },
+  "driver": {
+    "hvac": {
+      "name": "Air conditioner"
+    },
+    "frunk": {
+      "name": "Frunk"
+    },
+    "trunk": {
+      "name": "Trunk"
+    },
+    "ventilation": {
+      "name": "Ventilation"
+    },
+    "defrost": {
+      "name": "Defrost"
+    },
+    "ping": {
+      "name": "Ping"
+    },
+    "inside-temperature": {
+      "name": "Inside temperature"
+    },
+    "outside-temperature": {
+      "name": "Outside temperature"
+    }
+  }
 }

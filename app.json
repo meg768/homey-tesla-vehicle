@@ -715,7 +715,7 @@
           "template": "add_devices"
         }
       ],
-      "id": "inner-temperature"
+      "id": "inside-temperature"
     },
     {
       "name": {
@@ -748,7 +748,7 @@
           "template": "add_devices"
         }
       ],
-      "id": "outer-temperature"
+      "id": "outside-temperature"
     },
     {
       "name": {
@@ -833,7 +833,7 @@
         "inside_temperature",
         "outside_temperature",
         "odometer",
-        "measure_battery",
+        "battery",
         "charging_state",
         "location"
       ],
@@ -929,6 +929,20 @@
     }
   ],
   "capabilities": {
+    "battery": {
+      "type": "number",
+      "title": {
+        "en": "Battery",
+        "sv": "Batteri"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "%"
+      },
+      "icon": "./assets/capabilities/battery_range.svg",
+      "insights": true
+    },
     "battery_range": {
       "type": "number",
       "title": {

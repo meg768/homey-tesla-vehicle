@@ -1,7 +1,6 @@
 'use strict';
 
 const Device = require('../../device');
-const TeslaAPI = require('../../tesla-api');
 
 module.exports = class extends Device {
 	async onInit() {
@@ -12,8 +11,8 @@ module.exports = class extends Device {
 		await this.setCapabilityValue('onoff', this.state);
 
 		this.registerCapabilityListener('onoff', async (value, options) => {
-            await this.vehicle.setClimateState(value);
-            await this.vehicle.updateVehicleData(2000);
+			await this.vehicle.setClimateState(value);
+			await this.vehicle.updateVehicleData(2000);
 		});
 	}
 
@@ -31,21 +30,20 @@ module.exports = class extends Device {
 		}
 	}
 
-    async onAction(name, args) {
-        switch(name) {
-            case 'hvac_for_a_while': {
-                let {minutes} = args;
-                let timer = this.app.getTimer('hvac_for_a_while_timer');
-        
-                await this.vehicle.setClimateState(true);
-                await this.vehicle.updateVehicleData(2000);
-        
-                timer.setTimer(minutes * 60000, async () => {
-                    await this.vehicle.setClimateState(false);
-                    await this.vehicle.updateVehicleData(2000);
-                });
-        
-            };
-        }
-    }
+	async onAction(name, args) {
+		switch (name) {
+			case 'hvac_for_a_while': {
+				let { minutes } = args;
+				let timer = this.app.getTimer('hvac_for_a_while_timer');
+
+				await this.vehicle.setClimateState(true);
+				await this.vehicle.updateVehicleData(2000);
+
+				timer.setTimer(minutes * 60000, async () => {
+					await this.vehicle.setClimateState(false);
+					await this.vehicle.updateVehicleData(2000);
+				});
+			}
+		}
+	}
 };
