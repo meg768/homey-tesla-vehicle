@@ -954,6 +954,7 @@
       "units": {
         "en": "kW"
       },
+      "decimals": 1,
       "icon": "./assets/capabilities/charging_power.svg",
       "insights": true
     },
@@ -992,6 +993,7 @@
       "units": {
         "en": "km"
       },
+      "decimals": 1,
       "icon": "./assets/capabilities/distance_from_home.svg",
       "insights": true
     },
@@ -1007,6 +1009,7 @@
         "en": "°C"
       },
       "icon": "./assets/capabilities/inside_temperature.svg",
+      "decimals": 1,
       "insights": true
     },
     "location": {
@@ -1044,6 +1047,7 @@
         "en": "°C"
       },
       "icon": "./assets/capabilities/outside_temperature.svg",
+      "decimals": 1,
       "insights": true
     },
     "speed": {

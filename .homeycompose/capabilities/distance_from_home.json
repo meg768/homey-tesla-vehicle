@@ -5,6 +5,7 @@
     "getable": true,
     "setable": false,
     "units": { "en": "km" },
+    "decimals": 1,
     "icon": "./assets/capabilities/distance_from_home.svg",
     "insights": true
 

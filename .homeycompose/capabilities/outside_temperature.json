@@ -6,6 +6,7 @@
     "setable": false,
     "units": { "en": "°C" },
     "icon": "./assets/capabilities/outside_temperature.svg",
+    "decimals": 1,
     "insights": true
 
     

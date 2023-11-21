@@ -120,9 +120,12 @@ class Vehicle extends Events {
 	}
 
 	async getVehicleData() {
-        this.log(`Fetching vehicle data.`)
-		let command = `vehicle_data?endpoints=location_data%3Bcharge_state%3Bvehicle_state%3Bclimate_state`;
-		this.vehicleData = await this.getAPI().request(this.vehicleID, 'GET', command);
+        this.log(`Fetching vehicle data.`);
+
+        let query = {};
+        query.endpoints = 'location_data;charge_state;vehicle_state;climate_state';
+
+		this.vehicleData = await this.getAPI().request(this.vehicleID, 'GET', 'vehicle_data', {query:query});
 
 		// Emit the data
 		this.emit('vehicle_data', this.vehicleData);

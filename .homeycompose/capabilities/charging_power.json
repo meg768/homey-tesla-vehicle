@@ -5,6 +5,7 @@
     "getable": true,
     "setable": false,
     "units": { "en": "kW" },
+    "decimals": 1,
     "icon": "./assets/capabilities/charging_power.svg",
     "insights": true
 
