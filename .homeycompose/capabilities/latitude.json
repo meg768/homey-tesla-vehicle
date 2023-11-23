@@ -1,0 +1,8 @@
+{
+	"type": "number",
+	"title": { "en": "Latitude", "sv": "Lattitud" },
+	"getable": true,
+	"setable": false,
+    "uiComponent": null
+
+}

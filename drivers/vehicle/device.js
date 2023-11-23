@@ -1,7 +1,7 @@
 'use strict';
 
 const Device = require('../../device');
-const TeslaAPI = require('../../tesla-api');
+let Request = require('../../request');
 
 class MyDevice extends Device {
 	async onSettings({ oldSettings, changedKeys, newSettings }) {
@@ -78,6 +78,54 @@ class MyDevice extends Device {
 		this.pollVehicleState(0);
 	}
 
+
+    async lookupPosition(latitude, longitude) {
+
+        try {
+            let request = new Request('https://nominatim.openstreetmap.org');
+        
+            let query = {
+                lat: latitude,
+                lon: longitude,
+                format: 'geocodejson'
+            };
+        
+            let headers = {
+                'user-agent': `what-ever/${Math.round(Math.random() * 100)}`
+            };
+    
+            let response = await request.get('reverse', {headers:headers, query:query});
+            let geocode = response.body.features[0].properties.geocoding;
+        
+            if (geocode.name && geocode.city) {
+                return `${geocode.name}, ${geocode.city}`;
+            }
+        
+            if (geocode.housenumber && geocode.city && geocode.street) {
+                return `${geocode.street} ${geocode.housenumber}, ${geocode.city}`;
+            }
+        
+            if (geocode.housenumber && geocode.city) {
+                return `${geocode.housenumber} ${geocode.city}`;
+            }
+            if (geocode.street && geocode.city) {
+                return `${geocode.street}, ${geocode.city}`;
+            }
+            if (geocode.district && geocode.city) {
+                return `${geocode.district}, ${geocode.city}`;
+            }
+    
+            console.log(JSON.stringify(geocode, null, '  '))
+            return '-';
+        
+        }
+        catch(error) {
+            console.log(error.stack);
+            return '-';
+        }
+    }
+    
+
 	async onAction(name, args) {
 		switch (name) {
 			case 'wake_up': {
@@ -91,7 +139,14 @@ class MyDevice extends Device {
 				await this.setLocation(location);
 				break;
 			}
-		}
+
+			case 'lookup_position': {
+				let { latitude, longitude } = args;
+                let location = await this.lookupPosition(latitude, longitude);
+				break;
+			}
+
+        }
 	}
 
 	async onCondition(name, args) {
@@ -256,14 +311,18 @@ class MyDevice extends Device {
 		await this.setCapabilityValue('distance_from_home', this.vehicle.getDistanceFromHomey(vehicleData));
 		await this.setCapabilityValue('odometer', this.vehicle.getOdometer(vehicleData));
 
-		await this.setCapabilityValue('state', this.vehicle.getLocalizedState(vehicleData));
+		await this.setCapabilityValue('vehicle_state', this.vehicle.getLocalizedState(vehicleData));
 
 		await this.setCapabilityValue('location', this.vehicleLocation);
 
 		await this.setCapabilityValue('charging_power', this.vehicle.getChargePower(vehicleData));
 		await this.setCapabilityValue('charging_state', this.vehicle.getLocalizedChargingState(vehicleData));
 		await this.setCapabilityValue('charging_speed', this.vehicle.getChargingSpeed(vehicleData));
-	}
+
+		await this.setCapabilityValue('latitude', this.vehicle.getLatitude(vehicleData));
+		await this.setCapabilityValue('longitude', this.vehicle.getLongitude(vehicleData));
+
+    }
 }
 
 module.exports = MyDevice;

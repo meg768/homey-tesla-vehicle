@@ -1,0 +1,8 @@
+{
+	"type": "number",
+	"title": { "en": "Longitude", "sv": "Longitud" },
+	"getable": true,
+	"setable": false,
+    "uiComponent": null
+
+}

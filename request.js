@@ -129,9 +129,7 @@ function Request() {
             }
 			var iface = params.protocol === "https:" ? https : http;
 
-			debug('Request params:', params);
-
-            params.timeout = 100;
+            params.timeout = 1000;
 
 	        var request = iface.request(params, function(response) {
 

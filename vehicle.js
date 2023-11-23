@@ -236,6 +236,14 @@ class Vehicle extends Events {
 		return vehicleData.climate_state.steering_wheel_heater ? true : false;
 	}
 
+    getLatitude(vehicleData = this.vehicleData) {
+        return vehicleData.drive_state.latitude;
+    }
+
+    getLongitude(vehicleData = this.vehicleData) {
+        return vehicleData.drive_state.longitude;
+    }
+
 	getDistanceFromLocation(vehicleData, latitude, longitude) {
 		function deg2rad(deg) {
 			return deg * (Math.PI / 180);

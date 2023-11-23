@@ -146,6 +146,51 @@
             }
           }
         ]
+      },
+      {
+        "id": "find_location_name",
+        "title": {
+          "en": "Look up location",
+          "sv": "Ange plats"
+        },
+        "titleFormatted": {
+          "en": "Look up position [[longitude]], [[latitude]]",
+          "sv": "Hämta platsens adress [[longitude]], [[latitude]]"
+        },
+        "tokens": [
+          {
+            "title": {
+              "en": "Location",
+              "sv": "Plats"
+            },
+            "name": "location",
+            "type": "string",
+            "example": "Stockholm"
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          },
+          {
+            "type": "number",
+            "name": "latitude",
+            "placeholder": {
+              "en": "Latitude",
+              "sv": "Lattitud"
+            }
+          },
+          {
+            "type": "number",
+            "name": "longitude",
+            "placeholder": {
+              "en": "Longitude",
+              "sv": "Longitud"
+            }
+          }
+        ]
       }
     ],
     "triggers": [
@@ -192,6 +237,20 @@
         ]
       },
       {
+        "id": "position_changed",
+        "title": {
+          "en": "Position changed",
+          "sv": "Position ändrades"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
         "id": "outside_geofence",
         "title": {
           "en": "Left home",
@@ -210,45 +269,6 @@
         "title": {
           "en": "Came home",
           "sv": "Kom hem"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=vehicle"
-          }
-        ]
-      },
-      {
-        "id": "location_changed",
-        "title": {
-          "en": "Location changed",
-          "sv": "Plats ändrades"
-        },
-        "tokens": [
-          {
-            "title": {
-              "en": "Location",
-              "sv": "Plats"
-            },
-            "name": "location",
-            "type": "string",
-            "example": "Stockholm"
-          }
-        ],
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=vehicle"
-          }
-        ]
-      },
-      {
-        "id": "position_changed",
-        "title": {
-          "en": "Position changed",
-          "sv": "Position ändrades"
         },
         "args": [
           {
@@ -289,36 +309,8 @@
       {
         "id": "state_changed",
         "title": {
-          "en": "State changed (online/offline)",
-          "sv": "Tillstånd ändrades (online/offline)"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=vehicle"
-          }
-        ]
-      },
-      {
-        "id": "locked",
-        "title": {
-          "en": "Locked",
-          "sv": "Låstes"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=vehicle"
-          }
-        ]
-      },
-      {
-        "id": "unlocked",
-        "title": {
-          "en": "Unlocked",
-          "sv": "Låstes upp"
+          "en": "State changed",
+          "sv": "Tillstånd ändrades"
         },
         "args": [
           {
@@ -418,6 +410,31 @@
           "en": "Outside temperature changed",
           "sv": "Yttertemperaturen ändrades"
         },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ]
+      },
+      {
+        "id": "location_changed",
+        "title": {
+          "en": "Location changed",
+          "sv": "Plats ändrades"
+        },
+        "tokens": [
+          {
+            "title": {
+              "en": "Location",
+              "sv": "Plats"
+            },
+            "name": "location",
+            "type": "string",
+            "example": "Stockholm"
+          }
+        ],
         "args": [
           {
             "type": "device",
@@ -824,7 +841,9 @@
       "class": "lock",
       "capabilities": [
         "locked",
-        "state",
+        "vehicle_state",
+        "odometer",
+        "battery",
         "battery_range",
         "charging_power",
         "charging_speed",
@@ -832,10 +851,10 @@
         "distance_from_home",
         "inside_temperature",
         "outside_temperature",
-        "odometer",
-        "battery",
         "charging_state",
-        "location"
+        "location",
+        "latitude",
+        "longitude"
       ],
       "energy": {
         "batteries": [
@@ -940,7 +959,7 @@
       "units": {
         "en": "%"
       },
-      "icon": "./assets/capabilities/battery_range.svg",
+      "icon": "./assets/capabilities/battery.svg",
       "insights": true
     },
     "battery_range": {
@@ -1026,6 +1045,16 @@
       "decimals": 1,
       "insights": true
     },
+    "latitude": {
+      "type": "number",
+      "title": {
+        "en": "Latitude",
+        "sv": "Lattitud"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": null
+    },
     "location": {
       "type": "string",
       "title": {
@@ -1035,6 +1064,16 @@
       "getable": true,
       "setable": true,
       "icon": "./assets/capabilities/location.svg"
+    },
+    "longitude": {
+      "type": "number",
+      "title": {
+        "en": "Longitude",
+        "sv": "Longitud"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": null
     },
     "odometer": {
       "type": "number",
@@ -1078,7 +1117,7 @@
       "icon": "./assets/capabilities/speed.svg",
       "insights": true
     },
-    "state": {
+    "vehicle_state": {
       "type": "string",
       "title": {
         "en": "State",
@@ -1086,7 +1125,7 @@
       },
       "getable": true,
       "setable": false,
-      "icon": "./assets/capabilities/state.svg"
+      "icon": "./assets/capabilities/vehicle_state.svg"
     }
   }
 }
