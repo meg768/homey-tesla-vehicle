@@ -78,53 +78,48 @@ class MyDevice extends Device {
 		this.pollVehicleState(0);
 	}
 
+	async lookupPosition(latitude, longitude) {
+		try {
+			let request = new Request('https://nominatim.openstreetmap.org');
 
-    async lookupPosition(latitude, longitude) {
+			let query = {
+				lat: latitude,
+				lon: longitude,
+				format: 'geocodejson',
+			};
 
-        try {
-            let request = new Request('https://nominatim.openstreetmap.org');
-        
-            let query = {
-                lat: latitude,
-                lon: longitude,
-                format: 'geocodejson'
-            };
-        
-            let headers = {
-                'user-agent': `what-ever/${Math.round(Math.random() * 100)}`
-            };
-    
-            let response = await request.get('reverse', {headers:headers, query:query});
-            let geocode = response.body.features[0].properties.geocoding;
-        
-            if (geocode.name && geocode.city) {
-                return `${geocode.name}, ${geocode.city}`;
-            }
-        
-            if (geocode.housenumber && geocode.city && geocode.street) {
-                return `${geocode.street} ${geocode.housenumber}, ${geocode.city}`;
-            }
-        
-            if (geocode.housenumber && geocode.city) {
-                return `${geocode.housenumber} ${geocode.city}`;
-            }
-            if (geocode.street && geocode.city) {
-                return `${geocode.street}, ${geocode.city}`;
-            }
-            if (geocode.district && geocode.city) {
-                return `${geocode.district}, ${geocode.city}`;
-            }
-    
-            console.log(JSON.stringify(geocode, null, '  '))
-            return '-';
-        
-        }
-        catch(error) {
-            console.log(error.stack);
-            return '-';
-        }
-    }
-    
+			let headers = {
+				'user-agent': `what-ever/${Math.round(Math.random() * 100)}`,
+			};
+
+			let response = await request.get('reverse', { headers: headers, query: query });
+			let geocode = response.body.features[0].properties.geocoding;
+
+			if (geocode.name && geocode.city) {
+				return `${geocode.name}, ${geocode.city}`;
+			}
+
+			if (geocode.housenumber && geocode.city && geocode.street) {
+				return `${geocode.street} ${geocode.housenumber}, ${geocode.city}`;
+			}
+
+			if (geocode.housenumber && geocode.city) {
+				return `${geocode.housenumber} ${geocode.city}`;
+			}
+			if (geocode.street && geocode.city) {
+				return `${geocode.street}, ${geocode.city}`;
+			}
+			if (geocode.district && geocode.city) {
+				return `${geocode.district}, ${geocode.city}`;
+			}
+
+			console.log(JSON.stringify(geocode, null, '  '));
+			return '-';
+		} catch (error) {
+			console.log(error.stack);
+			return '-';
+		}
+	}
 
 	async onAction(name, args) {
 		switch (name) {
@@ -140,13 +135,15 @@ class MyDevice extends Device {
 				break;
 			}
 
-			case 'lookup_position': {
-				let { latitude, longitude } = args;
-                let location = await this.lookupPosition(latitude, longitude);
+			case 'update_location': {
+				let latitude = this.vehicle.getLatitude();
+				let longitude = this.vehicle.getLongitude();
+				let location = await this.lookupPosition(latitude, longitude);
+				await this.setCapabilityValue('location', location);
+				await this.setLocation(location);
 				break;
 			}
-
-        }
+		}
 	}
 
 	async onCondition(name, args) {
@@ -163,9 +160,10 @@ class MyDevice extends Device {
 			case 'is_charging': {
 				return this.isCharging();
 			}
-			case 'is_near_location_with_radius': {
+			case 'is_near_position': {
 				let { latitude, longitude, radius } = args;
-				return this.isNearLocation(latitude, longitude, radius);
+                let distance = this.vehicle.getDistanceFromLocation(this.vehicleData, latitude, longitude)
+				return distance <= radius;
 			}
 		}
 
@@ -321,8 +319,7 @@ class MyDevice extends Device {
 
 		await this.setCapabilityValue('latitude', this.vehicle.getLatitude(vehicleData));
 		await this.setCapabilityValue('longitude', this.vehicle.getLongitude(vehicleData));
-
-    }
+	}
 }
 
 module.exports = MyDevice;

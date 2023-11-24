@@ -38,8 +38,7 @@ class MyApp extends Homey.App {
 			this.log(error.stack);
 		}
 
-
-		this.addCondition('is_near_location_with_radius');
+		this.addCondition('is_near_position');
 		this.addCondition('is_charging');
 		this.addCondition('is_locked');
 		this.addCondition('is_online');
@@ -50,6 +49,7 @@ class MyApp extends Homey.App {
 		this.addAction('wake_up');
 		this.addAction('defrost_for_a_while');
 		this.addAction('hvac_for_a_while');
+		this.addAction('update_location');
 	}
 
 	getTimer(id) {

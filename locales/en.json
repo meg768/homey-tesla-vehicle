@@ -61,36 +61,36 @@
   "device": {
     "vehicle": {
       "chargingState": {
-        "connected": "ConnectedX",
-        "disconnected": "DisconnectedX",
-        "stopped": "StoppedX",
-        "complete": "CompleteX",
-        "charging": "ChargingX"
+        "connected": "Connected",
+        "disconnected": "Disconnected",
+        "stopped": "Stopped",
+        "complete": "Complete",
+        "charging": "Charging"
       }
     },
     "hvac": {
-      "name": "Air conditionerX"
+      "name": "Air conditioner"
     },
     "frunk": {
-      "name": "FrunkX"
+      "name": "Frunk"
     },
     "trunk": {
-      "name": "TrunkX"
+      "name": "Trunk"
     },
     "ventilation": {
-      "name": "VentilationX"
+      "name": "Ventilation"
     },
     "defrost": {
-      "name": "DefrostX"
+      "name": "Defrost"
     },
     "ping": {
-      "name": "PingX"
+      "name": "Ping"
     },
     "inside-temperature": {
-      "name": "Inside temperatureX"
+      "name": "Inside temperature"
     },
     "outside-temperature": {
-      "name": "Outside temperatureX"
+      "name": "Outside temperature"
     }
   },
   "vehicle": {
