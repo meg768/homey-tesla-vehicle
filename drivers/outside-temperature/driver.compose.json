@@ -1,32 +1,28 @@
 {
-  "name": {
-    "en": "Outside temperature",
-    "sv": "Yttertemperatur"
-  },
-  "class": "sensor",
-  "capabilities": [
-    "measure_temperature"
-  ],
-  "platforms": [
-    "local"
-  ],
-  "connectivity": [],
-  "images": {
-    "small": "/drivers/outer-temperature/assets/images/small.png",
-    "large": "/drivers/outer-temperature/assets/images/large.png",
-    "xlarge": "/drivers/outer-temperature/assets/images/xlarge.png"
-  },
-  "pair": [
-    {
-      "id": "list_devices",
-      "template": "list_devices",
-      "navigation": {
-        "next": "add_devices"
-      }
-    },
-    {
-      "id": "add_devices",
-      "template": "add_devices"
-    }
-  ]
+	"name": {
+		"en": "Outside temperature",
+		"sv": "Yttertemperatur"
+	},
+	"class": "sensor",
+	"capabilities": ["measure_temperature"],
+	"platforms": ["local"],
+	"connectivity": [],
+	"images": {
+		"small": "/drivers/outside-temperature/assets/images/small.png",
+		"large": "/drivers/outside-temperature/assets/images/large.png",
+		"xlarge": "/drivers/outside-temperature/assets/images/xlarge.png"
+	},
+	"pair": [
+		{
+			"id": "list_devices",
+			"template": "list_devices",
+			"navigation": {
+				"next": "add_devices"
+			}
+		},
+		{
+			"id": "add_devices",
+			"template": "add_devices"
+		}
+	]
 }

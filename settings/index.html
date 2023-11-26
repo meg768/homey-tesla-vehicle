@@ -6,11 +6,15 @@
 	</head>
 	<body>
 		<fieldset class="homey-form-fieldset">
-			<legend class="homey-form-legend">Refresh token</legend>
+			<legend class="homey-form-legend">Settings</legend>
 
 			<div class="homey-form-group">
-				<label class="homey-form-label" for="token">Use a tool like 'Auth for Tesla' to generate a valid token</label>
-				<textarea class="homey-form-textarea" id="token" type="text" rows="8" value=""></textarea>
+				<label class="homey-form-label" for="token">Token (a.k.a refresh token)</label>
+				<textarea class="homey-form-textarea" id="token" type="text" rows="6" value=""></textarea>
+                <small class="text-muted">Use a tool like 'Auth for Tesla' to generate a valid token</small>
+
+
+
 			</div>
 		</fieldset>
 
@@ -25,9 +29,7 @@
 				var tokenElement = document.getElementById('token');
 				var saveElement = document.getElementById('save');
 
-				Homey.on('meg768', (data) => {
-					Homey.alert(data);
-				});
+
 
 				Homey.get('token', function (error, token) {
 					if (error) {

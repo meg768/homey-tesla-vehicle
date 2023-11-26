@@ -1,73 +1,8 @@
 {
-  "settings": {
-    "title": "Settings",
-    "subtitle": "Please log in"
+  "app": {
+    "noAPI": "To find this device you first need to specify a Tesla refresh token in app settings. Use a tool like 'Auth for Tesla' to generate a such a token."
   },
-  "InvaldAccessToken": "Invalid access token.",
-  "InnerTemperature": "Inside temperature",
-  "InvalidAccessToken": "The access token didn´t work. Use a tool like 'Auth for Tesla' to generate a valid token. Try again with another token.",
-  "device.settings.name": "Settings",
-  "device.hvac.instanceName": "AC",
-  "Device.HVAC.InstanceName": "AC",
-  "Device-HVAC-InstanceName": "Air conditioner",
-  "Device-Ping-InstanceName": "Ping",
-  "Device-Pong-InstanceName": "Pong",
-  "Device-Ventilation-InstanceName": "Ventilation",
-  "Device-Inner-Temperature-InstanceName": "Inside temperature",
-  "Device-Outer-Temperature-InstanceName": "Outside temperature",
-  "Device-Frunk-InstanceName": "Frunk",
-  "Device-Trunk-InstanceName": "Trunk",
-  "Device-Vehicle-InstanceName": "Tesla",
-  "Device-Settings-InstanceName": "Settings",
-  "device-hvac-instanceName": "Air conditioner",
-  "device-ping-instanceName": "Ping",
-  "device-pong-instanceName": "Pong",
-  "device-ventilation-instanceName": "Ventilation",
-  "device-innerTemperature-instanceName": "Inside temperature",
-  "device-outerTemperature-instanceName": "Outside temperature",
-  "device-frunk-instanceName": "Frunk",
-  "device-trunk-instanceName": "Trunk",
-  "device-vehicle-instanceName": "Tesla",
-  "device-settings-instanceName": "Settings",
-  "__comment": "Device instance names",
-  "General error messages": "--------------------------------------",
-  "Device Instance Names": "--------------------------------------",
-  "Device Vehicle Texts": "--------------------------------------",
-  "device-vehicle-connected": "Charging",
-  "device-vehicle-disconnected": "Disconnected",
-  "this-is-the-end": "Hate commas in JSON",
-  "NoAPI": "To find this device you first need to specify a Tesla refresh token in app settings. Use a tool like 'Auth for Tesla' to generate a such a token.",
-  "device-steering-wheel-heater-instanceName": "Steering wheel heater",
-  "device-defrost-instanceName": "Defrost",
-  "SpecifyAccessToken": "An access token must be specified.",
-  "DeviceVehicleCharging": "Charging",
-  "DeviceVehicleDisconnected": "Disconnected",
-  "DeviceVehicleStopped": "Stopped",
-  "DeviceHvacInstanceName": "Air conditioner",
-  "DevicePingInstanceName": "Ping",
-  "DevicePongInstanceName": "Pong",
-  "DeviceVentilationInstanceName": "Ventilation",
-  "DeviceInnerTemperatureInstanceName": "Inside temperature",
-  "DeviceOuterTemperatureInstanceName": "Outside temperature",
-  "DeviceFrunkInstanceName": "Frunk",
-  "DeviceTrunkInstanceName": "Trunk",
-  "DeviceVehicleInstanceName": "Tesla",
-  "DeviceSettingsInstanceName": "Settings",
-  "DeviceSteeringWwheelHeaterInstanceName": "Steering wheel heater",
-  "DeviceDefrostInstanceName": "Defrost",
-  "DeviceLockInstanceName": "Lock",
-  "DeviceSteeringWheelHeaterInstanceName": "Steering wheel heater",
-  "DeviceDoorInstanceName": "Doors",
-  "device": {
-    "vehicle": {
-      "chargingState": {
-        "connected": "Connected",
-        "disconnected": "Disconnected",
-        "stopped": "Stopped",
-        "complete": "Complete",
-        "charging": "Charging"
-      }
-    },
+  "driver": {
     "hvac": {
       "name": "Air conditioner"
     },
@@ -100,32 +35,6 @@
       "stopped": "Stopped",
       "complete": "Complete",
       "charging": "Charging"
-    }
-  },
-  "driver": {
-    "hvac": {
-      "name": "Air conditioner"
-    },
-    "frunk": {
-      "name": "Frunk"
-    },
-    "trunk": {
-      "name": "Trunk"
-    },
-    "ventilation": {
-      "name": "Ventilation"
-    },
-    "defrost": {
-      "name": "Defrost"
-    },
-    "ping": {
-      "name": "Ping"
-    },
-    "inside-temperature": {
-      "name": "Inside temperature"
-    },
-    "outside-temperature": {
-      "name": "Outside temperature"
     }
   }
 }

@@ -12,9 +12,9 @@
   ],
   "connectivity": [],
   "images": {
-    "small": "/drivers/inner-temperature/assets/images/small.png",
-    "large": "/drivers/inner-temperature/assets/images/large.png",
-    "xlarge": "/drivers/inner-temperature/assets/images/xlarge.png"
+    "small": "/drivers/inside-temperature/assets/images/small.png",
+    "large": "/drivers/inside-temperature/assets/images/large.png",
+    "xlarge": "/drivers/inside-temperature/assets/images/xlarge.png"
   },
   "pair": [
     {

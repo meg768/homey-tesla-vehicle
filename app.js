@@ -151,9 +151,10 @@ class MyApp extends Homey.App {
 	async getPairListDevices(description) {
 		let token = this.homey.settings.get('token');
 
-		if (!this.api) {
-			throw new Error(this.homey.__('NoAPI'));
+        if (typeof token != 'string' || token == '' || !this.api) {
+			throw new Error(this.homey.__('app.noAPI'));
 		}
+
 
 		let api = await this.getAPI();
 		let vehicles = await api.getVehicles();

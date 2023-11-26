@@ -18,8 +18,6 @@ function isString(arg) {
 	return typeof arg === 'string';
 }
 
-
-
 class TeslaAPI {
 	constructor(options) {
 		this.token = options.refreshToken || options.token;
@@ -59,7 +57,6 @@ class TeslaAPI {
 				return;
 			}
 		} catch (error) {
-			this.log(error.stack);
 		}
 
 		let then = new Date();
@@ -70,17 +67,22 @@ class TeslaAPI {
 
 			this.debug(`Sending wakeup to vehicle ${vehicleID}...`);
 
-			var reply = await api.post(`vehicles/${vehicleID}/wake_up`);
-			var response = reply.body.response;
+			try {
+				let reply = await api.post(`vehicles/${vehicleID}/wake_up`);
+				let response = reply.body.response;
 
-			if (now.getTime() - then.getTime() > timeout) throw new Error('Your Tesla cannot be reached within timeout period.');
+				if (response.state == 'online') {
+					this.debug(`Vehicle ${vehicleID} is now online. Took ${Math.round((now - then) / 1000)} seconds to wake up`);
+					return response;
+				}
+			} catch (error) {
+            }
 
-			if (response.state == 'online') {
-				this.debug(`Vehicle ${vehicleID} is now online.`);
-				return response;
+			if (now.getTime() - then.getTime() > timeout) {
+				throw new Error('Your Tesla cannot be reached within timeout period.');
 			}
 
-			await this.pause(1000);
+			await this.pause(3000);
 		}
 	}
 
@@ -91,7 +93,6 @@ class TeslaAPI {
 	}
 
 	async request(vehicleID, method, command, options) {
-
 		var api = await this.getAPI();
 
 		var path = `vehicles/${vehicleID}/${command}`;
@@ -200,6 +201,5 @@ class TeslaAPI {
 		return this.api;
 	}
 }
-
 
 module.exports = TeslaAPI;

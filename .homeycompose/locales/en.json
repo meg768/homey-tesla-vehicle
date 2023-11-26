@@ -1,7 +1,7 @@
 {
-	"General error messages": "--------------------------------------",
-	"InvalidAccessToken": "The access token didn´t work. Use a tool like 'Auth for Tesla' to generate a valid token. Try again with another token.",
-	"NoAPI": "To find this device you first need to specify a Tesla refresh token in app settings. Use a tool like 'Auth for Tesla' to generate a such a token.",
+    "app": {
+        "noAPI": "To find this device you first need to specify a Tesla refresh token in app settings. Use a tool like 'Auth for Tesla' to generate a such a token."
+    },
     
     
     "driver": {

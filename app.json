@@ -676,9 +676,9 @@
       ],
       "connectivity": [],
       "images": {
-        "small": "/drivers/inner-temperature/assets/images/small.png",
-        "large": "/drivers/inner-temperature/assets/images/large.png",
-        "xlarge": "/drivers/inner-temperature/assets/images/xlarge.png"
+        "small": "/drivers/inside-temperature/assets/images/small.png",
+        "large": "/drivers/inside-temperature/assets/images/large.png",
+        "xlarge": "/drivers/inside-temperature/assets/images/xlarge.png"
       },
       "pair": [
         {
@@ -709,9 +709,9 @@
       ],
       "connectivity": [],
       "images": {
-        "small": "/drivers/outer-temperature/assets/images/small.png",
-        "large": "/drivers/outer-temperature/assets/images/large.png",
-        "xlarge": "/drivers/outer-temperature/assets/images/xlarge.png"
+        "small": "/drivers/outside-temperature/assets/images/small.png",
+        "large": "/drivers/outside-temperature/assets/images/large.png",
+        "xlarge": "/drivers/outside-temperature/assets/images/xlarge.png"
       },
       "pair": [
         {
