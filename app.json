@@ -150,7 +150,7 @@
       {
         "id": "update_location",
         "title": {
-          "en": "Set loction using OpenStreetMap",
+          "en": "Set location using OpenStreetMap",
           "sv": "Sätt plats m.h.a. OpenStreetMap"
         },
         "args": [
