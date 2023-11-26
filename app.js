@@ -2,9 +2,9 @@
 
 const Events = require('events');
 const Homey = require('homey');
-const TeslaAPI = require('./tesla-api.js');
-const Vehicle = require('./vehicle.js');
-const Timer = require('./timer.js');
+const TeslaAPI = require('./src/tesla-api.js');
+const Vehicle = require('./src/vehicle.js');
+const Timer = require('./src/timer.js');
 
 class MyApp extends Homey.App {
 	async onUninit() {}

@@ -1,7 +1,7 @@
 'use strict';
 
-const Device = require('../../device');
-let Request = require('../../request');
+const Device = require('../../src/device');
+let Request = require('../../src/request');
 
 class MyDevice extends Device {
 	async onSettings({ oldSettings, changedKeys, newSettings }) {

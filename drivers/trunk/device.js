@@ -1,7 +1,6 @@
 'use strict';
 
-const Device = require('../../device');
-
+const Device = require('../../src/device');
 
 
 module.exports = class MyDevice extends Device {

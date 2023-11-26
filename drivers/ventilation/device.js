@@ -1,7 +1,7 @@
 'use strict';
 
-const Device = require('../../device');
-const TeslaAPI = require('../../tesla-api');
+const Device = require('../../src/device');
+
 
 class MyDevice extends Device {
 	async onInit() {

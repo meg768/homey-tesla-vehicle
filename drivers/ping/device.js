@@ -1,6 +1,7 @@
 'use strict';
 
-const Device = require('../../device');
+const Device = require('../../src/device');
+
 
 class MyDevice extends Device {
 
