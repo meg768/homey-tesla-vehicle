@@ -1,6 +1,6 @@
 {
   "app": {
-    "noAPI": "To find this device you first need to specify a Tesla refresh token in app settings. Use a tool like 'Auth for Tesla' to generate a such a token."
+    "noAPI": "To find this device you first need to specify a Tesla refresh token in app settings. Use a tool like 'Auth for Tesla' to generate such a token."
   },
   "driver": {
     "hvac": {

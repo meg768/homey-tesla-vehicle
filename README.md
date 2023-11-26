@@ -38,7 +38,8 @@ When activated it keeps the vehicle online.
 Opens or closes the trunk.
 
 ### Vehicle
-The main device for your vehicle. Contains a number of "When", "And" and "Then" cards.
+The main device for your vehicle. Contains a number of "When", "And" and "Then" flow cards. The device
+also acts like a door to lock or unlock your vehicle.
 
 ### Ventilation
 Sets car door windows in a ventilating state.
