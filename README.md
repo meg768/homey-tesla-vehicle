@@ -1,5 +1,5 @@
 # Tesla Vehicle
-Control your Tesla vehicle using Homey. An alternative to the Tesla Smart Charger. Add buttons to control heating, defrost, trunk, frunk and more.
+Control your Tesla vehicle using Homey. An alternative to the [Tesla Smart Charger](https://homey.app/sv-se/app/com.tesla.charger/Tesla-Smart-Charger/). Add buttons to control heating, defrost, trunk, frunk and more.
 
 ## Description
 
@@ -8,8 +8,11 @@ To configure the app, you will need a refresh token issued by Tesla. Try a smart
 Install the app. Go to app settings and enter the refresh token and you are ready to go. 
 The following devices are available.
 
+This is an early version. It might help to make sure your Tesla(s) are online before installing. For now, a more solid product is the Tesla Smart Charger.
+
 ## Devices
 The folllowing devices are available.
+
 ![alt text](/images/devices.png)
 
 ### Air conditioner
