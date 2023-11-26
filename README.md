@@ -5,10 +5,11 @@ Control your Tesla vehicle using Homey. An alternative to the [Tesla Smart Charg
 
 To configure the app, you will need a refresh token issued by Tesla. Try a smart phone app like [Auth app for Tesla](https://apps.apple.com/us/app/auth-app-for-tesla/id1552058613) or [Tesla Tokens](https://play.google.com/store/apps/details?id=net.leveugle.teslatokens&hl=en_US).
 
+This is an early version. It might help to make sure your Tesla(s) are online before installing. For now, a more solid product is the Tesla Smart Charger.
+
 Install the app. Go to app settings and enter the refresh token and you are ready to go. 
 The following devices are available.
 
-This is an early version. It might help to make sure your Tesla(s) are online before installing. For now, a more solid product is the Tesla Smart Charger.
 
 ## Devices
 The folllowing devices are available.
@@ -40,5 +41,5 @@ Opens or closes the trunk.
 The main device for your vehicle. Contains a number of "When", "And" and "Then" cards.
 
 ### Ventilation
-Sets car dooor windows in a ventilating state.
+Sets car door windows in a ventilating state.
 
