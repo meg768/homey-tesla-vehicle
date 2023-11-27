@@ -21,6 +21,9 @@
 		"large": "/assets/images/large.png",
 		"xlarge": "/assets/images/xlarge.png"
 	},
+    
+    "source": "https://github.com/meg768/homey-tesla-vehicle",
+
 	"author": {
 		"name": "Magnus Egelberg",
 		"email": "magnus.egelberg@gmail.com"
