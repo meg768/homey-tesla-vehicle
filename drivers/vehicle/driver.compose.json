@@ -3,7 +3,7 @@
 		"en": "Vehicle",
 		"sv": "Tesla"
 	},
-	"class": "lock",
+	"class": "other",
 	"capabilities": ["locked", "vehicle_state", "odometer", "battery", "battery_range", "charging_power", "charging_speed", "speed", "distance_from_home", "inside_temperature", "outside_temperature", "charging_state", "location", "latitude", "longitude"],
 
 	"energy": {

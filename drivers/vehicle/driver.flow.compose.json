@@ -1,5 +1,6 @@
 {
 	"triggers": [
+
 		{
 			"id": "near_position_within_radius",
 			"title": {
@@ -38,7 +39,7 @@
 			]
 		},
 
-        {
+		{
 			"id": "position_changed",
 			"title": {
 				"en": "Position changed",
@@ -87,7 +88,6 @@
 			},
 			"args": []
 		},
-
 
 		{
 			"id": "started_driving",
@@ -237,8 +237,6 @@
 			"args": []
 		},
 
-
-
 		{
 			"id": "is_near_position",
 			"title": {
@@ -311,11 +309,7 @@
 				"en": "Set location using OpenStreetMap",
 				"sv": "Sätt plats m.h.a. OpenStreetMap"
 			},
-			"args": [
-			]
+			"args": []
 		}
-
-
-
-    ]
+	]
 }

@@ -26,6 +26,9 @@
     },
     "outside-temperature": {
       "name": "Outside temperature"
+    },
+    "doors": {
+      "name": "Doors"
     }
   },
   "vehicle": {

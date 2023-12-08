@@ -20,7 +20,7 @@ class MyDevice extends Device {
 				let locked = value ? true : false;
 
 				if (this.vehicle.isLocked() != locked) {
-					this.log(`Setting lock state to ${state ? 'LOCKED' : 'UNLOCKED'}.`);
+					this.log(`Setting lock state to ${locked ? 'LOCKED' : 'UNLOCKED'}.`);
 
 					if (locked) {
 						await this.vehicle.post('command/door_lock');
@@ -162,7 +162,7 @@ class MyDevice extends Device {
 			}
 			case 'is_near_position': {
 				let { latitude, longitude, radius } = args;
-                let distance = this.vehicle.getDistanceFromLocation(this.vehicleData, latitude, longitude)
+				let distance = this.vehicle.getDistanceFromLocation(this.vehicleData, latitude, longitude);
 				return distance <= radius;
 			}
 		}
