@@ -1,0 +1,12 @@
+
+{
+    "type": "number",
+    "title": { "en": "Speed", "sv":"Hastighet" },
+    "getable": true,
+    "setable": false,
+    "units": { "en": "km/h" },
+    "icon": "./assets/capabilities/speed.svg",
+    "insights": true
+
+    
+  }

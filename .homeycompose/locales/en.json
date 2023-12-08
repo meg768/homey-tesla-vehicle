@@ -11,6 +11,9 @@
         "frunk": {
             "name": "Frunk"
         },
+        "doors": {
+            "name": "Doors"
+        },
         "trunk": {
             "name": "Trunk"
         },

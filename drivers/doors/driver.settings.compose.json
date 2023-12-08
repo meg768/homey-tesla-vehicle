@@ -1,0 +1,22 @@
+[
+
+    {
+		"id": "remoteStartDrivePassword",
+		"type": "text",
+		"label": {
+			"en": "Password for keyless driving",
+			"sv": "Lösenord för nyckellös körning"
+		},
+		"hint": {
+			"en": "If specified your car will be ready to drive without your keycard present when unlocking.",
+			"sv": "Anger du lösenord här behöver du inte din bilnyckel (kortet) för att köra iväg när du låser upp."
+		},
+		"value": ""
+	}
+   
+
+   
+
+
+
+]
