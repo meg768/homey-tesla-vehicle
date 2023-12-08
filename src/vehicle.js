@@ -123,7 +123,7 @@ class Vehicle extends Events {
         this.log(`Fetching vehicle data.`);
 
         let query = {};
-        query.endpoints = 'location_data;charge_state;vehicle_state;climate_state';
+        query.endpoints = 'location_data;charge_state;vehicle_state;climate_state;vehicle_config';
 
 		this.vehicleData = await this.getAPI().request(this.vehicleID, 'GET', 'vehicle_data', {query:query});
 
